@@ -4,7 +4,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { connectDB } from "./Utils/dbConnection.js";
 import UserRoute from "./Routes/UserRoute.js";
-import ServiceRoute from "./Routes/ServiceRoute.js"
+import ServiceRoute from "./Routes/ServiceRoute.js";
+import BookingRoute from "./Routes/BookingRoute.js";
 
 // Load environment variables
 dotenv.config();
@@ -26,8 +27,9 @@ app.use(cookieParser());
 app.use(express.static("public"));
 
 // Routes
-app.use("/api/users", UserRoute);
-app.use("/api/services" , ServiceRoute)
+app.use("/users", UserRoute);
+app.use("/services" , ServiceRoute);
+app.use("/bookings", BookingRoute);
 
 // Connect to DB first, then start server
 connectDB()
