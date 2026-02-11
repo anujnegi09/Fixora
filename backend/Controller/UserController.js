@@ -102,9 +102,7 @@ export const login = asyncHandler(async (req, res) => {
   await user.save({ validateBeforeSave: false });
 
   // Exclude sensitive info
-  const loggedInUser = await User.findById(user._id).select(
-    "-password "
-  );
+  const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
 
   // 🍪 Set cookies
   res.cookie("accessToken", accessToken, {
@@ -124,7 +122,7 @@ export const login = asyncHandler(async (req, res) => {
     new apiResponse(
       200,
       {
-        user: loggedInUser,
+        user: loggedInUser,accessToken
       },
       "Login successful"
     )
