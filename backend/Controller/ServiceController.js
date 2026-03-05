@@ -7,10 +7,10 @@ import apiResponse from "../Utils/apiResponse.js";
  * @desc Create a new service
  */
 export const createService = asyncHandler(async (req, res) => {
-  const { title, description, location, phoneNumber, availability } = req.body;
+  const { title, description, location, phoneNumber, availability, price} = req.body;
   console.log("req.body:" , req.body);
 
-  if (!title || !description || !location || !phoneNumber || !availability) {
+  if (!title || !description || !location || !phoneNumber || !availability || !price) {
     throw new apiError(400, "All fields are required");
   }
 
@@ -22,6 +22,7 @@ export const createService = asyncHandler(async (req, res) => {
     location,
     phoneNumber,
     availability,
+    price
   });
 
   res
@@ -60,7 +61,7 @@ export const getServiceById = asyncHandler(async (req, res) => {
  */
 export const updateService = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { title, description, location, phoneNumber, availability } = req.body;
+  const { title, description, location, phoneNumber, availability, price } = req.body;
 
   const service = await Service.findById(id);
   if (!service) {
@@ -77,6 +78,7 @@ export const updateService = asyncHandler(async (req, res) => {
   service.location = location || service.location;
   service.phoneNumber = phoneNumber || service.phoneNumber;
   service.availability = availability || service.availability;
+  service.price = price || service.price;
 
   const updatedService = await service.save();
 
