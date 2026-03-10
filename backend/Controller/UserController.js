@@ -4,6 +4,8 @@ import { asyncHandler } from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";
 import cloudinary from "../Utils/cloudinarySetup.js";
+import generateToken from "../Utils/generateToken.js";
+import { transporter } from "../Config/Mail.js";
 
 /**
  * =====================================================
@@ -29,12 +31,35 @@ export const register = asyncHandler(async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
+  //generate email verification token
+  const verificationToken = generateToken();
+  const verificationTokenExpiry = Date.now() + 24 * 60 * 60 * 1000; // 25 hours
+
+
+
   // 🧍 Create new user
   const user = await User.create({
     fullName,
     email,
     userName,
     password: hashedPassword,
+    verificationToken,
+    verificationTokenExpiry
+  });
+
+  // Verification link
+  const verificationUrl = `${process.env.BASE_URL}/api/auth/verify-email/${verificationToken}`; 
+
+  // Send email
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: user.email,
+    subject: "Verify your email",
+    html: `
+      <h2>Email Verification</h2>
+      <p>Click the link below to verify your email:</p>
+      <a href="${verificationUrl}">${verificationUrl}</a>
+    `,
   });
 
   // 🪙 Generate tokens
@@ -251,6 +276,32 @@ export const checkAuth = asyncHandler(async (req, res) => {
     success: true,
     user: req.user,
   });
+});
+
+// ===================================
+//   EMAIL VERIFICATION CONTROLLER
+// ===================================
+export const verifyEmail = asyncHandler(async (req, res) => {
+  const { token } = req.params;
+
+  const user = await User.findOne({
+    verificationToken: token,
+    verificationTokenExpiry: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    throw new apiError(400, "Invalid or expired token");
+  }
+
+  user.isVerified = true;
+  user.verificationToken = undefined;
+  user.verificationTokenExpiry = undefined;
+
+  await user.save();
+
+  res.status(200).json(
+    new apiResponse(200, {}, "Email verified successfully")
+  );
 });
 
 
