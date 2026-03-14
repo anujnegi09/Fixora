@@ -19,38 +19,33 @@ export const register = asyncHandler(async (req, res) => {
     throw new apiError(400, "All fields are required");
   }
 
-  // Check if email or username already exists
   const existingUser = await User.findOne({
     $or: [{ email }, { userName }],
   });
+
   if (existingUser) {
     throw new apiError(400, "Email or username already registered");
   }
 
-  // 🔑 Hash password
+  // Hash password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
-  //generate email verification token
+  // Email verification token
   const verificationToken = generateToken();
-  const verificationTokenExpiry = Date.now() + 24 * 60 * 60 * 1000; // 25 hours
+  const verificationTokenExpiry = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
 
-
-
-  // 🧍 Create new user
   const user = await User.create({
     fullName,
     email,
     userName,
     password: hashedPassword,
     verificationToken,
-    verificationTokenExpiry
+    verificationTokenExpiry,
   });
 
-  // Verification link
-  const verificationUrl = `${process.env.BASE_URL}/api/auth/verify-email/${verificationToken}`; 
+  const verificationUrl = `${process.env.BASE_URL}/api/auth/verify-email/${verificationToken}`;
 
-  // Send email
   await transporter.sendMail({
     from: process.env.EMAIL_USER,
     to: user.email,
@@ -62,40 +57,11 @@ export const register = asyncHandler(async (req, res) => {
     `,
   });
 
-  // 🪙 Generate tokens
-  const accessToken = user.generateAccessToken();
-  const refreshToken = user.generateRefreshToken();
-
-  // 💾 Save refresh token
-  user.refreshToken = refreshToken;
-  await user.save({ validateBeforeSave: false });
-
-  // 🍪 Set cookies
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 24 * 60 * 60 * 1000, // 1 day
-  });
-
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
-  });
-
-  // ✅ Response
   return res.status(201).json(
     new apiResponse(
       201,
-      {
-        id: user._id,
-        fullName: user.fullName,
-        email: user.email,
-        userName: user.userName,
-      },
-      "Account created successfully"
+      {},
+      "Account created successfully. Please verify your email."
     )
   );
 });
@@ -115,6 +81,9 @@ export const login = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
   if (!user) throw new apiError(404, "No account found with this email");
 
+  if (!user.isVerified) {
+  throw new apiError(403, "Please verify your email before logging in");
+}
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) throw new apiError(400, "Invalid password");
 
@@ -293,14 +262,39 @@ export const verifyEmail = asyncHandler(async (req, res) => {
     throw new apiError(400, "Invalid or expired token");
   }
 
+  // Mark user verified
   user.isVerified = true;
   user.verificationToken = undefined;
   user.verificationTokenExpiry = undefined;
 
-  await user.save();
+  // Generate tokens
+  const accessToken = user.generateAccessToken();
+  const refreshToken = user.generateRefreshToken();
 
-  res.status(200).json(
-    new apiResponse(200, {}, "Email verified successfully")
+  user.refreshToken = refreshToken;
+  await user.save({ validateBeforeSave: false });
+
+  // Set cookies
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 24 * 60 * 60 * 1000,
+  });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 10 * 24 * 60 * 60 * 1000,
+  });
+
+  return res.status(200).json(
+    new apiResponse(
+      200,
+      {},
+      "Email verified and logged in successfully"
+    )
   );
 });
 
