@@ -6,6 +6,7 @@ import {
   refreshAccessToken,
   updateProfile,
   checkAuth,
+  verifyEmail,
 } from "../Controller/UserController.js";
 import { verifyJWT } from "../Middlewares/authMiddleware.js";
 
@@ -29,5 +30,10 @@ router.post("/refresh-token", refreshAccessToken);
 router.get("/check-auth", verifyJWT, checkAuth);
 router.post("/logout", verifyJWT, logout);
 router.put("/update-profile", verifyJWT, updateProfile);
+
+// ===================================
+//   EMAIL VERIFICATION ROUTE
+// ===================================
+router.get("/verify-email/:token", verifyEmail);
 
 export default router;

@@ -10,8 +10,6 @@ import BookingRoute from "./Routes/BookingRoute.js";
 // Load environment variables
 dotenv.config();
 
-
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
