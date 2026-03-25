@@ -4,7 +4,9 @@ import {
   getAllBookings,
   getBookingById,
   updateBooking,
-  deleteBooking
+  deleteBooking,
+  getMyBookings,
+  getBookingsForMyServices
 } from "../Controller/BookingController.js";
 
 import { verifyJWT } from "../Middlewares/authMiddleware.js";
@@ -17,19 +19,23 @@ const router = express.Router();
  * =========================
  */
 
-// Create a booking (User must be logged in)
+// ✅ Create booking
 router.post("/", verifyJWT, createBooking);
 
-// Get all bookings (Admin / later restrict)
+// ✅ User-specific routes (MUST come before :id)
+router.get("/my-bookings", verifyJWT, getMyBookings);
+router.get("/my-service-bookings", verifyJWT, getBookingsForMyServices);
+
+// ✅ Get all bookings
 router.get("/", verifyJWT, getAllBookings);
 
-// Get single booking by ID
+// ✅ Get booking by ID
 router.get("/:id", verifyJWT, getBookingById);
 
-// Update booking (status, date, notes)
-router.put("/:id", verifyJWT, updateBooking);
+// ✅ Update booking
+router.patch("/:id", verifyJWT, updateBooking);
 
-// Delete / cancel booking
+// ✅ Delete booking
 router.delete("/:id", verifyJWT, deleteBooking);
 
 export default router;

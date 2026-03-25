@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Booking from "../Models/Booking.js";
 import Service from "../Models/Service.js";
 import { asyncHandler } from "../Utils/asyncHandler.js";
@@ -14,33 +15,65 @@ export const createBooking = asyncHandler(async (req, res) => {
     throw new apiError(400, "Service ID and booking date are required");
   }
 
-  // Fetch the service to get owner
+  // ✅ Validate ObjectId
+  if (!mongoose.Types.ObjectId.isValid(serviceId)) {
+    throw new apiError(400, "Invalid service ID");
+  }
+
   const service = await Service.findById(serviceId);
   if (!service) {
     throw new apiError(404, "Service not found");
   }
 
+  // 🚨 Prevent booking own service
+  if (service.userId.toString() === req.user._id.toString()) {
+    throw new apiError(400, "You cannot book your own service");
+  }
+
+  // 🚨 Prevent past date booking
+  if (new Date(bookingDate) < new Date()) {
+    throw new apiError(400, "Booking date cannot be in the past");
+  }
+
   const booking = await Booking.create({
-    bookedBy: req.user._id,        // user who booked
-    serviceId: service._id,        // service being booked
-    serviceOwner: service.userId,  // owner of the service
+    bookedBy: req.user._id,
+    serviceId: service._id,
+    serviceOwner: service.userId,
     bookingDate,
     notes
   });
 
-  res.status(201).json(new apiResponse(201, "Booking created successfully", booking));
+  res.status(201).json(
+    new apiResponse(201, booking, "Booking created successfully")
+  );
 });
 
 /**
- * @desc Get all bookings
+ * @desc Get all bookings (pagination)
  */
 export const getAllBookings = asyncHandler(async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
+
+  const skip = (page - 1) * limit;
+
   const bookings = await Booking.find()
     .populate("bookedBy", "fullName email")
     .populate("serviceOwner", "fullName email")
-    .populate("serviceId", "title description location phoneNumber");
+    .populate("serviceId", "title description location phoneNumber")
+    .skip(skip)
+    .limit(parseInt(limit))
+    .lean();
 
-  res.status(200).json(new apiResponse(200, "Bookings fetched successfully", bookings));
+  const total = await Booking.countDocuments();
+
+  res.status(200).json(
+    new apiResponse(200, {
+      bookings,
+      total,
+      page: parseInt(page),
+      totalPages: Math.ceil(total / limit)
+    }, "Bookings fetched successfully")
+  );
 });
 
 /**
@@ -49,45 +82,68 @@ export const getAllBookings = asyncHandler(async (req, res) => {
 export const getBookingById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
+  // ✅ ObjectId validation
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new apiError(400, "Invalid booking ID");
+  }
+
   const booking = await Booking.findById(id)
     .populate("bookedBy", "fullName email")
     .populate("serviceOwner", "fullName email")
-    .populate("serviceId", "title description location phoneNumber");
+    .populate("serviceId", "title description location phoneNumber")
+    .lean();
 
   if (!booking) {
     throw new apiError(404, "Booking not found");
   }
 
-  res.status(200).json(new apiResponse(200, "Booking fetched successfully", booking));
+  res.status(200).json(
+    new apiResponse(200, booking, "Booking fetched successfully")
+  );
 });
 
 /**
- * @desc Update a booking (status, notes)
+ * @desc Update a booking
  */
 export const updateBooking = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { status, notes, bookingDate } = req.body;
+
+  // ✅ ObjectId validation
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new apiError(400, "Invalid booking ID");
+  }
 
   const booking = await Booking.findById(id);
   if (!booking) {
     throw new apiError(404, "Booking not found");
   }
 
-  // Optional: only allow the user who booked or the service owner to update
+  // ✅ Authorization
   if (
     booking.bookedBy.toString() !== req.user._id.toString() &&
     booking.serviceOwner.toString() !== req.user._id.toString()
   ) {
-    throw new apiError(403, "You are not authorized to update this booking");
+    throw new apiError(403, "Not authorized");
   }
 
-  booking.status = status || booking.status;
-  booking.notes = notes || booking.notes;
-  booking.bookingDate = bookingDate || booking.bookingDate;
+  // 🚨 Prevent past date update
+  if (bookingDate && new Date(bookingDate) < new Date()) {
+    throw new apiError(400, "Booking date cannot be in the past");
+  }
+
+  // ✅ Clean update
+  Object.assign(booking, {
+    ...(status && { status }),
+    ...(notes && { notes }),
+    ...(bookingDate && { bookingDate }),
+  });
 
   const updatedBooking = await booking.save();
 
-  res.status(200).json(new apiResponse(200, "Booking updated successfully", updatedBooking));
+  res.status(200).json(
+    new apiResponse(200, updatedBooking, "Booking updated successfully")
+  );
 });
 
 /**
@@ -96,20 +152,50 @@ export const updateBooking = asyncHandler(async (req, res) => {
 export const deleteBooking = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
+  // ✅ ObjectId validation
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new apiError(400, "Invalid booking ID");
+  }
+
   const booking = await Booking.findById(id);
   if (!booking) {
     throw new apiError(404, "Booking not found");
   }
 
-  // Optional: only allow the user who booked or the service owner to delete
+  // ✅ Authorization
   if (
     booking.bookedBy.toString() !== req.user._id.toString() &&
     booking.serviceOwner.toString() !== req.user._id.toString()
   ) {
-    throw new apiError(403, "You are not authorized to delete this booking");
+    throw new apiError(403, "Not authorized");
   }
 
   await booking.deleteOne();
 
-  res.status(200).json(new apiResponse(200, "Booking deleted successfully"));
+  res.status(200).json(
+    new apiResponse(200, null, "Booking deleted successfully")
+  );
+});
+
+export const getMyBookings = asyncHandler(async (req, res) => {
+  const bookings = await Booking.find({ bookedBy: req.user._id })
+    .populate("serviceId", "title description location phoneNumber")
+    .populate("serviceOwner", "fullName email")
+    .lean();
+
+  res.status(200).json(
+    new apiResponse(200, bookings, "User bookings fetched successfully")
+  );
+});
+
+
+export const getBookingsForMyServices = asyncHandler(async (req, res) => {
+  const bookings = await Booking.find({ serviceOwner: req.user._id })
+    .populate("bookedBy", "fullName email")
+    .populate("serviceId", "title description location phoneNumber")
+    .lean();
+
+  res.status(200).json(
+    new apiResponse(200, bookings, "Bookings for your services fetched successfully")
+  );
 });
