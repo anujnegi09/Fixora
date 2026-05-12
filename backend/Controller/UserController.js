@@ -1,248 +1,33 @@
-import bcrypt from "bcryptjs";
 import User from "../Models/User.js";
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";
-import cloudinary from "../Utils/cloudinarySetup.js";
-import generateToken from "../Utils/generateToken.js";
-import { transporter } from "../Config/Mail.js";
+import cloudinary from "../Config/CloudinarySetup.js";
 
 /**
  * =====================================================
- * 🔐 REGISTER USER
+ * 👤 GET OWN PROFILE
  * =====================================================
  */
-export const register = asyncHandler(async (req, res) => {
-  const { fullName, email, userName, password } = req.body;
+export const getProfile = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
 
-  if (!fullName || !email || !userName || !password) {
-    throw new apiError(400, "All fields are required");
-  }
-  if (!email.includes("@")) {
-  throw new apiError(400, "Invalid email format");
-  }
-  
-  const existingUser = await User.findOne({
-    $or: [{ email }, { userName : userName.toLowerCase() }],
-  });
-
-  if (existingUser) {
-    throw new apiError(400, "Email or username already registered");
+  if (!userId) {
+    throw new apiError(401, "Unauthorized");
   }
 
-  // Hash password
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  const user = await User.findById(userId)
+    .select("-password -refreshToken");
 
-  // Email verification token
-  const verificationToken = generateToken();
-  const verificationTokenExpiry = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
-
-  const user = await User.create({
-    fullName,
-    email,
-    userName : userName.toLowerCase(),
-    password: hashedPassword,
-    verificationToken,
-    verificationTokenExpiry,
-  });
-
-  const verificationUrl = `${process.env.BASE_URL}/users/verify-email/${verificationToken}`;
-
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: user.email,
-    subject: "Verify your email",
-    html: `
-       <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
-    <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-      
-      <!-- Header -->
-      <div style="background: #4f46e5; color: #ffffff; padding: 20px; text-align: center;">
-        <img src="https://raw.githubusercontent.com/anujnegi09/Fixora/main/frontend/src/assets/Logo.png" alt="Fixora" style="height: 50px;  width: 50px; border-radius: 50%;">
-        <h2 style="margin: 0;">Fixora</h2>
-      </div>
-
-      <!-- Body -->
-      <div style="padding: 30px; color: #333;">
-        <h2 style="margin-top: 0;">Verify Your Email</h2>
-        <p>Hi ${user.fullName || "User"},</p>
-        
-        <p>Thank you for signing up on <strong>Fixora</strong>. Please verify your email address to get started.</p>
-
-        <div style="text-align: center; margin: 30px 0;">
-          <a href="${verificationUrl}" 
-             style="background: #4f46e5; color: #ffffff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-            Verify Email
-          </a>
-        </div>
-
-        <p>If the button above doesn’t work, copy and paste the link below into your browser:</p>
-        <p style="word-break: break-all; color: #4f46e5;">${verificationUrl}</p>
-
-        <p style="margin-top: 20px;">This link will expire in 24 hours.</p>
-
-        <p>If you did not create this account, please ignore this email.</p>
-
-        <p>Best regards,<br><strong>Fixora Team</strong></p>
-      </div>
-
-      <!-- Footer -->
-      <div style="background: #f9f9f9; text-align: center; padding: 15px; font-size: 12px; color: #777;">
-        © ${new Date().getFullYear()} Fixora. All rights reserved.
-      </div>
-      
-    </div>
-  </div>
-    `,
-  });
-
-  return res.status(201).json(
-    new apiResponse(
-      201,
-      {},
-      "Account created successfully. Please verify your email."
-    )
-  );
-});
-
-/**
- * =====================================================
- * 🔑 LOGIN USER
- * =====================================================
- */
-export const login = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    throw new apiError(400, "Email and password are required");
-  }
-
-  const user = await User.findOne({ email });
-  if (!user) throw new apiError(404, "No account found with this email");
-
-  if (!user.isVerified) {
-  throw new apiError(403, "Please verify your email before logging in");
-}
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) throw new apiError(400, "Invalid password");
-
-  // 🪙 Generate tokens
-  const accessToken = user.generateAccessToken();
-  const refreshToken = user.generateRefreshToken();
-
-  // Save refresh token
-  user.refreshToken = refreshToken;
-  await user.save({ validateBeforeSave: false });
-
-  // Exclude sensitive info
-  const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
-
-  // 🍪 Set cookies
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
-
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
-
-  // ✅ Response
-  return res.status(200).json(
-    new apiResponse(
-      200,
-      {
-        user: loggedInUser,accessToken
-      },
-      "Login successful"
-    )
-  );
-});
-
-/**
- * =====================================================
- * 🔁 REFRESH ACCESS TOKEN
- * =====================================================
- */
-export const refreshAccessToken = asyncHandler(async (req, res) => {
-  const { refreshToken } = req.cookies;
-
-  if (!refreshToken) {
-    throw new apiError(401, "Refresh token missing");
-  }
-
-  const user = await User.findOne({ refreshToken });
   if (!user) {
-    throw new apiError(403, "Invalid refresh token");
+    throw new apiError(404, "User not found");
   }
 
-  const newAccessToken = user.generateAccessToken();
-  const newRefreshToken = user.generateRefreshToken();
-
-  // Update refresh token
-  user.refreshToken = newRefreshToken;
-  await user.save({ validateBeforeSave: false });
-
-  // Replace cookies
-  res.cookie("accessToken", newAccessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 24 * 60 * 60 * 1000,
-  });
-
-  res.cookie("refreshToken", newRefreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 10 * 24 * 60 * 60 * 1000,
-  });
-
-  return res
-    .status(200)
-    .json(new apiResponse(200, {}, "Access token refreshed successfully"));
+  return res.status(200).json(
+    new apiResponse(200, user, "Profile fetched successfully")
+  );
 });
 
-/**
- * =====================================================
- * 🚪 LOGOUT USER
- * =====================================================
- */
-export const logout = asyncHandler(async (req, res) => {
-  const { refreshToken } = req.cookies;
-
-  if (!refreshToken) {
-    throw new apiError(400, "No refresh token found in cookies");
-  }
-
-  // Find user by refresh token and clear it
-  const user = await User.findOne({ refreshToken });
-  if (user) {
-    user.refreshToken = null;
-    await user.save({ validateBeforeSave: false });
-  }
-
-  // 🧹 Clear cookies properly (for both dev and production)
-  res.clearCookie("accessToken", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
-
-  res.clearCookie("refreshToken", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
-
-  return res
-    .status(200)
-    .json(new apiResponse(200, {}, "Logged out successfully"));
-});
 
 /**
  * =====================================================
@@ -253,89 +38,90 @@ export const updateProfile = asyncHandler(async (req, res) => {
   const { profilePhoto, fullName } = req.body;
   const userId = req.user?._id;
 
-  if (!userId) throw new apiError(401, "Unauthorized");
+  if (!userId) {
+    throw new apiError(401, "Unauthorized");
+  }
 
   const user = await User.findById(userId);
-  if (!user) throw new apiError(404, "User not found");
+  if (!user) {
+    throw new apiError(404, "User not found");
+  }
 
   let updatedData = {};
-  if (fullName) updatedData.fullName = fullName;
 
+  // ✅ Update name
+  if (fullName) {
+    updatedData.fullName = fullName.trim();
+  }
+
+  // ✅ Upload profile photo
   if (profilePhoto) {
     const upload = await cloudinary.uploader.upload(profilePhoto, {
-      folder: "LocalSkillHub/avatars",
+      folder: "Fixora/avatars", // better naming
     });
+
     updatedData.profilePhoto = upload.secure_url;
   }
 
-  const updatedUser = await User.findByIdAndUpdate(userId, updatedData, {
-    new: true,
-  }).select("-password -refreshToken");
-
-  return res
-    .status(200)
-    .json(new apiResponse(200, updatedUser, "Profile updated successfully"));
-});
-
-// =============================
-// 🌟 CHECK AUTH CONTROLLER
-// =============================
-export const checkAuth = asyncHandler(async (req, res) => {
-  return res.status(200).json({
-    success: true,
-    user: req.user,
-  });
-});
-
-// ===================================
-//   EMAIL VERIFICATION CONTROLLER
-// ===================================
-export const verifyEmail = asyncHandler(async (req, res) => {
-  const { token } = req.params;
-
-  const user = await User.findOne({
-    verificationToken: token,
-    verificationTokenExpiry: { $gt: Date.now() },
-  });
-
-  if (!user) {
-    throw new apiError(400, "Invalid or expired token");
+  // ❗ Prevent empty update
+  if (Object.keys(updatedData).length === 0) {
+    throw new apiError(400, "No data provided to update");
   }
 
-  // Mark user verified
-  user.isVerified = true;
-  user.verificationToken = undefined;
-  user.verificationTokenExpiry = undefined;
-
-  // Generate tokens
-  const accessToken = user.generateAccessToken();
-  const refreshToken = user.generateRefreshToken();
-
-  user.refreshToken = refreshToken;
-  await user.save({ validateBeforeSave: false });
-
-  // Set cookies
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 24 * 60 * 60 * 1000,
-  });
-
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 10 * 24 * 60 * 60 * 1000,
-  });
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    updatedData,
+    { new: true }
+  ).select("-password -refreshToken");
 
   return res.status(200).json(
-    new apiResponse(
-      200,
-      {},
-      "Email verified and logged in successfully"
-    )
+    new apiResponse(200, updatedUser, "Profile updated successfully")
   );
 });
 
+// import User from "../Models/User.js";
+// import { asyncHandler } from "../Utils/asyncHandler.js";
+// import apiError from "../Utils/apiError.js";
+// import apiResponse from "../Utils/apiResponse.js";
+// import cloudinary from "../Config/CloudinarySetup.js";
+
+
+// /**
+//  * =====================================================
+//  * 🧑 UPDATE PROFILE
+//  * =====================================================
+//  */
+// export const updateProfile = asyncHandler(async (req, res) => {
+//   const { profilePhoto, fullName } = req.body;
+//   const userId = req.user?._id;
+
+//   if (!userId) throw new apiError(401, "Unauthorized");
+
+//   const user = await User.findById(userId);
+//   if (!user) throw new apiError(404, "User not found");
+
+//   let updatedData = {};
+//   if (fullName) updatedData.fullName = fullName;
+
+//   if (profilePhoto) {
+//     const upload = await cloudinary.uploader.upload(profilePhoto, {
+//       folder: "LocalSkillHub/avatars",
+//     });
+//     updatedData.profilePhoto = upload.secure_url;
+//   }
+
+//   const updatedUser = await User.findByIdAndUpdate(userId, updatedData, {
+//     new: true,
+//   }).select("-password -refreshToken");
+
+//   return res
+//     .status(200)
+//     .json(new apiResponse(200, updatedUser, "Profile updated successfully"));
+// });
+
+// export const getProfile = asyncHandler(async (req, res) => {
+//   const userId = req.user?._id;
+//   if(!userId ) throw new apiError(401, "Un")
+// }
+// )
 

@@ -2,10 +2,13 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import cors from "cors";
-import { connectDB } from "./Utils/dbConnection.js";
+import { connectDB } from "./Config/DBConnection.js";
 import UserRoute from "./Routes/UserRoute.js";
 import ServiceRoute from "./Routes/ServiceRoute.js";
 import BookingRoute from "./Routes/BookingRoute.js";
+import AuthRoute from "./Routes/AuthRoute.js";
+import NotificationRoute from "./Routes/NotificationRoute.js";
+import passport from "./Config/Passport.js";
 
 // Load environment variables
 dotenv.config();
@@ -23,12 +26,16 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(cookieParser());
 app.use(express.static("public"));
+app.use(passport.initialize());
+// app.use(passport.session());
 
 // Routes
-app.use("/users", UserRoute);
-app.use("/services" , ServiceRoute);
-app.use("/bookings", BookingRoute);
-
+app.use("/auth", AuthRoute);
+app.use("/user", UserRoute);
+app.use("/service" , ServiceRoute);
+app.use("/booking", BookingRoute);
+app.use("/notification", NotificationRoute);
+app.use("/api/auth", AuthRoute);
 // Connect to DB first, then start server
 connectDB()
   .then(() => {

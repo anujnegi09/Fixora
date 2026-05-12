@@ -20,7 +20,7 @@ const router = express.Router();
  */
 
 // ✅ Create booking
-router.post("/", verifyJWT, createBooking);
+router.post("/create", verifyJWT, createBooking);
 
 // ✅ User-specific routes (MUST come before :id)
 router.get("/my-bookings", verifyJWT, getMyBookings);
@@ -36,6 +36,6 @@ router.get("/:id", verifyJWT, getBookingById);
 router.patch("/:id", verifyJWT, updateBooking);
 
 // ✅ Delete booking
-router.delete("/:id", verifyJWT, deleteBooking);
+router.delete("/delete/:id", verifyJWT, deleteBooking);
 
 export default router;

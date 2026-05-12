@@ -4,6 +4,8 @@ import Service from "../Models/Service.js";
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";
+import { getIO } from "../Config/Socket.js";
+import Notification from "../Models/Notification.js";
 
 /**
  * @desc Create a booking
@@ -41,6 +43,24 @@ export const createBooking = asyncHandler(async (req, res) => {
     serviceOwner: service.userId,
     bookingDate,
     notes
+  });
+
+  // 💾 Save notification
+  await Notification.create({
+    userId: serviceOwner,
+    message: "📢 New booking request received",
+    bookingId: booking._id
+  });
+
+  // ⚡ Real-time
+  const io = getIO();
+  io.to(serviceOwner.toString()).emit("newNotification", {
+    message: "📢 New booking request received",
+  });
+
+  io.to(serviceOwner.toString()).emit("newBooking", {
+    message: "📢 New booking request!",
+    booking,
   });
 
   res.status(201).json(
@@ -197,5 +217,61 @@ export const getBookingsForMyServices = asyncHandler(async (req, res) => {
 
   res.status(200).json(
     new apiResponse(200, bookings, "Bookings for your services fetched successfully")
+  );
+});
+
+
+export const updateBookingStatus = asyncHandler(async (req, res) => {
+  const { bookingId } = req.params;
+  const { status } = req.body;
+  const userId = req.user._id;
+
+  const allowedStatuses = ["confirmed", "rejected", "cancelled", "completed"];
+
+  if (!allowedStatuses.includes(status)) {
+    throw new apiError(400, "Invalid status value");
+  }
+
+  const booking = await Booking.findById(bookingId);
+
+  if (!booking) {
+    throw new apiError(404, "Booking not found");
+  }
+
+  // ✅ Only service owner can update
+  if (booking.serviceOwner.toString() !== userId.toString()) {
+    throw new apiError(403, "Not authorized");
+  }
+
+  // ✅ Prevent invalid updates
+  if (["completed", "cancelled", "rejected"].includes(booking.status)) {
+    throw new apiError(400, "Booking already finalized");
+  }
+
+  // ✅ Update
+  booking.status = status;
+  booking.isRead = true;
+  await booking.save();
+
+  // 🔥 Socket notification
+  const io = getIO();
+
+  io.to(booking.bookedBy.toString()).emit("bookingUpdate", {
+    message: `Your booking has been ${status}`,
+    booking,
+  });
+
+  await Notification.create({
+    userId: booking.bookedBy,
+    message: `Your booking was ${status}`,
+    bookingId: booking._id
+  });
+
+  io.to(booking.bookedBy.toString()).emit("newNotification", {
+    message: `Your booking was ${status}`,
+  });
+
+  return res.status(200).json(
+    new apiResponse(200, booking, `Booking ${status} successfully`)
   );
 });

@@ -6,21 +6,23 @@ const BookingSchema = new mongoose.Schema(
     bookedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
+      index : true // for faster lookups when user wants to see their bookings
     },
 
     // Service being booked
     serviceId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Service",
-      required: true
+      required: true,
     },
 
     // Owner of the service (creator)
     serviceOwner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
+      index : true // for faster lookups when service owner wants to see bookings for their services
     },
 
     // Date & time of booking
@@ -28,17 +30,27 @@ const BookingSchema = new mongoose.Schema(
       type: Date,
       required: true
     },
-
+    price: {
+      type: Number
+    },
     // Booking status
     status: {
       type: String,
-      enum: ["pending", "confirmed", "completed", "cancelled"],
+      enum: ["pending","confirmed","completed",
+          "cancelled",   // user cancelled
+          "rejected"     // owner rejected
+        ],
       default: "pending"
     },
     // additional notes 
     notes: {
-      type: String
-    }
+      type: String,
+      trim : true
+    },
+    isRead: {
+      type: Boolean,
+      default: false
+    },
   },
   { timestamps: true }
 );

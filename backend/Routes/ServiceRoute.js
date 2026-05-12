@@ -30,7 +30,7 @@ import { verifyJWT } from "../Middlewares/authMiddleware.js";
 const router = express.Router();
 
 // Create service
-router.post("/", verifyJWT, createService);
+router.post("/create", verifyJWT, createService);
 
 // Get all services
 router.get("/", getAllServices);
@@ -39,9 +39,9 @@ router.get("/", getAllServices);
 router.get("/:id", getServiceById);
 
 // Update service
-router.patch("/:id", verifyJWT, updateService);
+router.patch("/update/:id", verifyJWT, updateService);
 
 // Delete service
-router.delete("/:id", verifyJWT, deleteService);
+router.delete("/delete/:id", verifyJWT, deleteService);
 
 export default router;
