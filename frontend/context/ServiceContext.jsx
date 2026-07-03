@@ -93,7 +93,7 @@ export const ServiceProvider = ({ children }) => {
   const fetchServices = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get("/api/service/services");
+      const { data } = await axios.get("/services");
       if (data.success) {
         setServices(data.data);
       }
@@ -109,7 +109,7 @@ export const ServiceProvider = ({ children }) => {
    * ============================== */
   const createService = async (formData) => {
     try {
-      const { data } = await axios.post("/api/service/create-service", formData);
+      const { data } = await axios.post("/services/create", formData);
       if (data.success) {
         toast.success("Service created successfully");
         fetchServices(); // Refresh list
@@ -125,7 +125,7 @@ export const ServiceProvider = ({ children }) => {
   const getServiceById = async (id) => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`/api/service/${id}`);
+      const { data } = await axios.get(`/services/${id}`);
       if (data.success) {
         setSingleService(data.data);
       }
@@ -141,7 +141,7 @@ export const ServiceProvider = ({ children }) => {
    * ============================== */
   const updateService = async (id, formData) => {
     try {
-      const { data } = await axios.put(`/api/service/${id}`, formData);
+      const { data } = await axios.put(`/services/update/${id}`, formData);
       if (data.success) {
         toast.success("Service updated");
         fetchServices();
@@ -156,7 +156,7 @@ export const ServiceProvider = ({ children }) => {
    * ============================== */
   const deleteService = async (id) => {
     try {
-      const { data } = await axios.delete(`/api/service/${id}`);
+      const { data } = await axios.delete(`/delete/services/${id}`);
       if (data.success) {
         toast.success("Service deleted");
         fetchServices();

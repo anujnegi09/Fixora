@@ -1,229 +1,246 @@
-// import React, { useContext, useState } from "react";
-// import ProjectLogo from "../assets/Logo.png";
-// import {Link } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { NavLink, Link } from "react-router-dom";
+import {
+  FiMenu,
+  FiX,
+  FiBell,
+  FiMessageSquare,
+  FiUser,
+  FiLogOut,
+} from "react-icons/fi";
 
-
-
-// import { useLocation } from "react-router-dom";
-
-// // import { useAuth } from "../../context/AuthContext";
-
-// const NavBar = () => {
-//   const location = useLocation();
-//   const navigate = useNavigate();
-//     const { isLoggedIn, login, logout } = useAuth();
-//   return (
-//     <div>
-//         <nav className="z-[100] fixed w-full bg-white shadow-md px-6 py-4 flex justify-between items-center">
-//       {/* Logo */}
-//       <div className="flex justify-center items-center ">
-//         <img
-//         src={ProjectLogo}
-//         alt="Fixora Logo"
-//         className="h-10 w-10 rounded-full pr-2 pt-2 object-contain "
-//       />
-//       <h1 className="text-3xl font-bold text-blue-600">Fixora</h1>
-//       </div>
-
-//       {/* Links */}
-//       <div className="flex items-center gap-6">
-//         <Link
-//           to="/"
-//           className={`cursor-pointer ${
-//           location.pathname === "/"
-//             ? "text-blue-600 underline underline-offset-6 decoration-3"
-//             : "text-gray-700 hover:text-blue-600"
-//           }`}
-//         > 
-//           Home
-//         </Link>
-//         {/* Home */}
-//       <Link
-//         to="/Services"
-//         className={`cursor-pointer ${
-//           location.pathname === "/Services"
-//             ? "text-blue-600 underline underline-offset-6 decoration-3"
-//             : "text-gray-700 hover:text-blue-600"
-//         }`}
-//       >
-//         Services
-//       </Link>
-
-//       {/* About */}
-//       <Link
-//         to="/About"
-//         className={`cursor-pointer ${
-//           location.pathname === "/About"
-//             ? "text-blue-600 underline underline-offset-6 decoration-3"
-//             : "text-gray-700 hover:text-blue-600"
-//         }`}
-//       >
-//         About
-//       </Link>
-
-//       {/* Create Service */}
-//       <Link
-//         to="/ServiceProviderPage"
-//         className={`cursor-pointer ${
-//           location.pathname === "/ServiceProviderPage"
-//             ? "text-blue-600 underline underline-offset-6 decoration-3"
-//             : "text-gray-700 hover:text-blue-600"
-//         }`}
-//       >
-//         Create Service
-//       </Link>
-
-//         {/* Auth Buttons */}
-//         {!isLoggedIn ? (
-//           <button
-//   onClick={() => {
-    
-//       navigate("/LoginPage");
-    
-//   }}
-//   className={`px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition cursor-pointer ${
-//     location.pathname === "/LoginPage" ? "opacity-50 pointer-events-none" : ""
-//   }`}
-// >
-//   Signup
-// </button>
-
-//         ) : (
-//           <button
-//             onClick={logout}
-//             className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-//           >
-//             Logout
-//           </button>
-//         )}
-//       </div>
-//     </nav>
-//     </div>
-//   )
-// }
-
-// export default NavBar
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// {/* <a onClick={() => {
-//         if (location.pathname !== "/") {
-//           navigate("/");
-//         }
-//       }} className={`cursor-pointer ${
-//         location.pathname === "/" 
-//           ? "text-blue-600 underline underline-offset-6 decoration-3" 
-//           : "text-gray-700 hover:text-blue-600"
-//       }`}>Home</a> */}
-
-
-import React, { useContext } from "react";
 import ProjectLogo from "../assets/Logo.png";
-import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
-const NavBar = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { authUser, logout } = useContext(AuthContext); // get authUser and logout
+const Navbar = () => {
+  const { authUser, logout } = useContext(AuthContext);
+  const [mobileMenu, setMobileMenu] = useState(false);
+  const [profileMenu, setProfileMenu] = useState(false);
+
+  const navLinks = [
+    {
+      name: "Home",
+      path: "/",
+    },
+    {
+      name: "Services",
+      path: "/services",
+    },
+    {
+      name: "About",
+      path: "/about",
+    },
+  ];
 
   return (
-    <div>
-      <nav className="z-[100] fixed w-full bg-white shadow-md px-6 py-4 flex justify-between items-center">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        
         {/* Logo */}
-        <div className="flex justify-center items-center">
+        <Link to="/" className="flex items-center gap-2">
           <img
             src={ProjectLogo}
             alt="Fixora Logo"
-            className="h-10 w-10 rounded-full pr-2 pt-2 object-contain"
+            className="w-10 h-10 object-contain"
           />
-          <h1 className="text-3xl font-bold text-blue-600">Fixora</h1>
+          <h1 className="text-2xl font-bold text-blue-600">
+            Fixora
+          </h1>
+        </Link>
+
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.path}
+              to={link.path}
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-600 font-semibold"
+                  : "text-gray-700 hover:text-blue-600 transition"
+              }
+            >
+              {link.name}
+            </NavLink>
+          ))}
         </div>
 
-        {/* Links */}
-        <div className="flex items-center gap-6">
-          <Link
-            to="/"
-            className={`cursor-pointer ${
-              location.pathname === "/"
-                ? "text-blue-600 underline underline-offset-6 decoration-3"
-                : "text-gray-700 hover:text-blue-600"
-            }`}
-          >
-            Home
-          </Link>
-
-          <Link
-            to="/Services"
-            className={`cursor-pointer ${
-              location.pathname === "/Services"
-                ? "text-blue-600 underline underline-offset-6 decoration-3"
-                : "text-gray-700 hover:text-blue-600"
-            }`}
-          >
-            Services
-          </Link>
-
-          <Link
-            to="/About"
-            className={`cursor-pointer ${
-              location.pathname === "/About"
-                ? "text-blue-600 underline underline-offset-6 decoration-3"
-                : "text-gray-700 hover:text-blue-600"
-            }`}
-          >
-            About
-          </Link>
-
-          <Link
-            to="/ServiceProviderPage"
-            className={`cursor-pointer ${
-              location.pathname === "/ServiceProviderPage"
-                ? "text-blue-600 underline underline-offset-6 decoration-3"
-                : "text-gray-700 hover:text-blue-600"
-            }`}
-          >
-            Create Service
-          </Link>
-
-          {/* Auth Buttons */}
+        {/* Right Section */}
+        <div className="hidden md:flex items-center gap-4">
           {!authUser ? (
-            <button
-              onClick={() => navigate("/LoginPage")}
-              className={`px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition ${
-                location.pathname === "/LoginPage" ? "opacity-50 pointer-events-none" : ""
-              }`}
-            >
-              Signup
-            </button>
+            <>
+              <Link to="/auth" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                  Get Started
+              </Link>
+            </>
           ) : (
-            <button
-              onClick={logout}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-            >
-              Logout
-            </button>
+            <>
+              {/* Create Service */}
+              <Link
+                to="/create-service"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+              >
+                Create Service
+              </Link>
+
+              {/* Chat */}
+              <Link
+                to="/chat"
+                className="text-gray-700 hover:text-blue-600"
+              >
+                <FiMessageSquare size={22} />
+              </Link>
+
+              {/* Notification */}
+              <Link
+                to="/notifications"
+                className="relative text-gray-700 hover:text-blue-600"
+              >
+                <FiBell size={22} />
+
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
+                  2
+                </span>
+              </Link>
+
+              {/* Profile Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setProfileMenu(!profileMenu)}
+                  className="flex items-center gap-2"
+                >
+                  <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                    <FiUser />
+                  </div>
+                </button>
+
+                {profileMenu && (
+                  <div className="absolute right-0 mt-3 w-52 bg-white shadow-lg border rounded-xl overflow-hidden">
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-3 hover:bg-gray-100"
+                    >
+                      Profile
+                    </Link>
+
+                    <Link
+                      to="/my-services"
+                      className="block px-4 py-3 hover:bg-gray-100"
+                    >
+                      My Services
+                    </Link>
+
+                    <Link
+                      to="/my-bookings"
+                      className="block px-4 py-3 hover:bg-gray-100"
+                    >
+                      My Bookings
+                    </Link>
+
+                    <button
+                      onClick={logout}
+                      className="w-full text-left px-4 py-3 hover:bg-red-50 text-red-600 flex items-center gap-2"
+                    >
+                      <FiLogOut />
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            </>
           )}
         </div>
-      </nav>
-    </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden"
+          onClick={() => setMobileMenu(!mobileMenu)}
+        >
+          {mobileMenu ? (
+            <FiX size={28} />
+          ) : (
+            <FiMenu size={28} />
+          )}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      {mobileMenu && (
+        <div className="md:hidden bg-white border-t border-gray-200 px-6 py-4 flex flex-col gap-4">
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.path}
+              to={link.path}
+              onClick={() => setMobileMenu(false)}
+              className={({ isActive }) =>
+                isActive
+                  ? "text-blue-600 font-semibold"
+                  : "text-gray-700"
+              }
+            >
+              {link.name}
+            </NavLink>
+          ))}
+
+          {!authUser ? (
+            <>
+              <Link
+                to="/login"
+                onClick={() => setMobileMenu(false)}
+              >
+                Login
+              </Link>
+
+              <Link
+                to="/signup"
+                onClick={() => setMobileMenu(false)}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg text-center"
+              >
+                Signup
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/create-service"
+                onClick={() => setMobileMenu(false)}
+              >
+                Create Service
+              </Link>
+
+              <Link
+                to="/profile"
+                onClick={() => setMobileMenu(false)}
+              >
+                Profile
+              </Link>
+
+              <Link
+                to="/my-services"
+                onClick={() => setMobileMenu(false)}
+              >
+                My Services
+              </Link>
+
+              <Link
+                to="/my-bookings"
+                onClick={() => setMobileMenu(false)}
+              >
+                My Bookings
+              </Link>
+
+              <button
+                onClick={logout}
+                className="text-left text-red-600"
+              >
+                Logout
+              </button>
+            </>
+          )}
+        </div>
+      )}
+    </nav>
   );
 };
 
-export default NavBar;
+export default Navbar;

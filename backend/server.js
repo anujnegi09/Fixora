@@ -69,17 +69,17 @@ app.use(passport.initialize());
 // ================================
 app.use("/auth", AuthRoute);
 
-app.use("/api/auth", AuthRoute);
+// app.use("/api/auth", AuthRoute);
 
 app.use("/user", UserRoute);
 
-app.use("/service", ServiceRoute);
+app.use("/services", ServiceRoute);
 
-app.use("/booking", BookingRoute);
+app.use("/bookings", BookingRoute);
 
-app.use("/notification", NotificationRoute);
+app.use("/notifications", NotificationRoute);
 
-app.use("/api/chat", ChatRoute);
+app.use("/chats", ChatRoute);
 
 
 // ================================

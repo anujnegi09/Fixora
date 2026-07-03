@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
   // Check Auth
   const checkAuth = async () => {
     try {
-      const { data } = await axios.get("/api/users/check-auth");
+      const { data } = await axios.get("/user/check-auth");
       if (data.success) {
         setAuthUser(data.user);
       }
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
   // Login
   const login = async (credentials) => {
     try {
-      const { data } = await axios.post("/api/users/login", credentials);
+      const { data } = await axios.post("/user/login", credentials);
       if (data.success) {
         setAuthUser(data.user);
         toast.success("Logged in successfully");
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
   // Logout
   const logout = async () => {
     try {
-      const { data } = await axios.post("/api/users/logout");
+      const { data } = await axios.post("/user/logout");
       if (data.success) {
         setAuthUser(null);
         toast.success("Logged out successfully");
@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
   // Update Profile
   const updateProfile = async (formData) => {
     try {
-      const { data } = await axios.put("/api/users/update-profile", formData);
+      const { data } = await axios.put("/user/update-profile", formData);
       if (data.success) {
         setAuthUser(data.user);
         toast.success("Profile updated");
@@ -79,3 +79,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+

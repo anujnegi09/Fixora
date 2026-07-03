@@ -63,7 +63,12 @@ const ServiceSchema = new mongoose.Schema({
   price : {
     type : Number,
     required : true,
-  }
+  },
+  // ---- use for subscription 
+  isVisible:{
+        type:Boolean,
+        default:false,
+    }
 
 }, { timestamps: true });
 
