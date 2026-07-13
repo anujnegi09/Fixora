@@ -1,10 +1,11 @@
 import bcrypt from "bcryptjs";
-import User from "../Models/User.js";
+import User from "../Model/User.js";
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";
 import generateToken from "../Utils/generateToken.js";
 import { transporter } from "../Config/Mail.js";
+import crypto from "crypto";
 
 /**
  * =====================================================
@@ -253,6 +254,229 @@ export const logout = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, {}, "Logged out successfully"));
 });
 
+
+// =============================
+// CHANGE PASSWORD CONTROLLER
+// =============================
+
+export const changePassword = asyncHandler(async (req, res) => {
+
+    const {
+        currentPassword,
+        newPassword,
+        confirmPassword
+    } = req.body;
+
+    if (
+        !currentPassword ||
+        !newPassword ||
+        !confirmPassword
+    ) {
+        throw new apiError(400, "All fields are required");
+    }
+
+    if (newPassword !== confirmPassword) {
+        throw new apiError(
+            400,
+            "Passwords do not match"
+        );
+    }
+
+    if (newPassword.length < 8) {
+        throw new apiError(
+            400,
+            "Password must be at least 8 characters"
+        );
+    }
+
+    const user = await User.findById(req.user._id);
+
+    const isMatch = await bcrypt.compare(
+        currentPassword,
+        user.password
+    );
+
+    if (!isMatch) {
+        throw new apiError(
+            400,
+            "Current password is incorrect"
+        );
+    }
+
+    if (currentPassword === newPassword) {
+        throw new apiError(
+            400,
+            "New password must be different"
+        );
+    }
+
+    const hashedPassword = await bcrypt.hash(
+        newPassword,
+        10
+    );
+
+    user.password = hashedPassword;
+
+    user.refreshToken = null;
+
+    await user.save();
+
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+
+    return res.status(200).json({
+        success: true,
+        message:
+            "Password changed successfully. Please login again."
+    });
+
+});
+
+
+// =============================
+// forget PASSWORD CONTROLLER
+// =============================
+
+export const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    throw new apiError(400, "Email is required");
+  }
+
+  const user = await User.findOne({ email });
+
+  // Don't reveal whether email exists
+  if (!user) {
+    return res.status(200).json(
+      new apiResponse(
+        200,
+        {},
+        "If an account with this email exists, a reset link has been sent."
+      )
+    );
+  }
+
+  // Google users don't have local passwords
+  if (user.authProvider === "google") {
+    throw new apiError(
+      400,
+      "This account uses Google Sign-In."
+    );
+  }
+
+  // Generate secure token
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  user.passwordResetToken = resetToken;
+  user.passwordResetTokenExpiry =
+    Date.now() + 15 * 60 * 1000; // 15 minutes
+
+  await user.save({ validateBeforeSave: false });
+
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: user.email,
+    subject: "Reset Your Password",
+    html: `
+      <h2>Reset Password</h2>
+
+      <p>Hello ${user.fullName},</p>
+
+      <p>You requested to reset your password.</p>
+
+      <a href="${resetUrl}">
+        Reset Password
+      </a>
+
+      <p>This link expires in 15 minutes.</p>
+
+      <p>If you didn't request this, ignore this email.</p>
+    `,
+  });
+
+  return res.status(200).json(
+    new apiResponse(
+      200,
+      {},
+      "Password reset link sent successfully."
+    )
+  );
+});
+
+// =============================
+// RESET PASSWORD CONTROLLER (after forgot password)
+// =============================
+
+export const resetPassword = asyncHandler(async (req, res) => {
+  const { token } = req.params;
+  const { newPassword, confirmPassword } = req.body;
+
+  // Validate input
+  if (!newPassword || !confirmPassword) {
+    throw new apiError(400, "All fields are required");
+  }
+
+  if (newPassword !== confirmPassword) {
+    throw new apiError(400, "Passwords do not match");
+  }
+
+  if (newPassword.length < 8) {
+    throw new apiError(
+      400,
+      "Password must be at least 8 characters long"
+    );
+  }
+
+  // Find user with valid token
+  const user = await User.findOne({
+    passwordResetToken: token,
+    passwordResetTokenExpiry: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    throw new apiError(400, "Invalid or expired reset token");
+  }
+
+  // Hash new password
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  // Update password
+  user.password = hashedPassword;
+
+  // Remove reset token
+  user.passwordResetToken = undefined;
+  user.passwordResetTokenExpiry = undefined;
+
+  // Logout from all devices
+  user.refreshToken = null;
+
+  await user.save({ validateBeforeSave: false });
+
+  // Clear cookies
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  return res.status(200).json(
+    new apiResponse(
+      200,
+      {},
+      "Password reset successfully. Please login again."
+    )
+  );
+});
+
 // =============================
 // 🌟 CHECK AUTH CONTROLLER
 // =============================
@@ -318,7 +542,7 @@ export const verifyEmail = asyncHandler(async (req, res) => {
  * ==========================================
  * GOOGLE CALLBACK CONTROLLER
  * ==========================================
- */
+**/
 
 export const googleCallback = async (req, res) => {
 

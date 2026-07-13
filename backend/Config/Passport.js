@@ -2,6 +2,7 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import User from "../Models/User.js";
 import dotenc from "dotenv";
+import { logger } from "./Logger.js";
 
 dotenc.config();
 
@@ -45,6 +46,7 @@ passport.use(
         return done(null, user);
 
       } catch (error) {
+        logger.error("Error in Google Strategy:", error);
         return done(error, null);
       }
     }

@@ -6,15 +6,17 @@ import http from "http";
 
 import { connectDB } from "./Config/DBConnection.js";
 import { initSocket } from "./Config/Socket.js";
+import { logger } from "./Config/Logger.js";
+import { subscriptionCron } from "./Cron/SubscriptionCron.js";
+import passport from "./Config/Passport.js"; 
 
-import passport from "./Config/Passport.js";
-
-import UserRoute from "./Routes/UserRoute.js";
-import ServiceRoute from "./Routes/ServiceRoute.js";
-import BookingRoute from "./Routes/BookingRoute.js";
-import AuthRoute from "./Routes/AuthRoute.js";
-import NotificationRoute from "./Routes/NotificationRoute.js";
-import ChatRoute from "./Routes/ChatRoute.js";
+import UserRoute from "./Route/UserRoute.js";
+import ServiceRoute from "./Route/ServiceRoute.js";
+import BookingRoute from "./Route/BookingRoute.js";
+import AuthRoute from "./Route/AuthRoute.js";
+import NotificationRoute from "./Route/NotificationRoute.js";
+import ChatRoute from "./Route/ChatRoute.js";
+import SubscriptionRoute from "./Route/SubscriptionRoute.js";
 
 // ================================
 // LOAD ENV
@@ -47,6 +49,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use("/subscription/webhook", express.raw({ type: "application/json" }));
 
 app.use(express.json({ limit: "10mb" }));
 
@@ -81,16 +85,22 @@ app.use("/notifications", NotificationRoute);
 
 app.use("/chats", ChatRoute);
 
+app.use("/subscription", SubscriptionRoute);
+
 
 // ================================
 // DATABASE CONNECTION
 // ================================
 connectDB()
+// ================================
+// START CRON JOB AND SERVER
+// ================================
+subscriptionCron.start()
   .then(() => {
 
     server.listen(PORT, () => {
 
-      console.log(`🚀 Server running on port ${PORT}`);
+      logger.info(`🚀 Server running on port ${PORT}`);
 
     });
 
@@ -98,7 +108,7 @@ connectDB()
 
   .catch((err) => {
 
-    console.error(
+    logger.error(
       "❌ Failed to connect to database:",
       err
     );

@@ -16,13 +16,27 @@ const notificationSchema = new mongoose.Schema(
 
     type: {
       type: String,
-      enum: ["booking", "system"],
-      default: "booking"
+      enum: [
+        "booking_request",
+        "booking_confirmed",
+        "booking_rejected",
+        "booking_cancelled",
+        "new_message",
+        "new_review",
+        "subscription",
+        "payment",
+        "system"
+      ],
+      required: true
     },
 
     isRead: {
       type: Boolean,
       default: false
+    },
+    serviceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Service"
     },
 
     bookingId: {

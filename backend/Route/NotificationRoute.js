@@ -3,7 +3,7 @@ import { getNotifications,
     markAsRead , 
     markAllAsRead,
     deleteNotification} from "../Controller/NotificationController.js";
-import { verifyJWT} from "../Middlewares/authMiddleware.js";
+import { verifyJWT } from "../Middleware/authMiddleware.js";
 
 const router = express.Router();
 

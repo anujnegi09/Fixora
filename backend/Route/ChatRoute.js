@@ -7,7 +7,7 @@ import {
   getChatUsers,
 } from "../Controller/ChatContoller.js";
 
-import { verifyJWT } from "../Middlewares/authMiddleware.js";
+import { verifyJWT } from "../Middleware/authMiddleware.js";
 
 const router = express.Router();
 

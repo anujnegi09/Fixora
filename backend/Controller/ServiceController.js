@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Service from "../Models/Service.js";
+import Service from "../Model/Service.js";
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";
@@ -47,7 +47,7 @@ export const getAllServices = asyncHandler(async (req, res) => {
 
   const skip = (page - 1) * limit;
 
-  const services = await Service.find(filter)
+  const services = await Service.find({ ...filter, isVisible : true})
     .populate("userId", "fullName email")
     .skip(skip)
     .limit(parseInt(limit))
@@ -76,7 +76,7 @@ export const getServiceById = asyncHandler(async (req, res) => {
     throw new apiError(400, "Invalid service ID");
   }
 
-  const service = await Service.findById(id)
+  const service = await Service.findById({ _id: id, isVisible: true })
     .populate("userId", "fullName email")
     .lean();
 
@@ -100,7 +100,7 @@ export const updateService = asyncHandler(async (req, res) => {
     throw new apiError(400, "Invalid service ID");
   }
 
-  const service = await Service.findById(id);
+  const service = await Service.findOne({ _id : id, isVisible : true});
   if (!service) {
     throw new apiError(404, "Service not found");
   }

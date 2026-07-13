@@ -7,12 +7,13 @@ import {
   refreshAccessToken,
   checkAuth,
   verifyEmail,
+  changePassword
 } from "../Controller/AuthController.js";
 import {
   googleCallback,
 } from "../Controller/AuthController.js";
 
-import { verifyJWT } from "../Middlewares/authMiddleware.js";
+import { verifyJWT } from "../Middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -72,6 +73,8 @@ router.get(
 // Check logged in user
 router.get("/check-auth", verifyJWT, checkAuth);
 
+// change password 
+router.put("/change-password", verifyJWT, changePassword);
 // Logout
 router.post("/logout", verifyJWT, logout);
 

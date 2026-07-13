@@ -1,4 +1,4 @@
-import Notification from "../Models/Notification.js";
+import Notification from "../Model/Notification.js";
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";
@@ -11,11 +11,45 @@ import apiResponse from "../Utils/apiResponse.js";
 export const getNotifications = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 
-  const notifications = await Notification.find({ userId })
-    .sort({ createdAt: -1 });
+  const { cursor, limit = 20 } = req.query;
+
+  // Base query
+  const query = {
+    userId,
+  };
+
+  // If cursor exists, fetch older notifications
+  if (cursor) {
+    query._id = { $lt: cursor };
+  }
+
+  const notifications = await Notification.find(query)
+    .sort({ _id: -1 })
+    .limit(Number(limit) + 1)
+    .lean();
+
+  // Determine if more notifications exist
+  const hasMore = notifications.length > Number(limit);
+
+  if (hasMore) {
+    notifications.pop();
+  }
+
+  // Next cursor
+  const nextCursor = hasMore
+    ? notifications[notifications.length - 1]._id
+    : null;
 
   return res.status(200).json(
-    new apiResponse(200, notifications, "Notifications fetched successfully")
+    new apiResponse(
+      200,
+      {
+        notifications,
+        nextCursor,
+        hasMore,
+      },
+      "Notifications fetched successfully"
+    )
   );
 });
 

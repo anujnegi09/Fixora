@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
-import Booking from "../Models/Booking.js";
-import Service from "../Models/Service.js";
+import Booking from "../Model/Booking.js";
+import Service from "../Model/Service.js";
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";
 import { getIO } from "../Config/Socket.js";
 import Notification from "../Models/Notification.js";
+import { sendNotification } from "../Service/Notification.js";
 
 /**
  * @desc Create a booking
