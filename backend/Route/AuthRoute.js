@@ -7,11 +7,12 @@ import {
   refreshAccessToken,
   checkAuth,
   verifyEmail,
-  changePassword
+  changePassword,
+  forgotPassword,
+  resetPassword,
+  googleCallback
 } from "../Controller/AuthController.js";
-import {
-  googleCallback,
-} from "../Controller/AuthController.js";
+
 
 import { verifyJWT } from "../Middleware/authMiddleware.js";
 
@@ -34,6 +35,12 @@ router.post("/refresh-token", refreshAccessToken);
 
 // Email verification
 router.get("/verify-email/:token", verifyEmail);
+
+// Send password reset email
+router.post("/forgot-password", forgotPassword);
+
+// Reset password using token from email
+router.post("/reset-password/:token", resetPassword);
 
 
 /**

@@ -1,10 +1,11 @@
-import Subscription from "../Model/Subscription.js";
+import Subscription from "../Models/Subscription.js";
 import Razorpay from "../Config/razorpay.js";
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";
 import crypto from "crypto";
-import Service from "../Model/Service.js";
+import Service from "../Models/Service.js";
+import {sendNotification} from "../Services/NotificationService.js";
 
 
 export const createSubscription = asyncHandler(async (req,res)=>{
@@ -26,8 +27,10 @@ export const createSubscription = asyncHandler(async (req,res)=>{
     throw new apiError(500, "Subscription plan is not configured");
     }
 //create razorpay subscription
+
+    let razorpaySubscription;
     try{
-        const razorpaySubscription = await Razorpay.subscriptions.create({
+        razorpaySubscription = await Razorpay.subscriptions.create({
         plan_id : planId,
         customer_notify : 1,
         total_count : plan === "monthly" ? 12 : 1,    
@@ -59,6 +62,8 @@ export const createSubscription = asyncHandler(async (req,res)=>{
             autoRenew : true,
         })
     }
+
+    
 
     const message = existingSubscription ? "Subscription updated successfully" : "Subscription created successfully"
     return res.status(201).json(new apiResponse(201,
@@ -121,7 +126,7 @@ export const verifySubscriptionPayment = asyncHandler(async (req, res) => {
     subscription.razorpayPaymentId = razorpay_payment_id;
     subscription.startDate = startDate;
     subscription.expiryDate = expiryDate;
-
+    subscription.currency = "INR";
     await subscription.save();
 
     // Show all services
@@ -184,8 +189,6 @@ export const cancelSubscription = asyncHandler(async (req, res) => {
     );
 
     // Update MongoDB
-    subscription.status = "cancelled";
-    subscription.expiryDate = new Date();
     subscription.autoRenew = false;
 
     await subscription.save();
@@ -210,7 +213,6 @@ export const cancelSubscription = asyncHandler(async (req, res) => {
 });
 
 
-
 export const handleWebhook = asyncHandler(async (req, res) => {
 
     const webhookSignature = req.headers["x-razorpay-signature"];
@@ -231,6 +233,9 @@ export const handleWebhook = asyncHandler(async (req, res) => {
 
     switch (event.event) {
 
+        // ============================
+        // SUBSCRIPTION ACTIVATED
+        // ============================
         case "subscription.activated": {
 
             const razorpaySubscriptionId =
@@ -243,6 +248,11 @@ export const handleWebhook = asyncHandler(async (req, res) => {
             if (subscription) {
 
                 subscription.status = "active";
+
+                // Save activation date if not already saved
+                if (!subscription.startDate) {
+                    subscription.startDate = new Date();
+                }
 
                 await subscription.save();
 
@@ -259,6 +269,9 @@ export const handleWebhook = asyncHandler(async (req, res) => {
             break;
         }
 
+        // ============================
+        // AUTO RENEW CANCELLED
+        // ============================
         case "subscription.cancelled": {
 
             const razorpaySubscriptionId =
@@ -270,7 +283,37 @@ export const handleWebhook = asyncHandler(async (req, res) => {
 
             if (subscription) {
 
-                subscription.status = "cancelled";
+                // User cancelled future renewals
+                // DO NOT expire immediately
+
+                subscription.autoRenew = false;
+
+                await subscription.save();
+
+                console.log(
+                    `Auto renewal cancelled for user ${subscription.userId}`
+                );
+            }
+
+            break;
+        }
+
+        // ============================
+        // SUBSCRIPTION ENDED
+        // ============================
+        case "subscription.completed": {
+
+            const razorpaySubscriptionId =
+                event.payload.subscription.entity.id;
+
+            const subscription = await Subscription.findOne({
+                razorpaySubscriptionId,
+            });
+
+            if (subscription) {
+
+                subscription.status = "expired";
+
                 subscription.autoRenew = false;
 
                 await subscription.save();
@@ -288,34 +331,9 @@ export const handleWebhook = asyncHandler(async (req, res) => {
             break;
         }
 
-        case "subscription.completed": {
-
-            const razorpaySubscriptionId =
-                event.payload.subscription.entity.id;
-
-            const subscription = await Subscription.findOne({
-                razorpaySubscriptionId,
-            });
-
-            if (subscription) {
-
-                subscription.status = "expired";
-
-                await subscription.save();
-
-                await Service.updateMany(
-                    { userId: subscription.userId },
-                    {
-                        $set: {
-                            isVisible: false,
-                        },
-                    }
-                );
-            }
-
-            break;
-        }
-
+        // ============================
+        // PAYMENT FAILED
+        // ============================
         case "payment.failed": {
 
             console.log("Subscription payment failed.");
@@ -330,5 +348,4 @@ export const handleWebhook = asyncHandler(async (req, res) => {
     return res.status(200).json({
         success: true,
     });
-
 });

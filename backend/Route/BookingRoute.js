@@ -1,12 +1,15 @@
 import express from "express";
 import {
   createBooking,
-  getAllBookings,
   getBookingById,
-  updateBooking,
+  updateBookingDetails,
   deleteBooking,
   getMyBookings,
-  getBookingsForMyServices
+  getBookingsForMyServices,
+  updateBookingStatus,
+  requestCompletion,
+  getCompletionOTP,
+  verifyCompletionOTP
 } from "../Controller/BookingController.js";
 
 import { verifyJWT } from "../Middleware/authMiddleware.js";
@@ -26,16 +29,21 @@ router.post("/create", verifyJWT, createBooking);
 router.get("/my-bookings", verifyJWT, getMyBookings);
 router.get("/my-service-bookings", verifyJWT, getBookingsForMyServices);
 
-// ✅ Get all bookings
-router.get("/", verifyJWT, getAllBookings);
-
 // ✅ Get booking by ID
 router.get("/:id", verifyJWT, getBookingById);
 
 // ✅ Update booking
-router.patch("/:id", verifyJWT, updateBooking);
+router.patch("/:id", verifyJWT, updateBookingDetails);
 
 // ✅ Delete booking
 router.delete("/delete/:id", verifyJWT, deleteBooking);
+
+router.patch("/:id/update-booking-status", verifyJWT, updateBookingStatus);
+
+router.patch("/:bookingId/request-completion",verifyJWT,requestCompletion);
+
+router.get("/:bookingId/completion-otp",  verifyJWT,getCompletionOTP);
+
+router.patch( "/:bookingId/verify-completion",verifyJWT,verifyCompletionOTP);
 
 export default router;

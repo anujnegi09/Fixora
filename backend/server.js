@@ -6,8 +6,8 @@ import http from "http";
 
 import { connectDB } from "./Config/DBConnection.js";
 import { initSocket } from "./Config/Socket.js";
-import { logger } from "./Config/Logger.js";
-import { subscriptionCron } from "./Cron/SubscriptionCron.js";
+import  logger  from "./Config/Logger.js";
+import subscriptionCron  from "./Cron/SubscriptionCron.js";
 import passport from "./Config/Passport.js"; 
 
 import UserRoute from "./Route/UserRoute.js";
@@ -17,7 +17,7 @@ import AuthRoute from "./Route/AuthRoute.js";
 import NotificationRoute from "./Route/NotificationRoute.js";
 import ChatRoute from "./Route/ChatRoute.js";
 import SubscriptionRoute from "./Route/SubscriptionRoute.js";
-
+import ReviewRoute from "./Route/ReviewRoute.js"
 // ================================
 // LOAD ENV
 // ================================
@@ -71,11 +71,11 @@ app.use(passport.initialize());
 // ================================
 // ROUTES
 // ================================
-app.use("/auth", AuthRoute);
+app.use("/users", AuthRoute);
 
 // app.use("/api/auth", AuthRoute);
 
-app.use("/user", UserRoute);
+app.use("/users", UserRoute);
 
 app.use("/services", ServiceRoute);
 
@@ -87,33 +87,50 @@ app.use("/chats", ChatRoute);
 
 app.use("/subscription", SubscriptionRoute);
 
+app.use("/reviews", ReviewRoute);
 
-// ================================
-// DATABASE CONNECTION
-// ================================
+
+
+
 connectDB()
-// ================================
-// START CRON JOB AND SERVER
-// ================================
-subscriptionCron.start()
   .then(() => {
+      subscriptionCron.start();
 
-    server.listen(PORT, () => {
-
-      logger.info(`🚀 Server running on port ${PORT}`);
-
-    });
-
+      server.listen(PORT, () => {
+          logger.info(`🚀 Server running on port ${PORT}`);
+      });
   })
-
-  .catch((err) => {
-
-    logger.error(
-      "❌ Failed to connect to database:",
-      err
-    );
-
+  .catch((error) => {
+      logger.error(error.message);
   });
+
+
+// // ================================
+// // DATABASE CONNECTION
+// // ================================
+// connectDB()
+// // ================================
+// // START CRON JOB AND SERVER
+// // ================================
+// subscriptionCron.start()
+//   // .then(() => {
+
+//     server.listen(PORT, () => {
+
+//       logger.info(`🚀 Server running on port ${PORT}`);
+
+//     });
+
+//   // })
+
+//   // .catch((err) => {
+
+//   //   logger.error(
+//   //     "❌ Failed to connect to database:",
+//   //     err
+//   //   );
+
+//   // });
 
 
 

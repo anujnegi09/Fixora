@@ -1,4 +1,4 @@
-import Subscription from "../Model/Subscription.js";
+import Subscription from "../Models/Subscription.js";
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 

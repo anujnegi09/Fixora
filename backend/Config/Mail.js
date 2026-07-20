@@ -1,6 +1,6 @@
 import dotenv from "dotenv"
 import nodemailer from "nodemailer";
-import { logger } from "./Logger.js";
+import  logger  from "./Logger.js";
 
 dotenv.config();
 

@@ -1,0 +1,8 @@
+2026-07-19T06:14:30.253Z [INFO] 🚀 Server running on port 5000
+2026-07-19T06:15:10.567Z [ERROR] querySrv ENOTFOUND _mongodb._tcp.cluster0.tn55egf.mongodb.net
+2026-07-19T06:15:12.341Z [INFO] Server is ready to send emails
+2026-07-19T06:15:20.159Z [ERROR] querySrv ENOTFOUND _mongodb._tcp.cluster0.tn55egf.mongodb.net
+2026-07-19T06:15:21.557Z [INFO] Server is ready to send emails
+2026-07-19T06:23:59.618Z [INFO] database connected
+2026-07-19T06:23:59.624Z [INFO] 🚀 Server running on port 5000
+2026-07-19T06:24:01.239Z [INFO] Server is ready to send emails

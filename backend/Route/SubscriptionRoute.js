@@ -1,8 +1,8 @@
-import SubscriptionController from "../Controller/SubscriptionController.js";
+// import SubscriptionController from "../Controller/SubscriptionController.js";
 import express from "express";
 import { verifyJWT } from "../Middleware/authMiddleware.js";
 import { createSubscription ,verifySubscriptionPayment ,
-    getMySubscription,cancelSubscription} from "../Controller/SubscriptionController.js";
+    getMySubscription,cancelSubscription, handleWebhook} from "../Controller/SubscriptionController.js";
 
 const router = express.Router();
 

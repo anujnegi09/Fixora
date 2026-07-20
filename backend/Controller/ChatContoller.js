@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Message from "../Model/Message.js";
+import Message, { buildConversationId } from "../Models/Message.js";
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";
@@ -24,10 +24,12 @@ export const sendMessage = asyncHandler(async (req, res) => {
     throw new apiError(400, "Invalid receiver ID");
   }
 
+  const conversationId = buildConversationId(senderId, receiverId);
   const newMessage = await Message.create({
     sender: senderId,
     receiver: receiverId,
     bookingId,
+    conversationId,
     message,
   });
 
@@ -60,11 +62,10 @@ export const getMessages = asyncHandler(async (req, res) => {
 
   const { userId } = req.params;
 
+  const conversationId = buildConversationId(myId, userId);
+
   const messages = await Message.find({
-    $or: [
-      { sender: myId, receiver: userId },
-      { sender: userId, receiver: myId },
-    ],
+   converationId,
   })
     .sort({ createdAt: 1 })
     .populate("sender", "fullName profilePhoto")
@@ -113,12 +114,12 @@ export const markMessagesAsSeen = asyncHandler(async (req, res) => {
 // GET CHAT USERS
 // ======================================
 
-export const getChatUsers = asyncHandler(async (req, res) => {
+import User from "../Models/User.js";
 
+export const getChatUsers = asyncHandler(async (req, res) => {
   const myId = req.user._id;
 
-  const users = await Message.aggregate([
-
+  const chats = await Message.aggregate([
     {
       $match: {
         $or: [
@@ -136,21 +137,89 @@ export const getChatUsers = asyncHandler(async (req, res) => {
 
     {
       $group: {
-        _id: {
+        _id: "$conversationId",
+
+        lastMessage: {
+          $first: "$message",
+        },
+
+        lastMessageTime: {
+          $first: "$createdAt",
+        },
+
+        sender: {
+          $first: "$sender",
+        },
+
+        receiver: {
+          $first: "$receiver",
+        },
+
+        unreadCount: {
+          $sum: {
+            $cond: [
+              {
+                $and: [
+                  { $eq: ["$receiver", myId] },
+                  { $eq: ["$isSeen", false] },
+                ],
+              },
+              1,
+              0,
+            ],
+          },
+        },
+      },
+    },
+
+    {
+      $addFields: {
+        otherUser: {
           $cond: [
             { $eq: ["$sender", myId] },
             "$receiver",
             "$sender",
           ],
         },
+      },
+    },
 
-        lastMessage: {
-          $first: "$message",
+    {
+      $lookup: {
+        from: "users",
+        localField: "otherUser",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+
+    {
+      $unwind: "$user",
+    },
+
+    {
+      $project: {
+        _id: 0,
+
+        conversationId: "$_id",
+
+        user: {
+          _id: "$user._id",
+          fullName: "$user.fullName",
+          profilePhoto: "$user.profilePhoto",
         },
 
-        createdAt: {
-          $first: "$createdAt",
-        },
+        lastMessage: 1,
+
+        lastMessageTime: 1,
+
+        unreadCount: 1,
+      },
+    },
+
+    {
+      $sort: {
+        lastMessageTime: -1,
       },
     },
   ]);
@@ -158,7 +227,7 @@ export const getChatUsers = asyncHandler(async (req, res) => {
   return res.status(200).json(
     new apiResponse(
       200,
-      users,
+      chats,
       "Chat users fetched successfully"
     )
   );

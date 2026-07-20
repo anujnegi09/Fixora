@@ -1,4 +1,4 @@
-import Notification from "../Model/Notification.js";
+import Notification from "../Models/Notification.js";
 import { getIO } from "../Config/Socket.js";
 
 export const sendNotification = async ({
@@ -7,7 +7,9 @@ export const sendNotification = async ({
   message,
   bookingId = null,
   serviceId = null,
-  chatId = null,
+  reviewId = null,
+  redirectTo = "/",
+  
 }) => {
 
   // Save notification
@@ -17,7 +19,8 @@ export const sendNotification = async ({
     message,
     bookingId,
     serviceId,
-    chatId,
+    reviewId,
+    redirectTo
   });
 
   // Send instantly

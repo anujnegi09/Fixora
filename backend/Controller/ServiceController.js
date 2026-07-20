@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Service from "../Model/Service.js";
+import Service from "../Models/Service.js";
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";

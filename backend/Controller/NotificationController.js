@@ -1,4 +1,4 @@
-import Notification from "../Model/Notification.js";
+import Notification from "../Models/Notification.js";
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";
@@ -53,7 +53,45 @@ export const getNotifications = asyncHandler(async (req, res) => {
   );
 });
 
+export const getNotificationById = asyncHandler(async (req, res) => {
 
+    const { id } = req.params;
+
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new apiError(400, "Invalid notification ID");
+    }
+
+    const notification = await Notification.findById(id)
+        .populate("bookingId")
+        .populate("serviceId")
+        .populate("reviewId")
+        .lean();
+
+    if (!notification) {
+        throw new apiError(404, "Notification not found");
+    }
+
+    // Only notification owner can access it
+    if (
+        notification.userId.toString() !==
+        req.user._id.toString()
+    ) {
+        throw new apiError(
+            403,
+            "You are not authorized to view this notification."
+        );
+    }
+
+    return res.status(200).json(
+        new apiResponse(
+            200,
+            notification,
+            "Notification fetched successfully."
+        )
+    );
+
+});
 /**
  * =========================================
  * ✅ MARK SINGLE NOTIFICATION AS READ
