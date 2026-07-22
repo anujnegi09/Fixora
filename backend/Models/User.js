@@ -4,10 +4,15 @@ import jwt from "jsonwebtoken";
 const userSchema = new mongoose.Schema(
   {
     phoneNumber : {
-      type : Number,
-      required : true,
+      type: String,
+      default: null,
+      trim: true,
       minlength : 10,
       maxlength : 10
+    },
+    profileCompleted: {  //for user who signup with google need to complete profile (adding phone number)
+      type: Boolean,
+      default: false,
     },
     email: {
       type: String,

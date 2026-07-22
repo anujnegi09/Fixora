@@ -13,9 +13,9 @@ import crypto from "crypto";
  * =====================================================
  */
 export const register = asyncHandler(async (req, res) => {
-  const { fullName, email, userName, password } = req.body;
+  const { phoneNumber, fullName, email, userName, password } = req.body;
 
-  if (!fullName || !email || !userName || !password) {
+  if (!phoneNumber || !fullName || !email || !userName || !password) {
     throw new apiError(400, "All fields are required");
   }
   if (!email.includes("@")) {
@@ -39,6 +39,7 @@ export const register = asyncHandler(async (req, res) => {
   const verificationTokenExpiry = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
 
   const user = await User.create({
+    phoneNumber,
     fullName,
     email,
     userName : userName.toLowerCase(),
@@ -256,6 +257,58 @@ export const logout = asyncHandler(async (req, res) => {
 
 
 // =============================
+// complete profile CONTROLLER  (for storing phone number)
+// =============================
+
+export const completeProfile = asyncHandler(async (req,res)=>{
+  const { phoneNumber } = req.body;
+  if(!phoneNumber) {
+    throw new apiError(400, "Phone number is required");
+  }
+
+  // Basic validation (10-digit Indian number)
+  const phoneRegex = /^[6-9]\d{9}$/;
+
+  if (!phoneRegex.test(phoneNumber)) {
+    throw new apiError(400, "Invalid phone number");
+  }
+   // Check if phone number is already used
+  const existingUser = await User.findOne({
+    phoneNumber,
+    _id: { $ne: req.user._id },
+  });
+
+  if (existingUser) {
+    throw new apiError(
+      409,
+      "Phone number is already registered"
+    );
+  }
+
+  //update phone number 
+  req.user.phoneNumber = phoneNumber;
+  req.user.profileCompleted = true;
+
+  await req.user.save({
+    validationBeforeSave : false
+  });
+  const safeUser = await User.findById(req.user._id).select(
+    "-password -refreshToken"
+  );
+
+   return res.status(200).json(
+    new apiResponse(
+      200,
+      {
+        user: safeUser,
+      },
+      "Profile completed successfully"
+    )
+  );
+});
+
+
+// =============================
 // CHANGE PASSWORD CONTROLLER
 // =============================
 
@@ -401,6 +454,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
     new apiResponse(
       200,
       {},
+
       "Password reset link sent successfully."
     )
   );
@@ -484,7 +538,9 @@ export const checkAuth = asyncHandler(async (req, res) => {
   return res.status(200).json({
     success: true,
     user: req.user,
-  });
+    profileCompleted: req.user.profileCompleted,
+  },
+  "User authenticated successfully");
 });
 
 // ===================================
@@ -543,71 +599,42 @@ export const verifyEmail = asyncHandler(async (req, res) => {
  * GOOGLE CALLBACK CONTROLLER
  * ==========================================
 **/
+export const googleCallback = asyncHandler(async (req, res) => {
 
-export const googleCallback = async (req, res) => {
+  const user = req.user;
 
-  try {
-
-    const user = req.user;
-
-    // Generate tokens
-    const accessToken = user.generateAccessToken();
-
-    const refreshToken = user.generateRefreshToken();
-
-    // Save refresh token
-    user.refreshToken = refreshToken;
-
-    await user.save({
-      validateBeforeSave: false,
-    });
-
-    // Safe user
-    const safeUser = await User.findById(user._id)
-      .select("-password -refreshToken");
-
-    // Cookie options
-    const cookieOptions = {
-      httpOnly: true,
-
-      secure: process.env.NODE_ENV === "production",
-
-      sameSite: "strict",
-    };
-
-    // Set cookies
-    res.cookie(
-      "accessToken",
-      accessToken,
-      cookieOptions
-    );
-
-    res.cookie(
-      "refreshToken",
-      refreshToken,
-      cookieOptions
-    );
-
-    // Response
-    return res.status(200).json({
-      success: true,
-
-      message: "Google login successful",
-
-      user: safeUser,
-
-      accessToken,
-    });
-
-  } catch (error) {
-
-    console.log("Google Auth Error:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Google authentication failed",
-    });
+  if (!user) {
+    throw new apiError(401, "Google authentication failed");
   }
-};
 
+  // Generate Tokens
+  const accessToken = user.generateAccessToken();
+  const refreshToken = user.generateRefreshToken();
 
+  // Save Refresh Token
+  user.refreshToken = refreshToken;
+
+  await user.save({
+    validateBeforeSave: false,
+  });
+
+  // Get Safe User
+  const safeUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+  );
+
+  // Cookie Options
+  const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  };
+
+  // Set Cookies
+  res.cookie("accessToken", accessToken, cookieOptions);
+  res.cookie("refreshToken", refreshToken, cookieOptions);
+
+  return res.redirect(
+    `${process.env.FRONTEND_URL}/auth/google/success`
+);
+});

@@ -6,6 +6,7 @@ import  logger  from "./Logger.js";
 
 dotenc.config();
 
+console.log("Callback URL:", process.env.GOOGLE_CALLBACK_URL);
 passport.use(
   new GoogleStrategy(
     {
@@ -13,6 +14,7 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: process.env.GOOGLE_CALLBACK_URL,
     },
+    
 
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -32,6 +34,8 @@ passport.use(
             authProvider: "google",
             profilePhoto: profile.photos[0]?.value,
             isVerified: true,
+            phoneNumber: null,
+            profileCompleted: false,
          });
         }
 

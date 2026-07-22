@@ -10,7 +10,8 @@ import {
   changePassword,
   forgotPassword,
   resetPassword,
-  googleCallback
+  googleCallback,
+  completeProfile
 } from "../Controller/AuthController.js";
 
 
@@ -84,6 +85,8 @@ router.get("/check-auth", verifyJWT, checkAuth);
 router.put("/change-password", verifyJWT, changePassword);
 // Logout
 router.post("/logout", verifyJWT, logout);
+
+router.patch("/complete-profile",verifyJWT,completeProfile);
 
 
 

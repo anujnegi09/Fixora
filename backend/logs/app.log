@@ -6,3 +6,191 @@
 2026-07-19T06:23:59.618Z [INFO] database connected
 2026-07-19T06:23:59.624Z [INFO] 🚀 Server running on port 5000
 2026-07-19T06:24:01.239Z [INFO] Server is ready to send emails
+2026-07-20T14:02:30.058Z [INFO] Server is ready to send emails
+2026-07-20T14:02:30.459Z [INFO] database connected
+2026-07-20T14:02:30.468Z [INFO] 🚀 Server running on port 5000
+2026-07-20T14:35:54.305Z [ERROR] Error in Google Strategy: User validation failed: phoneNumber: Path `phoneNumber` is required.
+2026-07-20T14:44:43.463Z [INFO] database connected
+2026-07-20T14:44:43.468Z [INFO] 🚀 Server running on port 5000
+2026-07-20T14:44:44.783Z [INFO] Server is ready to send emails
+2026-07-20T14:50:00.318Z [INFO] database connected
+2026-07-20T14:50:00.323Z [INFO] 🚀 Server running on port 5000
+2026-07-20T14:50:01.065Z [INFO] Server is ready to send emails
+2026-07-20T14:50:07.069Z [INFO] database connected
+2026-07-20T14:50:07.076Z [INFO] 🚀 Server running on port 5000
+2026-07-20T14:50:08.625Z [INFO] Server is ready to send emails
+2026-07-20T14:50:21.132Z [INFO] database connected
+2026-07-20T14:50:21.135Z [INFO] 🚀 Server running on port 5000
+2026-07-20T14:50:23.851Z [INFO] database connected
+2026-07-20T14:50:23.854Z [INFO] 🚀 Server running on port 5000
+2026-07-20T14:50:24.456Z [INFO] Server is ready to send emails
+2026-07-20T14:50:40.732Z [INFO] database connected
+2026-07-20T14:50:40.740Z [INFO] 🚀 Server running on port 5000
+2026-07-20T14:50:42.319Z [INFO] Server is ready to send emails
+2026-07-20T14:50:48.234Z [INFO] database connected
+2026-07-20T14:50:48.239Z [INFO] 🚀 Server running on port 5000
+2026-07-20T14:50:49.557Z [INFO] Server is ready to send emails
+2026-07-20T15:04:51.187Z [INFO] database connected
+2026-07-20T15:04:51.193Z [INFO] 🚀 Server running on port 5000
+2026-07-20T15:04:51.649Z [INFO] Server is ready to send emails
+2026-07-20T15:04:54.683Z [INFO] database connected
+2026-07-20T15:04:54.691Z [INFO] 🚀 Server running on port 5000
+2026-07-20T15:04:56.444Z [INFO] database connected
+2026-07-20T15:04:56.453Z [INFO] 🚀 Server running on port 5000
+2026-07-20T15:04:57.104Z [INFO] Server is ready to send emails
+2026-07-20T19:15:11.380Z [INFO] database connected
+2026-07-21T01:46:19.348Z [INFO] database connected
+2026-07-21T01:46:19.351Z [INFO] 🚀 Server running on port 5000
+2026-07-21T01:46:20.148Z [INFO] Server is ready to send emails
+2026-07-21T02:05:24.246Z [INFO] database connected
+2026-07-21T02:05:24.255Z [INFO] 🚀 Server running on port 5000
+2026-07-21T02:05:24.855Z [INFO] Server is ready to send emails
+2026-07-21T02:27:41.205Z [INFO] database connected
+2026-07-21T02:27:41.232Z [INFO] 🚀 Server running on port 5000
+2026-07-21T02:27:41.769Z [INFO] Server is ready to send emails
+2026-07-21T02:27:57.646Z [INFO] database connected
+2026-07-21T02:27:57.656Z [INFO] 🚀 Server running on port 5000
+2026-07-21T02:28:10.063Z [INFO] database connected
+2026-07-21T02:28:10.075Z [INFO] 🚀 Server running on port 5000
+2026-07-21T02:28:10.688Z [INFO] Server is ready to send emails
+2026-07-21T02:28:36.188Z [INFO] database connected
+2026-07-21T02:28:36.197Z [INFO] 🚀 Server running on port 5000
+2026-07-21T02:28:37.721Z [INFO] Server is ready to send emails
+2026-07-21T02:28:48.508Z [INFO] database connected
+2026-07-21T02:28:48.520Z [INFO] 🚀 Server running on port 5000
+2026-07-21T02:28:50.266Z [INFO] Server is ready to send emails
+2026-07-21T02:36:43.895Z [INFO] database connected
+2026-07-21T02:36:43.904Z [INFO] 🚀 Server running on port 5000
+2026-07-21T02:36:43.959Z [INFO] Server is ready to send emails
+2026-07-21T02:38:03.866Z [ERROR] Error in Google Strategy: User validation failed: phoneNumber: Path `phoneNumber` is required.
+2026-07-21T10:25:21.298Z [INFO] database connected
+2026-07-21T10:28:49.936Z [INFO] database connected
+2026-07-21T10:28:50.030Z [INFO] 🚀 Server running on port 5000
+2026-07-21T10:28:50.137Z [INFO] Server is ready to send emails
+2026-07-21T10:32:45.587Z [INFO] database connected
+2026-07-21T10:32:45.603Z [INFO] 🚀 Server running on port 5000
+2026-07-21T10:32:45.955Z [INFO] Server is ready to send emails
+2026-07-21T10:50:35.367Z [INFO] Server is ready to send emails
+2026-07-21T10:50:36.220Z [INFO] database connected
+2026-07-21T10:50:36.232Z [INFO] 🚀 Server running on port 5000
+2026-07-21T10:50:49.146Z [INFO] database connected
+2026-07-21T10:50:49.159Z [INFO] 🚀 Server running on port 5000
+2026-07-21T10:50:49.799Z [INFO] Server is ready to send emails
+2026-07-21T11:24:26.885Z [INFO] database connected
+2026-07-21T11:24:26.894Z [INFO] 🚀 Server running on port 5000
+2026-07-21T11:24:27.056Z [INFO] Server is ready to send emails
+2026-07-21T11:24:34.718Z [INFO] database connected
+2026-07-21T11:24:34.727Z [INFO] 🚀 Server running on port 5000
+2026-07-21T11:24:35.192Z [INFO] Server is ready to send emails
+2026-07-21T11:24:41.270Z [INFO] database connected
+2026-07-21T11:24:41.280Z [INFO] 🚀 Server running on port 5000
+2026-07-21T11:24:41.840Z [INFO] Server is ready to send emails
+2026-07-21T11:24:46.624Z [INFO] database connected
+2026-07-21T11:24:46.630Z [INFO] 🚀 Server running on port 5000
+2026-07-21T11:24:47.019Z [INFO] Server is ready to send emails
+2026-07-21T11:24:54.546Z [INFO] database connected
+2026-07-21T11:24:54.552Z [INFO] 🚀 Server running on port 5000
+2026-07-21T11:24:55.031Z [INFO] Server is ready to send emails
+2026-07-21T11:25:00.505Z [INFO] database connected
+2026-07-21T11:25:00.513Z [INFO] 🚀 Server running on port 5000
+2026-07-21T11:25:00.898Z [INFO] Server is ready to send emails
+2026-07-21T11:25:06.272Z [INFO] database connected
+2026-07-21T11:25:06.280Z [INFO] 🚀 Server running on port 5000
+2026-07-21T11:25:09.995Z [INFO] database connected
+2026-07-21T11:25:10.003Z [INFO] 🚀 Server running on port 5000
+2026-07-21T11:25:10.803Z [INFO] Server is ready to send emails
+2026-07-21T11:25:16.700Z [INFO] database connected
+2026-07-21T11:25:16.947Z [INFO] 🚀 Server running on port 5000
+2026-07-21T11:25:17.159Z [INFO] Server is ready to send emails
+2026-07-21T11:26:54.226Z [INFO] database connected
+2026-07-21T11:26:54.236Z [INFO] 🚀 Server running on port 5000
+2026-07-21T11:26:54.492Z [INFO] Server is ready to send emails
+2026-07-21T11:27:03.605Z [INFO] database connected
+2026-07-21T11:27:03.611Z [INFO] 🚀 Server running on port 5000
+2026-07-21T11:27:04.188Z [INFO] Server is ready to send emails
+2026-07-21T11:33:28.531Z [INFO] Server is ready to send emails
+2026-07-21T11:33:29.236Z [INFO] database connected
+2026-07-21T11:33:29.241Z [INFO] 🚀 Server running on port 5000
+2026-07-21T18:52:17.000Z [INFO] database connected
+2026-07-22T06:16:51.886Z [INFO] database connected
+2026-07-22T06:19:49.736Z [INFO] database connected
+2026-07-22T06:19:49.742Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:19:50.541Z [INFO] Server is ready to send emails
+2026-07-22T06:19:54.655Z [INFO] database connected
+2026-07-22T06:19:54.660Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:19:55.499Z [INFO] Server is ready to send emails
+2026-07-22T06:23:46.792Z [INFO] database connected
+2026-07-22T06:23:46.835Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:23:47.171Z [INFO] Server is ready to send emails
+2026-07-22T06:24:06.183Z [INFO] database connected
+2026-07-22T06:24:06.242Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:24:06.950Z [INFO] Server is ready to send emails
+2026-07-22T06:24:23.561Z [INFO] database connected
+2026-07-22T06:24:23.570Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:24:23.889Z [INFO] Server is ready to send emails
+2026-07-22T06:28:03.929Z [INFO] database connected
+2026-07-22T06:28:03.941Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:28:04.305Z [INFO] Server is ready to send emails
+2026-07-22T06:46:00.976Z [INFO] database connected
+2026-07-22T06:46:00.982Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:46:15.704Z [INFO] database connected
+2026-07-22T06:46:15.712Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:46:16.432Z [INFO] Server is ready to send emails
+2026-07-22T06:48:31.944Z [INFO] database connected
+2026-07-22T06:48:31.955Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:48:32.232Z [INFO] Server is ready to send emails
+2026-07-22T06:48:41.309Z [INFO] database connected
+2026-07-22T06:48:41.319Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:48:42.052Z [INFO] Server is ready to send emails
+2026-07-22T06:49:08.505Z [INFO] database connected
+2026-07-22T06:49:08.516Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:49:09.205Z [INFO] Server is ready to send emails
+2026-07-22T06:49:28.017Z [INFO] database connected
+2026-07-22T06:49:28.025Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:49:28.753Z [INFO] Server is ready to send emails
+2026-07-22T06:49:35.326Z [INFO] database connected
+2026-07-22T06:49:35.342Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:49:35.710Z [INFO] Server is ready to send emails
+2026-07-22T06:50:10.173Z [INFO] database connected
+2026-07-22T06:50:10.193Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:50:10.695Z [INFO] Server is ready to send emails
+2026-07-22T06:50:59.783Z [INFO] database connected
+2026-07-22T06:50:59.795Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:51:00.114Z [INFO] Server is ready to send emails
+2026-07-22T06:51:19.054Z [INFO] database connected
+2026-07-22T06:51:19.063Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:51:19.524Z [INFO] Server is ready to send emails
+2026-07-22T06:52:09.410Z [INFO] database connected
+2026-07-22T06:52:09.418Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:52:09.758Z [INFO] Server is ready to send emails
+2026-07-22T06:52:23.286Z [INFO] database connected
+2026-07-22T06:52:23.299Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:52:24.136Z [INFO] Server is ready to send emails
+2026-07-22T06:52:36.007Z [INFO] database connected
+2026-07-22T06:52:36.022Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:52:36.364Z [INFO] Server is ready to send emails
+2026-07-22T06:52:41.652Z [INFO] database connected
+2026-07-22T06:52:41.662Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:52:42.052Z [INFO] Server is ready to send emails
+2026-07-22T06:52:55.807Z [INFO] database connected
+2026-07-22T06:52:55.817Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:52:56.328Z [INFO] Server is ready to send emails
+2026-07-22T06:53:10.989Z [INFO] database connected
+2026-07-22T06:53:10.999Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:53:11.344Z [INFO] Server is ready to send emails
+2026-07-22T06:53:44.841Z [INFO] database connected
+2026-07-22T06:53:44.862Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:53:45.378Z [INFO] Server is ready to send emails
+2026-07-22T06:54:07.556Z [INFO] database connected
+2026-07-22T06:54:07.566Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:54:08.033Z [INFO] Server is ready to send emails
+2026-07-22T06:55:13.603Z [INFO] database connected
+2026-07-22T06:55:13.612Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:55:14.008Z [INFO] Server is ready to send emails
+2026-07-22T06:55:30.064Z [INFO] database connected
+2026-07-22T06:55:30.086Z [INFO] 🚀 Server running on port 5000
+2026-07-22T06:55:30.796Z [INFO] Server is ready to send emails
+2026-07-22T11:04:00.702Z [INFO] database connected
+2026-07-22T11:12:20.185Z [INFO] database connected
+2026-07-22T11:12:20.211Z [INFO] 🚀 Server running on port 5000
+2026-07-22T11:12:20.708Z [INFO] Server is ready to send emails
