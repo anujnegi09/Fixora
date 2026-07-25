@@ -17,9 +17,9 @@ router.patch("/update-profile", verifyJWT,upload.single("avatar"), updateProfile
 //get profile
 router.get("/profile", verifyJWT, getProfile);
 // change password 
-router.put("/change-password", verifyJWT, changePassword);
+router.patch("/change-password", verifyJWT, changePassword);
 //complete profile
-router.put("/complete-profile", verifyJWT,upload.single("avatar"), completeProfile);
+router.patch("/complete-profile", verifyJWT,upload.single("avatar"), completeProfile);
 
 
 export default router;
