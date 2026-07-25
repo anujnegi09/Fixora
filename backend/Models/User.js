@@ -51,10 +51,25 @@ const userSchema = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: "Booking",
     },
-    profilePhoto: {
-      type: String, // store Cloudinary URL
-      default: "",
-    },
+    // profilePhoto: {
+    //   type: String, // store Cloudinary URL
+    //   default: "",
+    // },
+    avatar: {
+    type: String,
+},
+
+address: {
+    type: String,
+},
+
+city: {
+    type: String,
+},
+
+state: {
+    type: String,
+},
     refreshToken: {
       type: String,
     },

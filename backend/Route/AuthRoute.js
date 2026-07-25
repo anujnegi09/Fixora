@@ -7,11 +7,9 @@ import {
   refreshAccessToken,
   checkAuth,
   verifyEmail,
-  changePassword,
   forgotPassword,
   resetPassword,
-  googleCallback,
-  completeProfile
+  googleCallback
 } from "../Controller/AuthController.js";
 
 
@@ -81,12 +79,8 @@ router.get(
 // Check logged in user
 router.get("/check-auth", verifyJWT, checkAuth);
 
-// change password 
-router.put("/change-password", verifyJWT, changePassword);
 // Logout
 router.post("/logout", verifyJWT, logout);
-
-router.patch("/complete-profile",verifyJWT,completeProfile);
 
 
 
