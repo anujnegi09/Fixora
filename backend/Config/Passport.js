@@ -5,8 +5,6 @@ import dotenc from "dotenv";
 import  logger  from "./Logger.js";
 
 dotenc.config();
-
-console.log("Callback URL:", process.env.GOOGLE_CALLBACK_URL);
 passport.use(
   new GoogleStrategy(
     {
