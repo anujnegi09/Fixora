@@ -9,6 +9,7 @@ import { initSocket } from "./Config/Socket.js";
 import  logger  from "./Config/Logger.js";
 import subscriptionCron  from "./Cron/SubscriptionCron.js";
 import passport from "./Config/Passport.js"; 
+import { connectRedis } from "./Config/Redis.js";
 
 import UserRoute from "./Route/UserRoute.js";
 import ServiceRoute from "./Route/ServiceRoute.js";
@@ -91,18 +92,38 @@ app.use("/reviews", ReviewRoute);
 
 
 
+const startServer = async () => {
+    try {
+        await connectDB();
+        await connectRedis();
 
-connectDB()
-  .then(() => {
-      subscriptionCron.start();
+        subscriptionCron.start();
 
-      server.listen(PORT, () => {
-          logger.info(`🚀 Server running on port ${PORT}`);
-      });
-  })
-  .catch((error) => {
-      logger.error(error.message);
-  });
+        server.listen(PORT, () => {
+            logger.info(`🚀 Server running on port ${PORT}`);
+        });
+    } catch (error) {
+        logger.error(error.message);
+        process.exit(1);
+    }
+};
+
+startServer();
+
+
+
+// connectDB()
+// connectRedis()
+//   .then(() => {
+//       subscriptionCron.start();
+
+//       server.listen(PORT, () => {
+//           logger.info(`🚀 Server running on port ${PORT}`);
+//       });
+//   })
+//   .catch((error) => {
+//       logger.error(error.message);
+//   });
 
 
 // // ================================

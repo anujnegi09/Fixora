@@ -7,9 +7,12 @@ import apiResponse from "../Utils/apiResponse.js";
 import { getIO } from "../Config/Socket.js";
 import Notification from "../Models/Notification.js";
 import { sendNotification } from "../Services/NotificationService.js";
+import redisClient from "../Config/Redis.js";
 
 /**
- * @desc Create a booking
+ * =====================================================
+ * BOOKING CREATE BY USER 
+ * =====================================================
  */
 export const createBooking = asyncHandler(async (req, res) => {
   const { serviceId, bookingDate, notes } = req.body;
@@ -46,28 +49,14 @@ export const createBooking = asyncHandler(async (req, res) => {
     notes
   });
 
-await sendNotification({
-    userId: service.userId,
-    type: "booking_request",
-    message: `${req.user.fullName} booked your "${service.title}" service.`,
-    bookingId: booking._id,
-    serviceId: service._id,
-    redirectTo: `/bookings/${booking._id}`,
-});
-
-  // // 💾 Save notification
-  // await Notification.create({
-  //   userId: serviceOwner,
-  //   message: "📢 New booking request received",
-  //   bookingId: booking._id
-  // });
-
-  // // ⚡ Real-time
-  // const io = getIO();
-  // io.to(serviceOwner.toString()).emit("newNotification", {
-  //   message: "📢 New booking request received",
-  // });
-
+    await sendNotification({
+        userId: service.userId,
+        type: "booking_request",
+        message: `${req.user.fullName} booked your "${service.title}" service.`,
+        bookingId: booking._id,
+        serviceId: service._id,
+        redirectTo: `/bookings/${booking._id}`,
+    });
   io.to(serviceOwner.toString()).emit("newBooking", {
     message: "📢 New booking request!",
     booking,
@@ -77,60 +66,11 @@ await sendNotification({
     new apiResponse(201, booking, "Booking created successfully")
   );
 });
-
 /**
- * @desc Get all bookings (pagination)
- */ 
-// export const getAllBookings = asyncHandler(async (req, res) => { // this is for all users
-//   const { page = 1, limit = 10 } = req.query;
-
-//   const skip = (page - 1) * limit;
-
-//   const bookings = await Booking.find()
-//     .populate("bookedBy", "fullName email")
-//     .populate("serviceOwner", "fullName email")
-//     .populate("serviceId", "title description location phoneNumber")
-//     .skip(skip)
-//     .limit(parseInt(limit))
-//     .lean();
-
-//   const total = await Booking.countDocuments();
-
-//   res.status(200).json(
-//     new apiResponse(200, {
-//       bookings,
-//       total,
-//       page: parseInt(page),
-//       totalPages: Math.ceil(total / limit)
-//     }, "Bookings fetched successfully")
-//   );
-// });
-
-/**
- * @desc Get a single booking by ID
+ * =====================================================
+ * GET BOOKING BY USER
+ * =====================================================
  */
-// export const getBookingById = asyncHandler(async (req, res) => {    //after clicks on one booking for more details
-//   const { id } = req.params;
-
-//   // ✅ ObjectId validation
-//   if (!mongoose.Types.ObjectId.isValid(id)) {
-//     throw new apiError(400, "Invalid booking ID");
-//   }
-
-//   const booking = await Booking.findById(id)
-//     .populate("bookedBy", "fullName email")
-//     .populate("serviceOwner", "fullName email")
-//     .populate("serviceId", "title description location phoneNumber")
-//     .lean();
-
-//   if (!booking) {
-//     throw new apiError(404, "Booking not found");
-//   }
-
-//   res.status(200).json(
-//     new apiResponse(200, booking, "Booking fetched successfully")
-//   );
-// });
 export const getBookingById = asyncHandler(async (req, res) => {
     const { id } = req.params;
     // Validate ObjectId
@@ -167,50 +107,9 @@ export const getBookingById = asyncHandler(async (req, res) => {
 });
 
 /**
- * @desc Update a booking
- */
-// export const updateBooking = asyncHandler(async (req, res) => {  //for both user and proovider 
-//   const { id } = req.params;
-//   const { status, notes, bookingDate } = req.body;
-
-//   // ✅ ObjectId validation
-//   if (!mongoose.Types.ObjectId.isValid(id)) {
-//     throw new apiError(400, "Invalid booking ID");
-//   }
-
-//   const booking = await Booking.findById(id);
-//   if (!booking) {
-//     throw new apiError(404, "Booking not found");
-//   }
-
-//   // ✅ Authorization
-//   if (
-//     booking.bookedBy.toString() !== req.user._id.toString() &&
-//     booking.serviceOwner.toString() !== req.user._id.toString()
-//   ) {
-//     throw new apiError(403, "Not authorized");
-//   }
-
-//   // 🚨 Prevent past date update
-//   if (bookingDate && new Date(bookingDate) < new Date()) {
-//     throw new apiError(400, "Booking date cannot be in the past");
-//   }
-
-//   // ✅ Clean update
-//   Object.assign(booking, {
-//     ...(status && { status }),
-//     ...(notes && { notes }),
-//     ...(bookingDate && { bookingDate }),
-//   });
-
-//   const updatedBooking = await booking.save();
-//   res.status(200).json(
-//     new apiResponse(200, updatedBooking, "Booking updated successfully")
-//   );
-// });
-
-/**
- * @desc Delete a booking
+ * =====================================================
+ * DELETE BOOKING 
+ * =====================================================
  */
 export const deleteBooking = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -249,6 +148,12 @@ export const deleteBooking = asyncHandler(async (req, res) => {
   );
 });
 
+
+/**
+ * =====================================================
+ * UPDATE BOOKING DETAILS (ONLY BY THE USER WHO BOOKED THE SERVICE)
+ * =====================================================
+ */
 export const updateBookingDetails = asyncHandler(async (req, res) => {
 
     const { id } = req.params;
@@ -322,7 +227,11 @@ export const updateBookingDetails = asyncHandler(async (req, res) => {
     );
 
 });
-
+/**
+ * =====================================================
+ * GET MY BOOKINGS
+ * =====================================================
+ */
 export const getMyBookings = asyncHandler(async (req, res) => {
 
     const limit = parseInt(req.query.limit) || 10;
@@ -365,7 +274,11 @@ export const getMyBookings = asyncHandler(async (req, res) => {
     );
 
 });
-
+/**
+ * =====================================================
+ * GET BOOKING FOR MY SERVICES 
+ * =====================================================
+ */
 export const getBookingsForMyServices = asyncHandler(async (req, res) => {
 
     const limit = parseInt(req.query.limit) || 10;
@@ -408,18 +321,12 @@ export const getBookingsForMyServices = asyncHandler(async (req, res) => {
     );
 
 });
-// export const getBookingsForMyServices = asyncHandler(async (req, res) => {
-//   const bookings = await Booking.find({ serviceOwner: req.user._id })
-//     .populate("bookedBy", "fullName email")
-//     .populate("serviceId", "title description location phoneNumber")
-//     .lean();
 
-//   res.status(200).json(
-//     new apiResponse(200, bookings, "Bookings for your services fetched successfully")
-//   );
-// });
-
-
+/**
+ * =====================================================
+ * UPDATE BOOKING STATUS (ONLY BY THE SERVICE OWNER)
+ * =====================================================
+ */
 export const updateBookingStatus = asyncHandler(async (req, res) => {
 
     const { bookingId } = req.params;
@@ -541,6 +448,11 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
 
 });
 
+/**
+ * =====================================================
+ * REQUEST COMPLETION (BY THE SERVICE PROVIDER AND NOTIFICATION GOES TO THE USER FOR OTP)
+ * =====================================================
+ */
 export const requestCompletion = asyncHandler(async (req, res) => {
 
     const { bookingId } = req.params;
@@ -567,15 +479,17 @@ export const requestCompletion = asyncHandler(async (req, res) => {
     }
 
     // Generate OTP
-
     const otp = Math.floor(
         100000 + Math.random() * 900000
     ).toString();
 
-    booking.completionOTP = otp;
-
-    booking.otpExpiresAt = new Date(
-        Date.now() + 15 * 60 * 1000
+    // Store OTP in Redis for 15 minutes
+    await redisClient.set(
+       `booking:${booking._id}:otp`,
+        otp,
+        {
+            EX: 15 * 60, // 15 minutes
+        }
     );
 
     booking.status = "completion_requested";
@@ -594,7 +508,11 @@ export const requestCompletion = asyncHandler(async (req, res) => {
     return res.status(200).json(new apiResponse(200,{},"Completion OTP generated successfully")
     );
 });
-
+/**
+ * =====================================================
+ * GET COMPLETION OTP 
+ * =====================================================
+ */
 export const getCompletionOTP = asyncHandler(async (req, res) => {
 
     const { bookingId } = req.params;
@@ -615,16 +533,21 @@ export const getCompletionOTP = asyncHandler(async (req, res) => {
             "OTP not generated yet"
         );
     }
+    const otp = await redisClient.get(
+        `booking:${booking._id}:otp`
+    );
+    if (!otp) {
+        throw new apiError(
+            400,
+            "OTP expired or not found"
+        );
+    }
 
     return res.status(200).json(
-
         new apiResponse(
-
             200,
-
             {
-                otp: booking.completionOTP,
-                expiresAt: booking.otpExpiresAt,
+                otp,
             },
 
             "OTP fetched successfully"
@@ -634,7 +557,11 @@ export const getCompletionOTP = asyncHandler(async (req, res) => {
     );
 
 });
-
+/**
+ * =====================================================
+ * PROVIDER ENTER THE OTP AND SERVER VERIFY IT 
+ * =====================================================
+ */
 export const verifyCompletionOTP = asyncHandler(async (req, res) => {
 
     const { bookingId } = req.params;
@@ -659,15 +586,18 @@ export const verifyCompletionOTP = asyncHandler(async (req, res) => {
             "Completion not requested"
         );
     }
+    const savedOTP = await redisClient.get(
+        `booking:${booking._id}:otp`
+    );
 
-    if (booking.otpExpiresAt < new Date()) {
+    if (!savedOTP) {
         throw new apiError(
             400,
-            "OTP expired"
+            "OTP expired or not found"
         );
     }
 
-    if (booking.completionOTP !== otp) {
+    if (savedOTP !== otp) {
         throw new apiError(
             400,
             "Invalid OTP"
@@ -678,27 +608,20 @@ export const verifyCompletionOTP = asyncHandler(async (req, res) => {
 
     booking.otpVerified = true;
 
-    booking.completionOTP = null;
-
-    booking.otpExpiresAt = null;
+    await redisClient.del(`booking:${booking._id}:otp`);
 
     await booking.save();
+
+    await booking.populate("serviceId", "title");
 
     await sendNotification({
     userId: booking.bookedBy,
     type: "review_reminder",
-    message: `Please rate your experience with "${service.title}".`,
+    message: `Please rate your experience with "${booking.serviceId.title}".`,
     bookingId: booking._id,
     serviceId: booking.serviceId,
     redirectTo: `/bookings/${booking._id}`,
   });
-
-    await sendNotification({
-        userId: booking.bookedBy,
-        type: "review_reminder",
-        message: "Please rate your experience.",
-        bookingId: booking._id,
-    });
 
     return res.status(200).json(
 

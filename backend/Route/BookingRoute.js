@@ -40,10 +40,10 @@ router.delete("/delete/:id", verifyJWT, deleteBooking);
 
 router.patch("/:id/update-booking-status", verifyJWT, updateBookingStatus);
 
-router.patch("/:bookingId/request-completion",verifyJWT,requestCompletion);
+router.patch("/:bookingId/request-completion", verifyJWT, requestCompletion);
 
-router.get("/:bookingId/completion-otp",  verifyJWT,getCompletionOTP);
+router.get("/:bookingId/completion-otp", verifyJWT, getCompletionOTP);
 
-router.patch( "/:bookingId/verify-completion",verifyJWT,verifyCompletionOTP);
+router.patch( "/:bookingId/verify-completion", verifyJWT, verifyCompletionOTP);
 
 export default router;
