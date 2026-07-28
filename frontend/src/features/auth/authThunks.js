@@ -1,7 +1,7 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {toast} from "react-hot-toast";
 
-import {loginUser,registerUser,logoutUser,checkAuth,resetPassword,forgotPassword} from "../../api/auth.api.js";
+import {loginUser,registerUser,logoutUser,checkAuth,resetPassword as ResetPassword ,forgotPassword as ForgotPassword} from "../../api/auth.api.js";
 
 export const register = createAsyncThunk(
     "auth/register",
@@ -64,14 +64,20 @@ export const checkAuthentication = createAsyncThunk(
 
 export const forgotPassword = createAsyncThunk(
     "auth/forgotPassword",
-    async ({token, formData},{rejectWithValue})=>{
-        try{
-            const response = await forgotPassword(token, formData);
+    async (formData, { rejectWithValue }) => {
+        try {
+            const response = await ForgotPassword(formData);
+
             toast.success(response.message);
+
             return response;
-        } catch(error){
-            const message = error.response?.data?.message || "Failed to send reset link.";
+        } catch (error) {
+            const message =
+                error.response?.data?.message ||
+                "Failed to send reset link.";
+
             toast.error(message);
+
             return rejectWithValue(message);
         }
     }
@@ -81,7 +87,7 @@ export const resetPassword = createAsyncThunk(
     "auth/resetPassword",
     async ({ token, formData }, { rejectWithValue }) => {
         try {
-            const response = await resetPassword(token, formData);
+            const response = await ResetPassword(token, formData);
             toast.success(response.message);
             return response;
         } catch (error) {
