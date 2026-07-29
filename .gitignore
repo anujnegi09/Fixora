@@ -1,6 +1,6 @@
 # frontend & backend
 node_modules/
-logs/
+logs/*
 # environment files
 .env
 .env.local
