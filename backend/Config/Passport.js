@@ -21,13 +21,21 @@ passport.use(
         // 🔍 Check existing user
         let user = await User.findOne({ email });
 
+        if (user && user.authProvider === "local") {
+          return done(
+            new Error(
+              "An account with this email already exists. Please sign in with your password."
+            ),
+            null
+          );
+        }
+
         // ✅ If no user → create
         if (!user) {
           user = await User.create({
-        fullName: profile.displayName,
+            fullName: profile.displayName,
             email: profile.emails[0].value,
-            userName:
-                profile.emails[0].value.split("@")[0] + Date.now(),
+            userName:profile.emails[0].value.split("@")[0] + Date.now(),
             googleId: profile.id,
             authProvider: "google",
             profilePhoto: profile.photos[0]?.value,
