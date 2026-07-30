@@ -1,19 +1,67 @@
-import {completeProfile as CompleteProfile,changePasword} from "../../api/user.api.js";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { toast } from "react-hot-toast";
+
+import { getProfileApi, updateProfileApi,
+    completeProfileApi, changePasswordApi  } from "../../api/user.api.js";
+
+
+export const getProfile = createAsyncThunk(
+    "user/getProfile",
+    async(_,{rejectWithValue}) =>{
+        try{
+        const response = await getProfileApi();
+        return response;
+        }catch(error){
+            const message = error.response?.data?.message || "Failed to fetch profile";
+            toast.error(message);
+            return rejectWithValue(message);
+        }
+    } 
+);
 
 
 
-
+export const updateProfile = createAsyncThunk(
+    "user/updateProfile",
+    async(formData,{rejectWithValue}) =>{
+        try{
+        const response = await updateProfileApi(formData);
+        toast.success(response.message);
+        return response;
+        }catch(error){
+            const message = error.response?.data?.message || "Failed to update profile";
+            toast.error(message);
+            return rejectWithValue(message);
+        }
+    } 
+);
 
 export const completeProfile = createAsyncThunk(
     "user/completeProfile",
-    async(formdata,{rejectWithValue}) =>{
+    async(formData,{rejectWithValue}) =>{
         try{
-        const response = await CompleteProfile(formdata);
+        const response = await completeProfileApi(formData);
         toast.success(response.message);
         return response;
         }catch(error){
             const message = error.response?.data?.message || "Failed to complete profile";
-            toast(message);
+            toast.error(message);
+            return rejectWithValue(message);
+        }
+    } 
+);
+
+
+export const changePassword = createAsyncThunk(
+    "user/changePassword",
+    async(formData,{rejectWithValue}) =>{
+        try{
+        const response = await changePasswordApi(formData);
+        toast.success(response.message);
+        return response;
+        }catch(error){
+            const message = error.response?.data?.message || "Failed to change password";
+            toast.error(message);
             return rejectWithValue(message);
         }
     } 
