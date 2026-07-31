@@ -11,9 +11,8 @@ import {
   resetPassword,
   googleCallback
 } from "../Controller/AuthController.js";
-
-
 import { verifyJWT } from "../Middleware/authMiddleware.js";
+import {upload} from "../Middleware/multerMiddleware.js";
 
 const router = express.Router();
 
@@ -24,7 +23,7 @@ const router = express.Router();
  */
 
 // Register user
-router.post("/register", register);
+router.post("/register",upload.single("profilePhoto"), register);
 
 // Login user
 router.post("/login", login);
@@ -85,61 +84,3 @@ router.post("/logout", verifyJWT, logout);
 
 
 export default router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import express from "express";
-// import {
-//   register,
-//   login,
-//   logout,
-//   refreshAccessToken,
-//   updateProfile,
-//   checkAuth,
-//   verifyEmail,
-// } from "../Controller/UserController.js";
-// import { verifyJWT } from "../Middlewares/authMiddleware.js";
-
-// const router = express.Router();
-
-// /**
-//  * =====================================================
-//  * 🧾 PUBLIC ROUTES
-//  * =====================================================
-//  */
-
-// router.post("/register", register);
-// router.post("/login", login);
-// router.post("/refresh-token", refreshAccessToken);
-
-// /**
-//  * =====================================================
-//  * 🔒 PROTECTED ROUTES (USER MUST BE LOGGED IN)
-//  * =====================================================
-//  */
-// router.get("/check-auth", verifyJWT, checkAuth);
-// router.post("/logout", verifyJWT, logout);
-
-// // ===================================
-// //   EMAIL VERIFICATION ROUTE
-// // ===================================
-// router.get("/verify-email/:token", verifyEmail);
-
-// export default router;
