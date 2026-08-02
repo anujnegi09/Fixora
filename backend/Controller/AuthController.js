@@ -13,9 +13,9 @@ import crypto from "crypto";
  * =====================================================
  */
 export const register = asyncHandler(async (req, res) => {
-  const { phoneNumber, fullName, email, userName, password } = req.body;
+  const { phoneNumber, fullName, email, userName, password ,state, city } = req.body;
 
-  if (!phoneNumber || !fullName || !email || !userName || !password) {
+  if (!phoneNumber || !fullName || !email || !userName || !password || !state || !city) {
     throw new apiError(400, "All fields are required");
   }
   if (!email.includes("@")) {
@@ -38,12 +38,17 @@ export const register = asyncHandler(async (req, res) => {
   const verificationToken = generateToken();
   const verificationTokenExpiry = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
 
+  const normalizedState = state.trim();
+  const normalizedCity = city.trim();
+
   const user = await User.create({
     phoneNumber,
     fullName,
     email,
     userName : userName.toLowerCase(),
     password: hashedPassword,
+    state : normalizedState,
+    city : normalizedCity,
     authProvider : "local",
     verificationToken,
     verificationTokenExpiry,

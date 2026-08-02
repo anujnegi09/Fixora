@@ -402,3 +402,94 @@
 2026-07-31T15:02:11.496Z [INFO] ✅ Redis connected successfully.
 2026-07-31T15:02:11.499Z [INFO] 🚀 Server running on port 5000
 2026-07-31T15:02:13.114Z [INFO] Server is ready to send emails
+2026-07-31T15:26:48.033Z [INFO] database connected
+2026-07-31T15:26:48.049Z [INFO] 🔗 Connecting to Redis...
+2026-07-31T15:26:48.057Z [INFO] ✅ Redis connected successfully.
+2026-07-31T15:26:48.061Z [INFO] 🚀 Server running on port 5000
+2026-07-31T15:26:49.526Z [INFO] Server is ready to send emails
+2026-08-01T06:50:00.601Z [INFO] database connected
+2026-08-01T06:50:00.637Z [INFO] 🔗 Connecting to Redis...
+2026-08-01T06:50:00.653Z [INFO] ✅ Redis connected successfully.
+2026-08-01T06:50:00.659Z [INFO] 🚀 Server running on port 5000
+2026-08-01T06:50:00.983Z [INFO] Server is ready to send emails
+2026-08-01T08:30:14.747Z [INFO] database connected
+2026-08-01T15:53:13.320Z [INFO] database connected
+2026-08-02T08:17:06.012Z [INFO] database connected
+2026-08-02T08:17:06.033Z [INFO] 🔗 Connecting to Redis...
+2026-08-02T08:17:06.046Z [INFO] ✅ Redis connected successfully.
+2026-08-02T08:17:06.053Z [INFO] 🚀 Server running on port 5000
+2026-08-02T08:17:06.556Z [INFO] Server is ready to send emails
+2026-08-02T09:14:29.424Z [INFO] database connected
+2026-08-02T09:14:29.437Z [INFO] 🔗 Connecting to Redis...
+2026-08-02T09:14:29.440Z [INFO] ✅ Redis connected successfully.
+2026-08-02T09:14:29.442Z [INFO] 🚀 Server running on port 5000
+2026-08-02T09:14:29.973Z [INFO] Server is ready to send emails
+2026-08-02T09:14:32.535Z [INFO] database connected
+2026-08-02T09:14:32.546Z [INFO] 🔗 Connecting to Redis...
+2026-08-02T09:14:32.548Z [INFO] ✅ Redis connected successfully.
+2026-08-02T09:14:32.550Z [INFO] 🚀 Server running on port 5000
+2026-08-02T09:14:32.970Z [INFO] Server is ready to send emails
+2026-08-02T09:14:39.057Z [INFO] database connected
+2026-08-02T09:14:39.065Z [INFO] 🔗 Connecting to Redis...
+2026-08-02T09:14:39.067Z [INFO] ✅ Redis connected successfully.
+2026-08-02T09:14:39.069Z [INFO] 🚀 Server running on port 5000
+2026-08-02T09:14:39.494Z [INFO] Server is ready to send emails
+2026-08-02T09:14:50.827Z [INFO] database connected
+2026-08-02T09:14:50.835Z [INFO] 🔗 Connecting to Redis...
+2026-08-02T09:14:50.838Z [INFO] ✅ Redis connected successfully.
+2026-08-02T09:14:50.840Z [INFO] 🚀 Server running on port 5000
+2026-08-02T09:14:51.258Z [INFO] Server is ready to send emails
+2026-08-02T09:14:56.111Z [INFO] database connected
+2026-08-02T09:14:56.122Z [INFO] 🔗 Connecting to Redis...
+2026-08-02T09:14:56.127Z [INFO] ✅ Redis connected successfully.
+2026-08-02T09:14:56.129Z [INFO] 🚀 Server running on port 5000
+2026-08-02T09:14:56.524Z [INFO] Server is ready to send emails
+2026-08-02T09:15:00.047Z [INFO] database connected
+2026-08-02T09:15:00.062Z [INFO] 🔗 Connecting to Redis...
+2026-08-02T09:15:00.068Z [INFO] ✅ Redis connected successfully.
+2026-08-02T09:15:00.071Z [INFO] 🚀 Server running on port 5000
+2026-08-02T09:15:00.623Z [INFO] Server is ready to send emails
+2026-08-02T09:15:33.902Z [INFO] database connected
+2026-08-02T09:15:33.908Z [INFO] 🔗 Connecting to Redis...
+2026-08-02T09:15:33.912Z [INFO] ✅ Redis connected successfully.
+2026-08-02T09:15:33.914Z [INFO] 🚀 Server running on port 5000
+2026-08-02T09:15:34.300Z [INFO] Server is ready to send emails
+2026-08-02T09:15:41.055Z [INFO] database connected
+2026-08-02T09:15:41.065Z [INFO] 🔗 Connecting to Redis...
+2026-08-02T09:15:41.068Z [INFO] ✅ Redis connected successfully.
+2026-08-02T09:15:41.070Z [INFO] 🚀 Server running on port 5000
+2026-08-02T09:15:41.735Z [INFO] Server is ready to send emails
+2026-08-02T09:17:23.993Z [INFO] database connected
+2026-08-02T09:17:24.003Z [INFO] 🔗 Connecting to Redis...
+2026-08-02T09:17:24.006Z [INFO] ✅ Redis connected successfully.
+2026-08-02T09:17:24.008Z [INFO] 🚀 Server running on port 5000
+2026-08-02T09:17:24.442Z [INFO] Server is ready to send emails
+2026-08-02T09:17:31.838Z [INFO] database connected
+2026-08-02T09:17:31.850Z [INFO] 🔗 Connecting to Redis...
+2026-08-02T09:17:31.858Z [INFO] ✅ Redis connected successfully.
+2026-08-02T09:17:31.859Z [INFO] 🚀 Server running on port 5000
+2026-08-02T09:17:32.323Z [INFO] Server is ready to send emails
+2026-08-02T09:17:36.433Z [INFO] database connected
+2026-08-02T09:17:36.441Z [INFO] 🔗 Connecting to Redis...
+2026-08-02T09:17:36.447Z [INFO] ✅ Redis connected successfully.
+2026-08-02T09:17:36.448Z [INFO] 🚀 Server running on port 5000
+2026-08-02T09:17:36.971Z [INFO] Server is ready to send emails
+2026-08-02T09:18:23.175Z [INFO] database connected
+2026-08-02T09:18:23.186Z [INFO] 🔗 Connecting to Redis...
+2026-08-02T09:18:23.189Z [INFO] ✅ Redis connected successfully.
+2026-08-02T09:18:23.190Z [INFO] 🚀 Server running on port 5000
+2026-08-02T09:18:26.298Z [INFO] database connected
+2026-08-02T09:18:26.305Z [INFO] 🔗 Connecting to Redis...
+2026-08-02T09:18:26.307Z [INFO] ✅ Redis connected successfully.
+2026-08-02T09:18:26.309Z [INFO] 🚀 Server running on port 5000
+2026-08-02T09:18:27.765Z [INFO] Server is ready to send emails
+2026-08-02T09:18:35.439Z [INFO] database connected
+2026-08-02T09:18:35.450Z [INFO] 🔗 Connecting to Redis...
+2026-08-02T09:18:35.456Z [INFO] ✅ Redis connected successfully.
+2026-08-02T09:18:35.458Z [INFO] 🚀 Server running on port 5000
+2026-08-02T09:18:35.900Z [INFO] Server is ready to send emails
+2026-08-02T09:18:38.645Z [INFO] database connected
+2026-08-02T09:18:38.654Z [INFO] 🔗 Connecting to Redis...
+2026-08-02T09:18:38.658Z [INFO] ✅ Redis connected successfully.
+2026-08-02T09:18:38.661Z [INFO] 🚀 Server running on port 5000
+2026-08-02T09:18:39.185Z [INFO] Server is ready to send emails

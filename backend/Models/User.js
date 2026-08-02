@@ -59,16 +59,14 @@ const userSchema = new mongoose.Schema(
     type: String,
 },
 
-address: {
-    type: String,
-},
-
 city: {
     type: String,
+    trim: true,
 },
 
 state: {
     type: String,
+     trim: true,
 },
     refreshToken: {
       type: String,
