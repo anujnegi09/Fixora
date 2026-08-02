@@ -7,10 +7,13 @@ import {
   selectForgotPasswordLoading,
 } from "../../features/auth/authSelectors";
 
+import Button from "../../components/common/Button.jsx"
+import Input from "../../components/common/Input.jsx"
+
 const ForgotPassword = () => {
   const dispatch = useDispatch();
 
-  const loading = useSelector(selectForgotPasswordLoading);
+  const forgotPasswordLoading = useSelector(selectForgotPasswordLoading);
 
   const {
     register,
@@ -45,7 +48,7 @@ const ForgotPassword = () => {
           className="space-y-5"
         >
 
-          <div>
+          {/* <div>
 
             <label className="font-medium">
               Email Address
@@ -66,9 +69,20 @@ const ForgotPassword = () => {
               </p>
             )}
 
-          </div>
+          </div> */}
 
-          <button
+           <Input
+  label="Email"
+  type="email"
+  name="email"
+  placeholder="Enter your email"
+  error={errors.email?.message}
+  {...register("email", {
+    required: "Email is required",
+  })}
+/>
+
+          {/* <button
             type="submit"
             disabled={loading}
             className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50"
@@ -76,7 +90,15 @@ const ForgotPassword = () => {
             {loading
               ? "Sending..."
               : "Send Reset Link"}
-          </button>
+          </button> */}
+
+          <Button
+            type="submit"
+            loading={forgotPasswordLoading}
+            fullWidth
+          >
+            Send Reset Link
+          </Button>
 
         </form>
 

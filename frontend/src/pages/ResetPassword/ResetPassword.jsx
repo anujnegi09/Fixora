@@ -9,13 +9,16 @@ import {
   selectResetPasswordLoading,
 } from "../../features/auth/authSelectors";
 
+import Button from "../../components/common/Button.jsx"
+import PasswordInput from "../../components/common/PasswordInput.jsx"
+
 const ResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { token } = useParams();
 
-  const loading = useSelector(selectResetPasswordLoading);
+  const changePasswordLoading = useSelector(selectResetPasswordLoading);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -64,7 +67,7 @@ const ResetPassword = () => {
 
           {/* Password */}
 
-          <div>
+          {/* <div>
 
             <label className="font-medium">
               New Password
@@ -111,11 +114,25 @@ const ResetPassword = () => {
               </p>
             )}
 
-          </div>
+          </div> */}
+
+
+          <PasswordInput
+  label="Password"
+  placeholder="Create a new password"
+  error={errors.password?.message}
+  {...register("password", {
+    required: "Password is required",
+    minLength: {
+      value: 6,
+      message: "Password must be at least 6 characters",
+    },
+  })}
+/>
 
           {/* Confirm Password */}
 
-          <div>
+          {/* <div>
 
             <label className="font-medium">
               Confirm Password
@@ -165,17 +182,23 @@ const ResetPassword = () => {
               </p>
             )}
 
-          </div>
+          </div> */}
 
-          <button
+          <PasswordInput
+  label="Password"
+  placeholder="Enter your password"
+  error={errors.password?.message}
+  {...register("password", {
+    required: "Password is required",
+  })}
+/>
+
+          <Button
             type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            loading={changePasswordLoading}
           >
-            {loading
-              ? "Updating..."
-              : "Reset Password"}
-          </button>
+            Change Password
+          </Button>
 
         </form>
 
