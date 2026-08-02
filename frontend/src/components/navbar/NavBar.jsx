@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
+
 import {
   FaBars,
   FaTimes,
@@ -21,6 +22,7 @@ import {
 import { selectIsAuthenticated, selectUser } from "../../features/auth/authSelectors.js";
 
 import { logout } from "../../features/auth/authThunks.js";
+import fixoraLogo from "../../assets/fixora-logo.png";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -50,7 +52,11 @@ const Navbar = () => {
 
           <div className="flex items-center gap-2">
             <NavLink to="/" className="text-2xl font-bold text-blue-600">
-              Fixora
+                <img
+      src={fixoraLogo}
+      alt="Fixora Logo"
+      className="h-24 pt-2 w-auto object-contain"
+    />
             </NavLink>
           </div>
 
@@ -194,14 +200,14 @@ const Navbar = () => {
 
     <div className="py-2">
 
-      <NavLink
-        to="/profile"
-        onClick={closeSidebar}
-        className="flex items-center gap-3 px-5 py-2.5 text-gray-700 hover:bg-gray-100 transition"
-      >
-        <FaUser size={17} />
-        <span>Profile</span>
-      </NavLink>
+    <NavLink
+  to="/profile"
+  onClick={closeSidebar}
+  className="flex items-center gap-3 px-5 py-2.5 text-gray-700 hover:bg-gray-100 transition"
+>
+  <FaUser size={17} />
+  <span>Profile</span>
+</NavLink>
 
       <NavLink
         to="/account"
@@ -299,8 +305,6 @@ const Navbar = () => {
 
   </aside>
 )}
-
-      
     </>
   );
 };
