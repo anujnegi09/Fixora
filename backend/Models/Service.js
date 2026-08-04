@@ -35,10 +35,10 @@ const ServiceSchema = new mongoose.Schema(
       min: 0,
       max: 5,
     },
-    totalRating : {
-      type : Number,
-      default : 0
-    },
+   totalReviews: {
+    type: Number,
+    default: 0,
+},
     availability: {
       days: {
         type: [

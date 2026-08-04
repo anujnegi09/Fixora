@@ -19,6 +19,7 @@ import NotificationRoute from "./Route/NotificationRoute.js";
 import ChatRoute from "./Route/ChatRoute.js";
 import SubscriptionRoute from "./Route/SubscriptionRoute.js";
 import ReviewRoute from "./Route/ReviewRoute.js"
+import LocationRoute from "./Route/LocationRoute.js";
 // ================================
 // LOAD ENV
 // ================================
@@ -89,6 +90,8 @@ app.use("/chats", ChatRoute);
 app.use("/subscription", SubscriptionRoute);
 
 app.use("/reviews", ReviewRoute);
+
+app.use("/location", LocationRoute);
 
 
 
