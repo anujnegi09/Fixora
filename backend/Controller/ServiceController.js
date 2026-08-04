@@ -1,8 +1,28 @@
 import mongoose from "mongoose";
 import Service from "../Models/Service.js";
-import { asyncHandler } from "../Utils/asyncHandler.js";
+import  {asyncHandler}  from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";
+
+
+export const getMyServices = asyncHandler(async (req, res) => {
+
+    const userId = req.user._id;
+
+    const services = await Service.find({
+        userId,
+    })
+        .sort({ createdAt: -1 });
+
+    return res.status(200).json(
+        new apiResponse(
+            200,
+            services,
+            "Your services fetched successfully"
+        )
+    );
+
+});
 
 /**
  * @desc Create a new service
@@ -155,4 +175,36 @@ export const deleteService = asyncHandler(async (req, res) => {
   res.status(200).json(
     new apiResponse(200, null, "Service deleted successfully")
   );
+});
+
+
+export const toggleServiceVisibility = asyncHandler(async (req, res) => {
+
+    const { id } = req.params;
+
+    const service = await Service.findById(id);
+
+    if (!service) {
+        throw new apiError(404, "Service not found");
+    }
+
+    // Only the owner can change visibility
+    if (service.userId.toString() !== req.user._id.toString()) {
+        throw new apiError(403, "Not authorized");
+    }
+
+    service.isVisible = !service.isVisible;
+
+    await service.save();
+
+    return res.status(200).json(
+        new apiResponse(
+            200,
+            service,
+            `Service ${
+                service.isVisible ? "visible" : "hidden"
+            } successfully`
+        )
+    );
+
 });
