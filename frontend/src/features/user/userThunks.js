@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-hot-toast";
 
 import { getProfileApi, updateProfileApi,
-    completeProfileApi, changePasswordApi  } from "../../api/user.api.js";
+    completeProfileApi, changePasswordApi, updateLocationApi  } from "../../api/user.api.js";
 
 
 export const getProfile = createAsyncThunk(
@@ -65,4 +65,21 @@ export const changePassword = createAsyncThunk(
             return rejectWithValue(message);
         }
     } 
+);
+
+export const updateLocation = createAsyncThunk(
+    "user/updateLocation",
+    async (locationData, { rejectWithValue }) => {
+        try {
+            const response = await updateLocationApi(locationData);
+            toast.success(response.message);
+            return response;
+        } catch (error) {
+            const message =
+                error.response?.data?.message ||
+                "Failed to update location";
+            toast.error(message);
+            return rejectWithValue(message);
+        }
+    }
 );

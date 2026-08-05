@@ -18,3 +18,9 @@ export const selectChangePasswordLoading = (state) =>
 
 // Error
 export const selectUserError = (state) => state.user.error;
+
+export const selectUserLocation = (state) =>
+    state.user.profile?.location;
+
+export const selectUpdateLocationLoading = (state) =>
+    state.user.updateLocationLoading;

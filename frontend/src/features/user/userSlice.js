@@ -5,16 +5,16 @@ import {
   updateProfile,
   completeProfile,
   changePassword,
+  updateLocation
 } from "./userThunks";
 
 const initialState = {
   profile: null,
-
   loading: false,
   updateProfileLoading: false,
   completeProfileLoading: false,
   changePasswordLoading: false,
-
+  updateLocationLoading: false,
   error: null,
 };
 
@@ -109,7 +109,24 @@ const userSlice = createSlice({
       .addCase(changePassword.rejected, (state, action) => {
         state.changePasswordLoading = false;
         state.error = action.payload;
-      });
+      })
+
+        // ==========================
+      // update location
+      // ==========================
+      .addCase(updateLocation.pending, (state) => {
+         state.updateLocationLoading = true;
+         state.error = null;
+      })
+      .addCase(updateLocation.fulfilled, (state, action) => {
+          state.updateLocationLoading = false;
+          state.profile = action.payload.data;
+      })    
+      .addCase(updateLocation.rejected, (state, action) => {
+          state.updateLocationLoading = false;
+          state.error = action.payload;
+      })
+     
   },
 });
 
