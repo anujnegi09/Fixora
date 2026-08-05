@@ -32,3 +32,12 @@ export const changePasswordApi = async (formData) => {
 
   return response.data;
 };
+
+export const updateLocationApi = async (locationData) => {
+    const response = await api.patch(
+        "/users/location",
+        locationData
+    );
+
+    return response.data;
+};
