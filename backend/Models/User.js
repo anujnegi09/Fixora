@@ -32,10 +32,6 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-//       required: function () {
-// // password required ONLY for local auth
-//       return !this.googleId;
-//       },
       minLength: 6,
     },
     authProvider: {
@@ -51,23 +47,39 @@ const userSchema = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: "Booking",
     },
-    // profilePhoto: {
-    //   type: String, // store Cloudinary URL
-    //   default: "",
-    // },
     avatar: {
     type: String,
 },
+location: {
+    address: {
+        type: String,
+        default: "",
+    },
+    city: {
+        type: String,
+        default: "",
+    },
 
-city: {
-    type: String,
-    trim: true,
-},
+    state: {
+        type: String,
+        default: "",
+    },
 
-state: {
-    type: String,
-     trim: true,
-},
+    pincode: {
+        type: String,
+        default: "",
+    },
+
+    latitude: {
+        type: Number,
+        default: null,
+    },
+
+    longitude: {
+        type: Number,
+        default: null,
+    },
+  },
     refreshToken: {
       type: String,
     },

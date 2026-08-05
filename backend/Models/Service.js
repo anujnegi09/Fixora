@@ -71,7 +71,42 @@ const ServiceSchema = new mongoose.Schema(
         },
       },
     },
- 
+
+    location: {
+      address: {
+          type: String,
+          required: true,
+      },
+      city: {
+          type: String,
+          required: true,
+          index: true,
+      },
+      state: {
+        type: String,
+        required: true,
+      },
+      pincode: {
+        type: String,
+        required: true,
+      },
+     coordinates: {
+        type: {
+            type: String,
+            enum: ["Point"],
+            default: "Point",
+        },
+        coordinates: {
+            type: [Number], // [longitude, latitude]
+            required: true,
+        },
+      },
+    },
+    serviceRadius: {
+    type: Number,
+    required: true,
+    default: 10, // kilometers
+    },
     phoneNumber: {
       type: String,
       required: true,
@@ -90,9 +125,10 @@ const ServiceSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
- 
 // NEW: helps full-text search across title & description when users
 // search for services (e.g. "plumber", "AC repair").
+
+ServiceSchema.index({"location.coordinates": "2dsphere",});
 ServiceSchema.index({ title: "text", description: "text" });
  
 const Service = mongoose.model("Service", ServiceSchema);

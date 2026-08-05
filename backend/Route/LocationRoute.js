@@ -1,8 +1,10 @@
 import { Router } from "express";
-import { reverseGeocode } from "../controller/LocationController.js";
+import { reverseGeocode, searchLocation} from "../controller/LocationController.js";
 
 const router = Router();
 
 router.get("/reverse-geocode", reverseGeocode);
+
+router.get("/search", searchLocation);
 
 export default router;

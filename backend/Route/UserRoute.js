@@ -1,5 +1,5 @@
 import express from "express";
-import { updateProfile, getProfile, changePassword, completeProfile } from "../Controller/UserController.js";
+import { updateProfile, getProfile, changePassword, completeProfile, updateLocation } from "../Controller/UserController.js";
 import { verifyJWT } from "../Middleware/authMiddleware.js";
 import {upload} from "../Middleware/multerMiddleware.js";
 import uploadOnCloudinary from "../Utils/uploadOnCloudinary.js";
@@ -20,6 +20,8 @@ router.get("/profile", verifyJWT, getProfile);
 router.patch("/change-password", verifyJWT, changePassword);
 //complete profile
 router.patch("/complete-profile", verifyJWT,upload.single("avatar"), completeProfile);
+
+router.patch("/location",verifyJWT, updateLocation);
 
 
 export default router;

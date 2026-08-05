@@ -27,63 +27,220 @@ export const getMyServices = asyncHandler(async (req, res) => {
 /**
  * @desc Create a new service
  */
+
 export const createService = asyncHandler(async (req, res) => {
-  const { title, description, location, phoneNumber, availability, price } = req.body;
 
-  // ✅ Better validation
-  const requiredFields = { title, description, location, phoneNumber, availability, price };
-  for (const [key, value] of Object.entries(requiredFields)) {
-    if (!value) {
-      throw new apiError(400, `${key} is required`);
+    const {
+        title,
+        description,
+        phoneNumber,
+        availability,
+        price,
+        serviceRadius,
+        location,
+    } = req.body;
+
+    const requiredFields = {
+        title,
+        description,
+        phoneNumber,
+        availability,
+        price,
+        serviceRadius,
+        location,
+    };
+
+    for (const [key, value] of Object.entries(requiredFields)) {
+        if (
+            value === undefined ||
+            value === null ||
+            value === ""
+        ) {
+            throw new apiError(400, `${key} is required`);
+        }
     }
-  }
 
-  const service = await Service.create({
-    userId: req.user._id,
-    title,
-    description,
-    location,
-    phoneNumber,
-    availability,
-    price
-  });
+    if (
+        !location.latitude ||
+        !location.longitude
+    ) {
+        throw new apiError(
+            400,
+            "Location coordinates are required"
+        );
+    }
 
-  res.status(201).json(
-    new apiResponse(201, service, "Service created successfully")
-  );
+    const service = await Service.create({
+
+        userId: req.user._id,
+
+        title,
+
+        description,
+
+        phoneNumber,
+
+        availability,
+
+        price,
+
+        serviceRadius,
+
+        location: {
+
+            address: location.address,
+
+            city: location.city,
+
+            state: location.state,
+
+            pincode: location.pincode,
+
+            coordinates: {
+                type: "Point",
+                coordinates: [
+                    Number(location.longitude),
+                    Number(location.latitude),
+                ],
+            },
+        },
+    });
+
+    res.status(201).json(
+        new apiResponse(
+            201,
+            service,
+            "Service created successfully"
+        )
+    );
+
 });
+// export const createService = asyncHandler(async (req, res) => {
+//   const { title, description, location, phoneNumber, availability, price } = req.body;
+
+//   // ✅ Better validation
+//   const requiredFields = { title, description, location, phoneNumber, availability, price };
+//   for (const [key, value] of Object.entries(requiredFields)) {
+//     if (!value) {
+//       throw new apiError(400, `${key} is required`);
+//     }
+//   }
+
+//   const service = await Service.create({
+//     userId: req.user._id,
+//     title,
+//     description,
+//     location,
+//     phoneNumber,
+//     availability,
+//     price
+//   });
+
+//   res.status(201).json(
+//     new apiResponse(201, service, "Service created successfully")
+//   );
+// });
 
 /**
  * @desc Get all services (with pagination + search)
  */
 export const getAllServices = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, location, title } = req.query;
-
-  const filter = {};
-
-  // ✅ Search filters
-  if (location) filter.location = { $regex: location, $options: "i" };
-  if (title) filter.title = { $regex: title, $options: "i" };
-
-  const skip = (page - 1) * limit;
-
-  const services = await Service.find({ ...filter, isVisible : true})
-    .populate("userId", "fullName email")
-    .skip(skip)
-    .limit(parseInt(limit))
-    .lean();
-
-  const total = await Service.countDocuments(filter);
-
-  res.status(200).json(
-    new apiResponse(200, {
-      services,
-      total,
-      page: parseInt(page),
-      totalPages: Math.ceil(total / limit)
-    }, "Services fetched successfully")
-  );
+    const {
+        page = 1,
+        limit = 10,
+        title,
+        latitude,
+        longitude,
+        radius = 10000, // 10 km in meters
+        city,
+    } = req.query;
+    const skip = (page - 1) * limit;
+    const filter = {
+        isVisible: true,
+    };
+    if (title) {
+        filter.title = {
+            $regex: title,
+            $options: "i",
+        };
+    }
+    if (city) {
+        filter["location.city"] = {
+            $regex: city,
+            $options: "i",
+        };
+    }
+    let services;
+    // User location available
+    if (latitude && longitude) {
+        services = await Service.find({
+            ...filter,
+            "location.coordinates": {
+                $near: {
+                    $geometry: {
+                        type: "Point",
+                        coordinates: [
+                            Number(longitude),
+                            Number(latitude),
+                        ],
+                    },
+                    $maxDistance: Number(radius),
+                },
+            },
+        })
+            .populate("userId", "fullName email avatar")
+            .skip(skip)
+            .limit(Number(limit));
+    }
+    // No location selected
+    else {
+        services = await Service.find(filter)
+            .populate("userId", "fullName email avatar")
+            .skip(skip)
+            .limit(Number(limit));
+    }
+    const total = await Service.countDocuments(filter);
+    res.status(200).json(
+        new apiResponse(
+            200,
+            {
+                services,
+                total,
+                page: Number(page),
+                totalPages: Math.ceil(total / limit),
+            },
+            "Services fetched successfully"
+        )
+    );
 });
+// export const getAllServices = asyncHandler(async (req, res) => {
+//   const { page = 1, limit = 10, location, title } = req.query;
+
+//   const filter = {};
+
+//   // ✅ Search filters
+//   if (location) filter.location = { $regex: location, $options: "i" };
+//   if (title) filter.title = { $regex: title, $options: "i" };
+
+//   const skip = (page - 1) * limit;
+
+//   const services = await Service.find({ ...filter, isVisible : true})
+//     .populate("userId", "fullName email")
+//     .skip(skip)
+//     .limit(parseInt(limit))
+//     .lean();
+
+//   const total = await Service.countDocuments(filter);
+
+//   res.status(200).json(
+//     new apiResponse(200, {
+//       services,
+//       total,
+//       page: parseInt(page),
+//       totalPages: Math.ceil(total / limit)
+//     }, "Services fetched successfully")
+//   );
+// });
 
 /**
  * @desc Get a single service by ID
