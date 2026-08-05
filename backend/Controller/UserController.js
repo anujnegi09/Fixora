@@ -278,10 +278,18 @@ export const updateLocation = asyncHandler(async (req, res) => {
         city,
         state,
         pincode,
-        latitude,
-        longitude,
+
+        coordinates: {
+            type: "Point",
+            coordinates: [
+                Number(longitude), // MongoDB requires [lng, lat]
+                Number(latitude),
+            ],
+        },
     };
+
     await user.save({ validateBeforeSave: false });
+
     return res.status(200).json(
         new apiResponse(
             200,
@@ -289,4 +297,5 @@ export const updateLocation = asyncHandler(async (req, res) => {
             "Location updated successfully"
         )
     );
+
 });
