@@ -32,9 +32,9 @@ const CompleteProfile = () => {
       const formData = new FormData();
 
       formData.append("phoneNumber", data.phoneNumber);
-      formData.append("address", data.address || "");
-      formData.append("city", data.city || "");
-      formData.append("state", data.state || "");
+      // formData.append("address", data.address || "");
+      // formData.append("city", data.city || "");
+      // formData.append("state", data.state || "");
 
       if (data.profileImage?.[0]) {
         formData.append("profileImage", data.profileImage[0]);
@@ -137,7 +137,7 @@ const CompleteProfile = () => {
 
           {/* Address */}
 
-          <div>
+          {/* <div>
             <label className="font-medium">
               Address
             </label>
@@ -148,11 +148,11 @@ const CompleteProfile = () => {
               {...register("address")}
               className="w-full mt-2 border rounded-lg p-3"
             />
-          </div>
+          </div> */}
 
           {/* City */}
 
-          <div>
+          {/* <div>
             <label className="font-medium">
               City
             </label>
@@ -163,11 +163,11 @@ const CompleteProfile = () => {
               {...register("city")}
               className="w-full mt-2 border rounded-lg p-3"
             />
-          </div>
+          </div> */}
 
           {/* State */}
 
-          <div>
+          {/* <div>
             <label className="font-medium">
               State
             </label>
@@ -178,7 +178,7 @@ const CompleteProfile = () => {
               {...register("state")}
               className="w-full mt-2 border rounded-lg p-3"
             />
-          </div>
+          </div> */}
 
           {/* <button
             type="submit"

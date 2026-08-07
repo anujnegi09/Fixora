@@ -136,7 +136,7 @@ const Profile = () => {
               </p>
             </div>
 
-            <div>
+            {/* <div>
               <h4 className="font-semibold">
                 Address
               </h4>
@@ -144,9 +144,9 @@ const Profile = () => {
               <p>
                 {user?.address || "Not Added"}
               </p>
-            </div>
+            </div> */}
 
-            <div>
+            {/* <div>
               <h4 className="font-semibold">
                 City
               </h4>
@@ -160,7 +160,7 @@ const Profile = () => {
               </h4>
 
               <p>{user?.state || "Not Added"}</p>
-            </div>
+            </div> */}
 
           </div>
 

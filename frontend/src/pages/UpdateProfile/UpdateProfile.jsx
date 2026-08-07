@@ -11,7 +11,7 @@ import {
 
 import Button from "../../components/common/Button.jsx";
 import Input from "../../components/common/Input.jsx";
-import { State, City } from "country-state-city";
+// import { State, City } from "country-state-city";
 
 
 
@@ -24,15 +24,15 @@ const UpdateProfile = () => {
 
   const [preview, setPreview] = useState("");
 
-  const [states, setStates] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [selectedStateCode, setSelectedStateCode] = useState("");
+  // const [states, setStates] = useState([]);
+  // const [cities, setCities] = useState([]);
+  // const [selectedStateCode, setSelectedStateCode] = useState("");
 
-  useEffect(() => {
-    setStates(
-        State.getStatesOfCountry("IN")
-    );
-  }, []);
+  // useEffect(() => {
+  //   setStates(
+  //       State.getStatesOfCountry("IN")
+  //   );
+  // }, []);
 
   const {
     register,
@@ -42,27 +42,27 @@ const UpdateProfile = () => {
     formState: { errors },
   } = useForm();
 
-   const handleStateChange = (e) => {
+//    const handleStateChange = (e) => {
 
-    const stateCode = e.target.value;
+//     const stateCode = e.target.value;
 
-    setSelectedStateCode(stateCode);
+//     setSelectedStateCode(stateCode);
 
-    const selectedState = states.find(
-        state => state.isoCode === stateCode
-    );
+//     const selectedState = states.find(
+//         state => state.isoCode === stateCode
+//     );
 
-    setValue("state", selectedState.name);
+//     setValue("state", selectedState.name);
 
-    setCities(
-        City.getCitiesOfState(
-            "IN",
-            stateCode
-        )
-    );
+//     setCities(
+//         City.getCitiesOfState(
+//             "IN",
+//             stateCode
+//         )
+//     );
 
-    setValue("city", "");
-};
+//     setValue("city", "");
+// };
 
   useEffect(() => {
     dispatch(getProfile());
@@ -75,8 +75,8 @@ const UpdateProfile = () => {
         userName: user.userName || "",
         phoneNumber: user.phoneNumber || "",
         // address: user.address || "",
-        city: user.city || "",
-        state: user.state || "",
+        // city: user.city || "",
+        // state: user.state || "",
       });
 
       setPreview(user.profilePhoto || "");
@@ -216,7 +216,7 @@ const UpdateProfile = () => {
 
            {/* State */}
 
-<div>
+{/* <div>
 
 <label className="font-medium">
 State
@@ -257,10 +257,10 @@ required:"State is required"
 </p>
 )}
 
-</div>
+</div> */}
 
   {/* City */}
-<div>
+{/* <div>
 
 <label className="font-medium">
 City
@@ -304,7 +304,7 @@ required:"City is required"
 </p>
 )}
 
-</div>
+</div> */}
 
           <div className="flex gap-4 pt-4">
 

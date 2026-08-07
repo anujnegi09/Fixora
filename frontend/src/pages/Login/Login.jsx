@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
-import { login } from "../../features/auth/authThunks";
+import { login ,checkAuthentication, } from "../../features/auth/authThunks";
 import { selectLoading } from "../../features/auth/authSelectors";
 import { loginWithGoogle } from "../../api/auth.api";
 
@@ -25,14 +25,22 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
+
   const onSubmit = async (data) => {
-    const result = await dispatch(login(data));
+  try {
+    console.log("Login started");
 
-    if (login.fulfilled.match(result)) {
-      navigate("/");
-    }
-  };
+    await dispatch(login(data)).unwrap();
+    console.log("Login success");
 
+    await dispatch(checkAuthentication()).unwrap();
+    console.log("Check auth success");
+
+    navigate("/");
+  } catch (error) {
+    console.log("ERROR =>", error);
+  }
+};
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-5">
       <div className="w-full max-w-md rounded-xl bg-white shadow-lg p-8">
