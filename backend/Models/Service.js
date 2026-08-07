@@ -21,14 +21,6 @@ const ServiceSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
- 
-    location: {
-      type: String,
-      required: true,
-      index: true, // NEW: users will browse/filter services by location,
-      // so this should be indexed too.
-    },
- 
     rating: {
       type: Number,
       default: 0,
@@ -116,12 +108,29 @@ const ServiceSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+  category: {
+  type: String,
+  required: true,
+  enum: [
+    "Electrician",
+    "Plumber",
+    "Carpenter",
+    "Painter",
+    "Cleaner",
+    "Mechanic",
+    "AC Repair",
+    "Tutor",
+    "Beautician",
+    "other",
+    ],
+  },
     // used to control whether the service shows up in browse results
     // (should be tied to the user's active subscription status)
     isVisible: {
       type: Boolean,
       default: false,
     },
+
   },
   { timestamps: true }
 );
