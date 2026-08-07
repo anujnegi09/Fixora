@@ -30,7 +30,7 @@ router.get("/:id", getServiceById);
 router.patch("/update/:id", verifyJWT,verifySubscription, updateService);   
 
 // Delete service
-router.delete("/delete/:id", verifyJWT, deleteService);  //there is no need to verify subscription for deleting a service
+router.delete("/:id", verifyJWT, deleteService);  //there is no need to verify subscription for deleting a service
 
 router.patch("/:id/toggle-visibility",verifyJWT,toggleServiceVisibility);
 
