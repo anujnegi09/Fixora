@@ -241,7 +241,6 @@ export const changePassword = asyncHandler(async (req, res) => {
 
 
 export const updateLocation = asyncHandler(async (req, res) => {
-
     const userId = req.user._id;
 
     const {
@@ -289,11 +288,14 @@ export const updateLocation = asyncHandler(async (req, res) => {
     };
 
     await user.save({ validateBeforeSave: false });
+    const updatedUser = await User.findById(userId)
+    .select("-password -refreshToken");
+    console.log(updatedUser.location);
 
     return res.status(200).json(
         new apiResponse(
             200,
-            user.location,
+            updatedUser,
             "Location updated successfully"
         )
     );

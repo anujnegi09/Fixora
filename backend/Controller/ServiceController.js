@@ -33,6 +33,7 @@ export const createService = asyncHandler(async (req, res) => {
     const {
         title,
         description,
+        category,
         phoneNumber,
         availability,
         price,
@@ -43,6 +44,7 @@ export const createService = asyncHandler(async (req, res) => {
     const requiredFields = {
         title,
         description,
+        category,
         phoneNumber,
         availability,
         price,
@@ -75,27 +77,17 @@ export const createService = asyncHandler(async (req, res) => {
         userId: req.user._id,
 
         title,
-
         description,
-
+        category,
         phoneNumber,
-
         availability,
-
         price,
-
         serviceRadius,
-
         location: {
-
             address: location.address,
-
             city: location.city,
-
             state: location.state,
-
             pincode: location.pincode,
-
             coordinates: {
                 type: "Point",
                 coordinates: [
@@ -152,7 +144,6 @@ export const getAllServices = asyncHandler(async (req, res) => {
         latitude,
         longitude,
         radius = 10000, // 10 km in meters
-        city,
     } = req.query;
     const skip = (page - 1) * limit;
     const filter = {
@@ -161,12 +152,6 @@ export const getAllServices = asyncHandler(async (req, res) => {
     if (title) {
         filter.title = {
             $regex: title,
-            $options: "i",
-        };
-    }
-    if (city) {
-        filter["location.city"] = {
-            $regex: city,
             $options: "i",
         };
     }
@@ -213,34 +198,7 @@ export const getAllServices = asyncHandler(async (req, res) => {
         )
     );
 });
-// export const getAllServices = asyncHandler(async (req, res) => {
-//   const { page = 1, limit = 10, location, title } = req.query;
 
-//   const filter = {};
-
-//   // ✅ Search filters
-//   if (location) filter.location = { $regex: location, $options: "i" };
-//   if (title) filter.title = { $regex: title, $options: "i" };
-
-//   const skip = (page - 1) * limit;
-
-//   const services = await Service.find({ ...filter, isVisible : true})
-//     .populate("userId", "fullName email")
-//     .skip(skip)
-//     .limit(parseInt(limit))
-//     .lean();
-
-//   const total = await Service.countDocuments(filter);
-
-//   res.status(200).json(
-//     new apiResponse(200, {
-//       services,
-//       total,
-//       page: parseInt(page),
-//       totalPages: Math.ceil(total / limit)
-//     }, "Services fetched successfully")
-//   );
-// });
 
 /**
  * @desc Get a single service by ID
