@@ -1,32 +1,35 @@
+import { FaChevronDown } from "react-icons/fa";
+
 const CategoryFilter = ({
   categories = [],
   value,
   onChange,
 }) => {
   return (
-    <div className="w-full">
-
-      <label className="block mb-2 font-medium text-gray-700">
-        Category
-      </label>
-
+    <div className="relative w-full">
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="
+          appearance-none
+          h-12
           w-full
+          rounded-xl
           border
           border-gray-300
-          rounded-lg
+          bg-white
           px-4
-          py-3
+          shadow-sm
           outline-none
+          transition
+          focus:border-blue-500
           focus:ring-2
           focus:ring-blue-500
-          focus:border-blue-500
         "
       >
-        <option value="">All Categories</option>
+        <option value="" disabled hidden>
+          All Categories
+        </option>
 
         {categories.map((category) => (
           <option
@@ -37,7 +40,16 @@ const CategoryFilter = ({
           </option>
         ))}
       </select>
-
+        <FaChevronDown
+    className="
+      pointer-events-none
+      absolute
+      right-4
+      top-1/2
+      -translate-y-1/2
+      text-gray-500
+    "
+  />
     </div>
   );
 };
