@@ -5,13 +5,11 @@ import serviceSlice from "../features/services/serviceSlice.js"
 import locationSlice from "../features/location/locationSlice.js"
 
 
-
-
 export const store = configureStore({
     reducer :{
         auth : authSlice,
         user : userSlice,
-        service :serviceSlice,
+        service : serviceSlice,
         location : locationSlice
         
     },
