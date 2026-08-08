@@ -70,7 +70,7 @@ const MyServiceCard = ({ service }) => {
   // ==========================
 
   const handleEdit = () => {
-    navigate(`/edit-service/${service._id}`);
+    navigate(`/update-service/${service._id}`);
   };
 
   return (
@@ -157,6 +157,12 @@ const MyServiceCard = ({ service }) => {
         <div className="mt-5 grid grid-cols-3 gap-2 border-t border-gray-100 pt-4">
 
           {/* Edit */}
+          {/* <Link
+  to={`/update-service/${service._id}`}
+  className="px-3 py-1 bg-yellow-400 text-white rounded-md hover:bg-yellow-500"
+>
+  Edit
+</Link> */}
           <button
             type="button"
             onClick={handleEdit}

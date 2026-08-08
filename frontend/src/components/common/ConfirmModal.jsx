@@ -19,7 +19,6 @@ onClick={(e) => e.stopPropagation()}
 >
 {/* Header */} <div className="flex items-start justify-between"> <div className="flex items-center gap-3"> <div className="flex h-11 w-11 items-center justify-center rounded-full bg-red-100"> <FaExclamationTriangle className="text-red-600" /> </div>
 
-```
         <h2 className="text-xl font-semibold text-gray-800">
           {title}
         </h2>
