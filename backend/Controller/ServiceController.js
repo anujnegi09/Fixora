@@ -107,31 +107,7 @@ export const createService = asyncHandler(async (req, res) => {
     );
 
 });
-// export const createService = asyncHandler(async (req, res) => {
-//   const { title, description, location, phoneNumber, availability, price } = req.body;
 
-//   // ✅ Better validation
-//   const requiredFields = { title, description, location, phoneNumber, availability, price };
-//   for (const [key, value] of Object.entries(requiredFields)) {
-//     if (!value) {
-//       throw new apiError(400, `${key} is required`);
-//     }
-//   }
-
-//   const service = await Service.create({
-//     userId: req.user._id,
-//     title,
-//     description,
-//     location,
-//     phoneNumber,
-//     availability,
-//     price
-//   });
-
-//   res.status(201).json(
-//     new apiResponse(201, service, "Service created successfully")
-//   );
-// });
 
 /**
  * @desc Get all services (with pagination + search)
@@ -143,48 +119,150 @@ export const getAllServices = asyncHandler(async (req, res) => {
         title,
         latitude,
         longitude,
-        radius = 10000, // 10 km in meters
     } = req.query;
-    const skip = (page - 1) * limit;
+
+    const skip = (Number(page) - 1) * Number(limit);
+    console.log("========== GET ALL SERVICES ==========");
+
+// console.log("User latitude:", latitude);
+// console.log("User longitude:", longitude);
+
+// console.log(
+//     "User coordinates:",
+//     Number(longitude),
+//     Number(latitude)
+// );
+
     const filter = {
         isVisible: true,
+        userId: { $ne: req.user._id },
     };
+
+    // Search by title
     if (title) {
         filter.title = {
             $regex: title,
             $options: "i",
         };
     }
+
     let services;
-    // User location available
+    let total;
+
+    // ==========================================
+    // USER LOCATION AVAILABLE
+    // ==========================================
+
     if (latitude && longitude) {
-        services = await Service.find({
-            ...filter,
-            "location.coordinates": {
-                $near: {
-                    $geometry: {
+        const userLongitude = Number(longitude);
+        const userLatitude = Number(latitude);
+
+        const pipeline = [
+            {
+                $geoNear: {
+                    near: {
                         type: "Point",
                         coordinates: [
-                            Number(longitude),
-                            Number(latitude),
+                            userLongitude,
+                            userLatitude,
                         ],
                     },
-                    $maxDistance: Number(radius),
+                    distanceField: "distance",
+                    spherical: true,
+                    query: filter,
                 },
             },
-        })
-            .populate("userId", "fullName email avatar")
-            .skip(skip)
-            .limit(Number(limit));
+
+            // Convert provider's serviceRadius from KM to meters
+            // and only keep services within their own radius.
+            {
+                $match: {
+                    $expr: {
+                        $lte: [
+                            "$distance",
+                            {
+                                $multiply: [
+                                    "$serviceRadius",
+                                    1000,
+                                ],
+                            },
+                        ],
+                    },
+                },
+            },
+
+            {
+                $facet: {
+                    services: [
+                        {
+                            $sort: {
+                                distance: 1,
+                            },
+                        },
+                        {
+                            $skip: skip,
+                        },
+                        {
+                            $limit: Number(limit),
+                        },
+                        {
+                            $lookup: {
+                                from: "users",
+                                localField: "userId",
+                                foreignField: "_id",
+                                as: "userId",
+                            },
+                        },
+                        {
+                            $unwind: {
+                                path: "$userId",
+                                preserveNullAndEmptyArrays: true,
+                            },
+                        },
+                        {
+                            $project: {
+                                "userId.password": 0,
+                                "userId.refreshToken": 0,
+                            },
+                        },
+                    ],
+
+                    total: [
+                        {
+                            $count: "count",
+                        },
+                    ],
+                },
+            },
+        ];
+
+        const result = await Service.aggregate(pipeline);
+
+        services = result[0]?.services || [];
+        total = result[0]?.total[0]?.count || 0;
     }
-    // No location selected
+
+    // ==========================================
+    // NO USER LOCATION
+    // ==========================================
+
     else {
         services = await Service.find(filter)
-            .populate("userId", "fullName email avatar")
+            .populate(
+                "userId",
+                "fullName email profilePhoto"
+            )
+            .sort({ createdAt: -1 })
             .skip(skip)
             .limit(Number(limit));
+
+        total = await Service.countDocuments(filter);
     }
-    const total = await Service.countDocuments(filter);
+
+    // ==========================================
+    // RESPONSE
+    // ==========================================
+
     res.status(200).json(
         new apiResponse(
             200,
@@ -192,7 +270,9 @@ export const getAllServices = asyncHandler(async (req, res) => {
                 services,
                 total,
                 page: Number(page),
-                totalPages: Math.ceil(total / limit),
+                totalPages: Math.ceil(
+                    total / Number(limit)
+                ),
             },
             "Services fetched successfully"
         )
@@ -200,9 +280,9 @@ export const getAllServices = asyncHandler(async (req, res) => {
 });
 
 
-/**
- * @desc Get a single service by ID
- */
+// /**
+//  * @desc Get a single service by ID
+//  */
 export const getServiceById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -245,7 +325,7 @@ export const updateService = asyncHandler(async (req, res) => {
     throw new apiError(403, "You are not authorized to update this service");
   }
 
-  const { title, description, location, phoneNumber, availability, price } = req.body;
+  const { title, description, location, phoneNumber, availability, price ,serviceRadius,} = req.body;
 
   // ✅ Clean update
   Object.assign(service, {
@@ -255,6 +335,7 @@ export const updateService = asyncHandler(async (req, res) => {
     ...(phoneNumber && { phoneNumber }),
     ...(availability && { availability }),
     ...(price && { price }),
+    ...(serviceRadius !== undefined && { serviceRadius }),
   });
 
   const updatedService = await service.save();
