@@ -129,29 +129,46 @@ const serviceSlice = createSlice({
       })
 
       // Delete Service
-      .addCase(deleteService.pending, (state) => {
-        state.deleteLoading = true;
-        state.error = null;
-      })
+      // .addCase(deleteService.pending, (state) => {
+      //   state.deleteLoading = true;
+      //   state.error = null;
+      // })
+      // .addCase(deleteService.fulfilled, (state, action) => {
+      //   state.deleteLoading = false;
+
+      //   state.services = state.services.filter(
+      //     (service) => service._id !== action.payload.data._id
+      //   );
+
+      //   state.myServices = state.myServices.filter(
+      //     (service) => service._id !== action.payload.data._id
+      //   );
+
+      //   if (state.service?._id === action.payload.data._id) {
+      //     state.service = null;
+      //   }
+      // })
+      // .addCase(deleteService.rejected, (state, action) => {
+      //   state.deleteLoading = false;
+      //   state.error = action.payload;
+      // })
       .addCase(deleteService.fulfilled, (state, action) => {
-        state.deleteLoading = false;
+  state.deleteLoading = false;
 
-        state.services = state.services.filter(
-          (service) => service._id !== action.payload.data._id
-        );
+  const deletedServiceId = action.payload.serviceId;
 
-        state.myServices = state.myServices.filter(
-          (service) => service._id !== action.payload.data._id
-        );
+  state.services = state.services.filter(
+    (service) => service._id !== deletedServiceId
+  );
 
-        if (state.service?._id === action.payload.data._id) {
-          state.service = null;
-        }
-      })
-      .addCase(deleteService.rejected, (state, action) => {
-        state.deleteLoading = false;
-        state.error = action.payload;
-      })
+  state.myServices = state.myServices.filter(
+    (service) => service._id !== deletedServiceId
+  );
+
+  if (state.service?._id === deletedServiceId) {
+    state.service = null;
+  }
+})
 
       // Toggle Service Visibility
       .addCase(toggleServiceVisibility.pending, (state) => {

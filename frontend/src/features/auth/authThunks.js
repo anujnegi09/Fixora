@@ -3,6 +3,9 @@ import {toast} from "react-hot-toast";
 
 import {loginUser,registerUser,logoutUser,checkAuth,resetPassword as ResetPassword ,forgotPassword as ForgotPassword} from "../../api/auth.api.js";
 
+import { getProfile } from "../user/userThunks";
+
+
 export const register = createAsyncThunk(
     "auth/register",
     async(formData,{rejectWithValue}) =>{
@@ -49,18 +52,21 @@ export const logout = createAsyncThunk(
     }
 );
 
+
 export const checkAuthentication = createAsyncThunk(
-    "auth/checkAuthentication",
-    async(_,{rejectWithValue}) =>{
-        try{
-            const response = await checkAuth();
-            return response;
-        }catch(error){
-           const message = error.response?.data?.message || "Unauthorized";
-           return rejectWithValue(message);
-        }
+  "auth/checkAuthentication",
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await checkAuth();
+      // Automatically load profile
+      await dispatch(getProfile()).unwrap();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.response?.data);
     }
+  }
 );
+
 
 export const forgotPassword = createAsyncThunk(
     "auth/forgotPassword",

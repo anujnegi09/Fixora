@@ -22,17 +22,35 @@ export const createService= createAsyncThunk(
 // get all services
 export const getAllServices = createAsyncThunk(
     "services/getAllServices",
-    async(_, {rejectWithValue}) =>{
-        try{
-        const response = await getAllServicesApi();
-        return response;
-        }catch(error){
-            const message = error.response?.data?.message || "Failed to fetch services";
+    async (params, { rejectWithValue }) => {
+        try {
+             console.log("GET ALL SERVICES PARAMS:", params);
+            const response = await getAllServicesApi(params);
+            return response;
+        } catch (error) {
+            const message =
+                error.response?.data?.message ||
+                "Failed to fetch services";
+
             toast.error(message);
+
             return rejectWithValue(message);
         }
-    } 
+    }
 );
+// export const getAllServices = createAsyncThunk(
+//     "services/getAllServices",
+//     async(_, {rejectWithValue}) =>{
+//         try{
+//         const response = await getAllServicesApi();
+//         return response;
+//         }catch(error){
+//             const message = error.response?.data?.message || "Failed to fetch services";
+//             toast.error(message);
+//             return rejectWithValue(message);
+//         }
+//     } 
+// );
 // get service by id 
 export const getServiceById= createAsyncThunk(
     "services/getServiceById",
@@ -51,9 +69,9 @@ export const getServiceById= createAsyncThunk(
 // update service
 export const updateService = createAsyncThunk(
     "services/updateService",
-    async ({ serviceId, formData }, { rejectWithValue }) => {
+    async ({ serviceId, serviceData }, { rejectWithValue }) => {
         try {
-            const response = await updateServiceApi(serviceId, formData);
+            const response = await updateServiceApi(serviceId, serviceData);
             toast.success(response.message);
             return response;
         } catch (error) {
@@ -72,7 +90,10 @@ export const deleteService = createAsyncThunk(
         try{
         const response = await deleteServiceApi(serviceId);
         toast.success(response.message);
-        return response;
+         return {
+        ...response,
+        serviceId,
+        };
         }catch(error){
             const message = error.response?.data?.message || "Failed to delete service";
             toast.error(message);
