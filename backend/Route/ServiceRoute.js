@@ -21,13 +21,13 @@ router.get("/my-services",verifyJWT,getMyServices);
 router.post("/create", verifyJWT, createService);   //verifySubscription = temprary remove this
 
 // Get all services
-router.get("/", getAllServices);
+router.get("/",verifyJWT, getAllServices );
 
 // Get single service
 router.get("/:id", getServiceById);
 
 // Update service
-router.patch("/update/:id", verifyJWT,verifySubscription, updateService);   
+router.patch("/update/:id", verifyJWT, updateService);    //,verifySubscription
 
 // Delete service
 router.delete("/:id", verifyJWT, deleteService);  //there is no need to verify subscription for deleting a service

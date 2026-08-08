@@ -51,35 +51,39 @@ const userSchema = new mongoose.Schema(
     type: String,
 },
 location: {
-    address: {
-        type: String,
-        default: "",
-    },
-    city: {
-        type: String,
-        default: "",
+  address: {
+    type: String,
+    default: "",
+  },
+
+  city: {
+    type: String,
+    default: "",
+  },
+
+  state: {
+    type: String,
+    default: "",
+  },
+
+  pincode: {
+    type: String,
+    default: "",
+  },
+
+  coordinates: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      default: "Point",
     },
 
-    state: {
-        type: String,
-        default: "",
-    },
-
-    pincode: {
-        type: String,
-        default: "",
-    },
-
-    latitude: {
-        type: Number,
-        default: null,
-    },
-
-    longitude: {
-        type: Number,
-        default: null,
+    coordinates: {
+      type: [Number],
+      default: [0, 0],
     },
   },
+},
     refreshToken: {
       type: String,
     },

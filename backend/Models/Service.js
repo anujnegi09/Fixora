@@ -71,7 +71,7 @@ const ServiceSchema = new mongoose.Schema(
       },
       city: {
           type: String,
-          required: true,
+          // required: true,
           index: true,
       },
       state: {
@@ -80,7 +80,7 @@ const ServiceSchema = new mongoose.Schema(
       },
       pincode: {
         type: String,
-        required: true,
+        // required: true,
       },
      coordinates: {
         type: {
@@ -97,7 +97,6 @@ const ServiceSchema = new mongoose.Schema(
     serviceRadius: {
     type: Number,
     required: true,
-    default: 10, // kilometers
     },
     phoneNumber: {
       type: String,
