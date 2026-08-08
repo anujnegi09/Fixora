@@ -9,10 +9,29 @@ export const createServiceApi = async (formData) => {
 };
 
 //get all services 
-export const getAllServicesApi = async () => {
-  const response = await api.get("/services");
+// export const getAllServicesApi = async (params) => {
+//     const response = await api.get("/services", params,);
+//     return response.data;
+// };
+export const getAllServicesApi = async (params) => {
+  console.log("API PARAMS:", params);
+  const response = await api.get("/services", {
+    params: {
+      page: params?.page,
+      limit: params?.limit,
+      title: params?.search,
+      latitude: params?.latitude,
+      longitude: params?.longitude,
+    },
+  });
+
   return response.data;
 };
+// export const getAllServicesApi = async (params) => {
+//   const response = await api.get("/services",{params});
+//   return response.data;
+// };
+
 //get by id 
 export const getServiceByIdApi = async (serviceId)=>{
   const response = await api.get(`/services/${serviceId}`);
@@ -20,8 +39,8 @@ export const getServiceByIdApi = async (serviceId)=>{
 }
 
 //update service 
-export const updateServiceApi = async (serviceId,formData) => {
-  const response = await api.patch(`/services/update/${serviceId}`, formData);
+export const updateServiceApi = async (serviceId,serviceData) => {
+  const response = await api.patch(`/services/update/${serviceId}`, serviceData);
 
   return response.data;
 };
