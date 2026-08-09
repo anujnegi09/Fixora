@@ -12,8 +12,14 @@ import GoogleSuccess from "../pages/GoogleSuccess/GoogleSuccess.jsx";
 import CompleteProfile from "../pages/CompleteProfile/CompleteProfile.jsx";
 import UpdateProfile from "../pages/UpdateProfile/UpdateProfile.jsx";
 import ChangePassword from "../pages/ChangePassword/ChangePassword.jsx";
-import MainLayout from "../components/layout/MainLayout";
+import BecomeProvider from "../pages/BecomeProvider/BecomeProvider";
+import Services from "../pages/Services/Services.jsx";
+import CreateService from "../pages/CreateService/CreateService.jsx";
+import ServiceDetails from "../pages/ServiceDetails/ServiceDetails";
+import UpdateService from "../pages/UpdateService/UpdateService";
 
+
+import MainLayout from "../components/layout/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import GuestRoute from "./GuestRoute";
 
@@ -58,6 +64,49 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/services"
+          element={
+            <ProtectedRoute>
+              <Services />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+  path="/become-provider"
+  element={
+    <ProtectedRoute>
+      <BecomeProvider />
+    </ProtectedRoute>
+  }
+/>
+
+        <Route
+          path="/create-service"
+          element={
+            <ProtectedRoute>
+              <CreateService />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+  path="/services/:serviceId"
+  element={<ServiceDetails />}
+/>
+
+      <Route
+  path="/update-service/:serviceId"
+  element={
+    <ProtectedRoute>
+      <UpdateService />
+    </ProtectedRoute>
+  }
+/>
+
+
 
       </Route>
 
