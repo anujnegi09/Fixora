@@ -54,14 +54,9 @@ const MyServiceCard = ({ service }) => {
 
   const handleToggleVisibility = async () => {
     try {
-      await dispatch(
-        toggleServiceVisibility(service._id)
-      ).unwrap();
+      await dispatch(toggleServiceVisibility(service._id)).unwrap();
     } catch (error) {
-      console.error(
-        "Failed to update service visibility:",
-        error
-      );
+      console.error("Failed to update service visibility:", error);
     }
   };
 
@@ -76,7 +71,6 @@ const MyServiceCard = ({ service }) => {
   return (
     <>
       <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:shadow-md">
-
         {/* Service Header */}
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -110,7 +104,6 @@ const MyServiceCard = ({ service }) => {
 
         {/* Service Information */}
         <div className="mt-5 space-y-4">
-
           {/* Location */}
           <div className="flex items-start gap-3">
             <FaMapMarkerAlt className="mt-1 shrink-0 text-red-500" />
@@ -132,9 +125,7 @@ const MyServiceCard = ({ service }) => {
           {/* Price + Radius */}
           <div className="flex items-center justify-between border-t border-gray-100 pt-4">
             <div>
-              <p className="text-xs text-gray-500">
-                Price
-              </p>
+              <p className="text-xs text-gray-500">Price</p>
 
               <p className="text-lg font-bold text-gray-800">
                 ₹{service.price}
@@ -142,9 +133,7 @@ const MyServiceCard = ({ service }) => {
             </div>
 
             <div className="text-right">
-              <p className="text-xs text-gray-500">
-                Service Radius
-              </p>
+              <p className="text-xs text-gray-500">Service Radius</p>
 
               <p className="font-semibold text-gray-700">
                 {service.serviceRadius} km
@@ -155,7 +144,6 @@ const MyServiceCard = ({ service }) => {
 
         {/* Actions */}
         <div className="mt-5 grid grid-cols-3 gap-2 border-t border-gray-100 pt-4">
-
           {/* Edit */}
           {/* <Link
   to={`/update-service/${service._id}`}

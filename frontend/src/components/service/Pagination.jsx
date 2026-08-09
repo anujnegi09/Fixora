@@ -1,14 +1,6 @@
-import {
-  FaAngleLeft,
-  FaAngleRight,
-} from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 
-const Pagination = ({
-  currentPage,
-  totalPages,
-  onPageChange,
-}) => {
-
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   if (totalPages <= 1) return null;
 
   const pages = [];
@@ -19,7 +11,6 @@ const Pagination = ({
 
   return (
     <div className="flex items-center justify-center gap-2 mt-8">
-
       {/* Previous Button */}
 
       <button
@@ -57,7 +48,6 @@ const Pagination = ({
       >
         <FaAngleRight />
       </button>
-
     </div>
   );
 };

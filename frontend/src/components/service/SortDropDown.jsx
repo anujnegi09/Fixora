@@ -1,6 +1,5 @@
 import { FaChevronDown } from "react-icons/fa";
 
-
 const SortDropdown = ({
   value,
   onChange,
@@ -62,16 +61,13 @@ const SortDropdown = ({
         </option>
 
         {options.map((option) => (
-          <option
-            key={option.value}
-            value={option.value}
-          >
+          <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}
       </select>
       <FaChevronDown
-    className="
+        className="
       pointer-events-none
       absolute
       right-4
@@ -79,7 +75,7 @@ const SortDropdown = ({
       -translate-y-1/2
       text-gray-500
     "
-  />
+      />
     </div>
   );
 };
