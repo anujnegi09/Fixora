@@ -127,9 +127,8 @@ const ServiceSchema = new mongoose.Schema(
     // (should be tied to the user's active subscription status)
     isVisible: {
       type: Boolean,
-      default: false,
+      default: true,
     },
-
   },
   { timestamps: true }
 );

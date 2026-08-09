@@ -122,16 +122,6 @@ export const getAllServices = asyncHandler(async (req, res) => {
     } = req.query;
 
     const skip = (Number(page) - 1) * Number(limit);
-    console.log("========== GET ALL SERVICES ==========");
-
-// console.log("User latitude:", latitude);
-// console.log("User longitude:", longitude);
-
-// console.log(
-//     "User coordinates:",
-//     Number(longitude),
-//     Number(latitude)
-// );
 
     const filter = {
         isVisible: true,
@@ -139,12 +129,23 @@ export const getAllServices = asyncHandler(async (req, res) => {
     };
 
     // Search by title
-    if (title) {
-        filter.title = {
-            $regex: title,
-            $options: "i",
-        };
-    }
+   // Search by title OR category
+if (title) {
+    filter.$or = [
+        {
+            title: {
+                $regex: title,
+                $options: "i",
+            },
+        },
+        {
+            category: {
+                $regex: title,
+                $options: "i",
+            },
+        },
+    ];
+}
 
     let services;
     let total;
