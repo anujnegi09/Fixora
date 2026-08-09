@@ -19,11 +19,14 @@ export const selectChangePasswordLoading = (state) =>
 // Error
 export const selectUserError = (state) => state.user.error;
 
-// export const selectUserLocation = (state) =>
-//     state.user.profile?.location;
+export const selectUserLocation = (state) =>
+    state.user.profile?.location;
 
 export const selectUpdateLocationLoading = (state) =>
     state.user.updateLocationLoading;
+
+
+
 
 // export const selectUserLocation = (state) => {
 //   const location = state.user.profile?.location;
@@ -49,30 +52,30 @@ export const selectUpdateLocationLoading = (state) =>
 //   };
 // };
 
-export const selectUserLocation = (state) => {
-  const location = state.user.profile?.location;
+// export const selectUserLocation = (state) => {
+//   const location = state.user.profile?.location;
 
-  if (!location) {
-    return {
-      address: "",
-      city: "",
-      state: "",
-      pincode: "",
-      latitude: null,
-      longitude: null,
-    };
-  }
+//   if (!location) {
+//     return {
+//       address: "",
+//       city: "",
+//       state: "",
+//       pincode: "",
+//       latitude: null,
+//       longitude: null,
+//     };
+//   }
 
-  return {
-    address: location.address || "",
-    city: location.city || "",
-    state: location.state || "",
-    pincode: location.pincode || "",
+//   return {
+//     address: location.address || "",
+//     city: location.city || "",
+//     state: location.state || "",
+//     pincode: location.pincode || "",
 
-    longitude:
-      location.coordinates?.coordinates?.[0] ?? null,
+//     longitude:
+//       location.coordinates?.coordinates?.[0] ?? null,
 
-    latitude:
-      location.coordinates?.coordinates?.[1] ?? null,
-  };
-};
+//     latitude:
+//       location.coordinates?.coordinates?.[1] ?? null,
+//   };
+// };

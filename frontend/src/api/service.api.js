@@ -14,7 +14,6 @@ export const createServiceApi = async (formData) => {
 //     return response.data;
 // };
 export const getAllServicesApi = async (params) => {
-  console.log("API PARAMS:", params);
   const response = await api.get("/services", {
     params: {
       page: params?.page,

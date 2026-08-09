@@ -24,7 +24,6 @@ export const getAllServices = createAsyncThunk(
     "services/getAllServices",
     async (params, { rejectWithValue }) => {
         try {
-             console.log("GET ALL SERVICES PARAMS:", params);
             const response = await getAllServicesApi(params);
             return response;
         } catch (error) {
