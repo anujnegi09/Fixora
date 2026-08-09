@@ -3,12 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { forgotPassword } from "../../features/auth/authThunks";
-import {
-  selectForgotPasswordLoading,
-} from "../../features/auth/authSelectors";
+import { selectForgotPasswordLoading } from "../../features/auth/authSelectors";
 
-import Button from "../../components/common/Button.jsx"
-import Input from "../../components/common/Input.jsx"
+import Button from "../../components/common/Button.jsx";
+import Input from "../../components/common/Input.jsx";
 
 const ForgotPassword = () => {
   const dispatch = useDispatch();
@@ -22,9 +20,8 @@ const ForgotPassword = () => {
     reset,
   } = useForm();
 
-  
   const onSubmit = async (data) => {
-    const result = await dispatch(forgotPassword({email :data.email}));
+    const result = await dispatch(forgotPassword({ email: data.email }));
 
     if (forgotPassword.fulfilled.match(result)) {
       reset();
@@ -34,7 +31,6 @@ const ForgotPassword = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-5">
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
-
         <h1 className="text-3xl font-bold text-center text-blue-600">
           Forgot Password
         </h1>
@@ -43,11 +39,7 @@ const ForgotPassword = () => {
           Enter your registered email address.
         </p>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-5"
-        >
-
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* <div>
 
             <label className="font-medium">
@@ -71,16 +63,16 @@ const ForgotPassword = () => {
 
           </div> */}
 
-           <Input
-  label="Email"
-  type="email"
-  name="email"
-  placeholder="Enter your email"
-  error={errors.email?.message}
-  {...register("email", {
-    required: "Email is required",
-  })}
-/>
+          <Input
+            label="Email"
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            error={errors.email?.message}
+            {...register("email", {
+              required: "Email is required",
+            })}
+          />
 
           {/* <button
             type="submit"
@@ -92,29 +84,17 @@ const ForgotPassword = () => {
               : "Send Reset Link"}
           </button> */}
 
-          <Button
-            type="submit"
-            loading={forgotPasswordLoading}
-            fullWidth
-          >
+          <Button type="submit" loading={forgotPasswordLoading} fullWidth>
             Send Reset Link
           </Button>
-
         </form>
 
         <p className="text-center mt-6">
-
           Remember your password?
-
-          <Link
-            to="/login"
-            className="ml-1 text-blue-600 hover:underline"
-          >
+          <Link to="/login" className="ml-1 text-blue-600 hover:underline">
             Login
           </Link>
-
         </p>
-
       </div>
     </div>
   );

@@ -3,51 +3,46 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-selectMyServices,
-selectServiceLoading,
-selectServiceError,
+  selectMyServices,
+  selectServiceLoading,
+  selectServiceError,
 } from "../../features/services/serviceSelectors.js";
 
-import {
-getMyServices,
-} from "../../features/services/serviceThunks.js";
+import { getMyServices } from "../../features/services/serviceThunks.js";
 
 import EmptyState from "../../components/common/EmptyState.jsx";
 import MyServiceCard from "../../components/service/MyServiceCard.jsx";
 
 const BecomeProvider = () => {
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-const myServices = useSelector(selectMyServices);
-const loading = useSelector(selectServiceLoading);
-const error = useSelector(selectServiceError);
+  const myServices = useSelector(selectMyServices);
+  const loading = useSelector(selectServiceLoading);
+  const error = useSelector(selectServiceError);
 
-// Fetch user's services when page loads
-useEffect(() => {
-dispatch(getMyServices());
-}, [dispatch]);
+  // Fetch user's services when page loads
+  useEffect(() => {
+    dispatch(getMyServices());
+  }, [dispatch]);
 
-return ( <div className="mx-auto max-w-7xl px-5 py-24">
+  return (
+    <div className="mx-auto max-w-7xl px-5 py-28">
+      {/* Heading */}
 
-  {/* Heading */}
+      <div className="mb-28 flex items-center justify-between">
+        <div>
+          <h1 className="text-4xl font-bold">Become a Provider</h1>
 
-  <div className="mb-8 flex items-center justify-between">
+          <p className="mt-2 text-gray-500">
+            Manage all your services from one place.
+          </p>
+        </div>
 
-    <div>
-      <h1 className="text-4xl font-bold">
-        Become a Provider
-      </h1>
+        {/* Create Service */}
 
-      <p className="mt-2 text-gray-500">
-        Manage all your services from one place.
-      </p>
-    </div>
-
-    {/* Create Service */}
-
-    <Link
-      to="/create-service"
-      className="
+        <Link
+          to="/create-service"
+          className="
         inline-flex
         items-center
         gap-2
@@ -69,73 +64,59 @@ return ( <div className="mx-auto max-w-7xl px-5 py-24">
         focus:ring-red-800
         focus:ring-offset-2
       "
-    >
-      <span className="text-lg">+</span>
-      Create Service
-    </Link>
-
-  </div>
-
-  {/* Loading */}
-
-  {loading && (
-    <div className="py-12 text-center">
-      <p className="text-lg font-medium text-blue-600">
-        Loading your services...
-      </p>
-    </div>
-  )}
-
-  {/* Error */}
-
-  {!loading && error && (
-    <div className="rounded-lg bg-red-50 p-4 text-center text-red-600">
-      {error}
-    </div>
-  )}
-
-  {/* Empty */}
-
-  {!loading &&
-    !error &&
-    myServices.length === 0 && (
-      <EmptyState
-        title="No Services Yet"
-        message="Create your first service and start receiving bookings."
-        buttonText="Create Service"
-      />
-    )}
-
-  {/* Services */}
-
-  {!loading &&
-    myServices.length > 0 && (
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-
-        {myServices.map((service) => (
-          <MyServiceCard
-            key={service._id}
-            service={service}
-          />
-        ))}
-
+        >
+          <span className="text-lg">+</span>
+          Create Service
+        </Link>
       </div>
-    )}
 
-</div>
+      {/* Loading */}
 
-);
+      {loading && (
+        <div className="py-12 text-center">
+          <p className="text-lg font-medium text-blue-600">
+            Loading your services...
+          </p>
+        </div>
+      )}
+
+      {/* Error */}
+
+      {!loading && error && (
+        <div className="rounded-lg bg-red-50 p-4 text-center text-red-600">
+          {error}
+        </div>
+      )}
+
+      {/* Empty */}
+
+      {!loading && !error && myServices.length === 0 && (
+        <EmptyState
+          title="No Services Yet"
+          message="Create your first service and start receiving bookings."
+          buttonText="Create Service"
+        />
+      )}
+
+      {/* Services */}
+
+      {!loading && myServices.length > 0 && (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {myServices.map((service) => (
+            <MyServiceCard key={service._id} service={service} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default BecomeProvider;
 
 
 
-
-
 // import { Link } from "react-router-dom";
 // import { useSelector } from "react-redux";
-
 
 // import {selectMyServices, selectServiceLoading} from "../../features/services/serviceSelectors.js";
 // import {getMyServices } from "../../features/services/serviceThunks.js";
@@ -165,8 +146,6 @@ export default BecomeProvider;
 //           </p>
 
 //         </div>
-
-
 
 //         <Link
 //   to="/create-service"
@@ -214,8 +193,6 @@ export default BecomeProvider;
 //             buttonText="Create Service"
 //           />
 //         )}
-
-
 
 //       {/* Cards */}
 

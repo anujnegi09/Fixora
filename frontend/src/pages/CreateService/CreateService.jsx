@@ -55,8 +55,8 @@ const CreateService = () => {
   } = useForm({
     defaultValues: {
       availability: [],
-      category: categories[0],
-      serviceRadius: 10,
+      category: "",
+      serviceRadius: "",
     },
   });
 
@@ -99,7 +99,6 @@ const CreateService = () => {
       },
     };
 
-    console.log("DATA BEING SENT:", formattedData);
     const result = await dispatch(createService(formattedData));
 
     if (createService.fulfilled.match(result)) {
@@ -118,16 +117,9 @@ const CreateService = () => {
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-8">
+      <h1 className="mb-8 text-3xl font-bold">Create New Service</h1>
 
-      <h1 className="mb-8 text-3xl font-bold">
-        Create New Service
-      </h1>
-
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-7"
-      >
-
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
         {/* Service Title */}
 
         <Input
@@ -142,19 +134,15 @@ const CreateService = () => {
         {/* Category */}
 
         <div>
-          <label className="font-medium">
-            Category
-          </label>
+          <label className="font-medium">Category</label>
 
           <select
             {...register("category")}
             className="mt-4 w-full rounded-lg border p-3"
           >
+            <option value="">All Categories</option>
             {categories.map((category) => (
-              <option
-                key={category}
-                value={category}
-              >
+              <option key={category} value={category}>
                 {category}
               </option>
             ))}
@@ -164,9 +152,7 @@ const CreateService = () => {
         {/* Description */}
 
         <div>
-          <label className="mb-2 block font-medium">
-            Description
-          </label>
+          <label className="mb-2 block font-medium">Description</label>
 
           <textarea
             rows="4"
@@ -215,9 +201,7 @@ const CreateService = () => {
         {/* Service Location */}
 
         <div>
-          <label className="mb-2 block font-medium">
-            Service Location
-          </label>
+          <label className="mb-2 block font-medium">Service Location</label>
 
           <ServiceSearchHeader
             location={
@@ -225,9 +209,7 @@ const CreateService = () => {
                 ? `${serviceLocation.city}, ${serviceLocation.state}`
                 : "Select Location"
             }
-            onLocationClick={() =>
-              setShowLocationModal(true)
-            }
+            onLocationClick={() => setShowLocationModal(true)}
             showSearch={false}
             showCategory={false}
             showSort={false}
@@ -235,10 +217,8 @@ const CreateService = () => {
 
           {serviceLocation && (
             <div className="mt-3 rounded-lg border bg-gray-50 p-4">
-
               <p className="font-medium">
-                {serviceLocation.city},{" "}
-                {serviceLocation.state}
+                {serviceLocation.city}, {serviceLocation.state}
               </p>
 
               <p className="mt-1 text-sm text-gray-600">
@@ -248,7 +228,6 @@ const CreateService = () => {
               <p className="mt-1 text-sm text-gray-600">
                 Pincode: {serviceLocation.pincode}
               </p>
-
             </div>
           )}
         </div>
@@ -256,6 +235,24 @@ const CreateService = () => {
         {/* Service Radius */}
 
         <Input
+          label="Radius (km)"
+          type="number"
+          placeholder="Enter service radius"
+          error={errors.serviceRadius?.message}
+          {...register("serviceRadius", {
+            required: "Service radius is required",
+            valueAsNumber: true,
+            min: {
+              value: 1,
+              message: "Minimum radius is 1 km",
+            },
+            max: {
+              value: 100,
+              message: "Maximum radius is 100 km",
+            },
+          })}
+        />
+        {/* <Input
           label="Radius (km)"
           type="number"
           placeholder="10"
@@ -272,17 +269,14 @@ const CreateService = () => {
               message: "Maximum radius is 100 km",
             },
           })}
-        />
+        /> */}
 
         {/* Availability */}
 
         <div>
-          <h3 className="mb-3 text-lg font-semibold">
-            Availability
-          </h3>
+          <h3 className="mb-3 text-lg font-semibold">Availability</h3>
 
           <div className="grid grid-cols-2 gap-3">
-
             {weekDays.map((day) => (
               <label
                 key={day}
@@ -294,16 +288,11 @@ const CreateService = () => {
                   checked={selectedDays.includes(day)}
                   onChange={(e) => {
                     if (e.target.checked) {
-                      setValue("availability", [
-                        ...selectedDays,
-                        day,
-                      ]);
+                      setValue("availability", [...selectedDays, day]);
                     } else {
                       setValue(
                         "availability",
-                        selectedDays.filter(
-                          (d) => d !== day
-                        )
+                        selectedDays.filter((d) => d !== day),
                       );
                     }
                   }}
@@ -312,7 +301,6 @@ const CreateService = () => {
                 {day}
               </label>
             ))}
-
           </div>
 
           {selectedDays.length === 0 && (
@@ -324,14 +312,9 @@ const CreateService = () => {
 
         {/* Submit */}
 
-        <Button
-          type="submit"
-          loading={loading}
-          fullWidth
-        >
+        <Button type="submit" loading={loading} fullWidth>
           Create Service
         </Button>
-
       </form>
 
       {/* Location Modal */}
@@ -342,7 +325,6 @@ const CreateService = () => {
           onLocationSelect={handleLocationSelect}
         />
       )}
-
     </div>
   );
 };

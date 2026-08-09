@@ -33,22 +33,14 @@ const ChangePassword = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center px-5">
-
       <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-lg">
-
-        <h1 className="text-3xl font-bold text-center mb-2">
-          Change Password
-        </h1>
+        <h1 className="text-3xl font-bold text-center mb-2">Change Password</h1>
 
         <p className="text-center text-gray-500 mb-8">
           Update your account password securely.
         </p>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-6"
-        >
-
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <PasswordInput
             label="Current Password"
             placeholder="Enter current password"
@@ -83,12 +75,7 @@ const ChangePassword = () => {
           />
 
           <div className="flex gap-4 pt-4">
-
-            <Button
-              type="submit"
-              loading={loading}
-              fullWidth
-            >
+            <Button type="submit" loading={loading} fullWidth>
               Change Password
             </Button>
 
@@ -99,13 +86,9 @@ const ChangePassword = () => {
             >
               Cancel
             </Button>
-
           </div>
-
         </form>
-
       </div>
-
     </div>
   );
 };

@@ -42,15 +42,12 @@ const CompleteProfile = () => {
 
       const response = await completeProfileApi(formData);
 
-      toast.success(
-        response.message || "Profile completed successfully."
-      );
+      toast.success(response.message || "Profile completed successfully.");
 
       navigate("/");
     } catch (error) {
       toast.error(
-        error.response?.data?.message ||
-          "Failed to complete profile."
+        error.response?.data?.message || "Failed to complete profile.",
       );
     }
   };
@@ -58,7 +55,6 @@ const CompleteProfile = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-5 py-10">
       <div className="w-full max-w-xl bg-white rounded-xl shadow-lg p-8">
-
         <h1 className="text-3xl font-bold text-center text-blue-600">
           Complete Your Profile
         </h1>
@@ -67,11 +63,7 @@ const CompleteProfile = () => {
           Just a few more details to finish setting up your account.
         </p>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-5"
-        >
-
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Phone Number */}
 
           {/* <div>
@@ -98,25 +90,23 @@ const CompleteProfile = () => {
               </p>
             )}
           </div> */}
-<Input
-  label="Phone Number"
-  type="tel"
-  placeholder="Enter phone number"
-  error={errors.phoneNumber?.message}
-  {...register("phoneNumber", {
-    required: "Phone number is required",
-    pattern: {
-      value: /^[6-9]\d{9}$/,
-      message: "Enter a valid 10-digit phone number",
-    },
-  })}
-/>
+          <Input
+            label="Phone Number"
+            type="tel"
+            placeholder="Enter phone number"
+            error={errors.phoneNumber?.message}
+            {...register("phoneNumber", {
+              required: "Phone number is required",
+              pattern: {
+                value: /^[6-9]\d{9}$/,
+                message: "Enter a valid 10-digit phone number",
+              },
+            })}
+          />
           {/* Profile Image */}
 
           <div>
-            <label className="font-medium">
-              Profile Picture (Optional)
-            </label>
+            <label className="font-medium">Profile Picture (Optional)</label>
 
             <input
               type="file"
@@ -189,16 +179,10 @@ const CompleteProfile = () => {
               ? "Saving..."
               : "Complete Profile"}
           </button> */}
-          <Button
-            type="submit"
-            loading={isSubmitting}
-            fullWidth
-          >
+          <Button type="submit" loading={isSubmitting} fullWidth>
             Complete Profile
           </Button>
-
         </form>
-
       </div>
     </div>
   );

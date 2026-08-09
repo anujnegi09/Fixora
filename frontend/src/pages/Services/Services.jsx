@@ -16,6 +16,7 @@ import ServiceCard from "../../components/service/ServiceCard";
 import ServicePagination from "../../components/service/Pagination";
 import ServiceSearchHeader from "../../components/service/ServiceSearchHeader";
 import LocationModal from "../../components/location/LocationModal";
+import ServiceDetailsModal from "../../components/service/ServiceDetailsModal";
 
 const Services = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,8 @@ const Services = () => {
   const [sortBy, setSortBy] = useState("");
   const [page, setPage] = useState(1);
 
+  const [selectedServiceId, setSelectedServiceId] = useState(null);
+
   const [showLocationModal, setShowLocationModal] = useState(false);
 
   // Reset page whenever search/filter changes
@@ -40,7 +43,6 @@ const Services = () => {
   }, [search, category, sortBy]);
 
   // Fetch services
-
   useEffect(() => {
     dispatch(
       getAllServices({
@@ -50,7 +52,7 @@ const Services = () => {
         page,
         latitude: selectedLocation?.latitude,
         longitude: selectedLocation?.longitude,
-      })
+      }),
     );
   }, [
     dispatch,
@@ -62,22 +64,18 @@ const Services = () => {
     selectedLocation?.longitude,
   ]);
 
-
   const handleLocationSelect = async (location) => {
-  try {
-    await dispatch(updateLocation(location)).unwrap();
-    setShowLocationModal(false);
-  } catch (error) {
-    console.error("Failed to update location:", error);
-  }
-};
+    try {
+      await dispatch(updateLocation(location)).unwrap();
+      setShowLocationModal(false);
+    } catch (error) {
+      console.error("Failed to update location:", error);
+    }
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-24">
-
-      <h1 className="mb-8 text-4xl font-bold">
-        Services
-      </h1>
+      <h1 className="mb-8 text-4xl font-bold">Services</h1>
 
       <ServiceSearchHeader
         location={
@@ -95,12 +93,12 @@ const Services = () => {
         isLocationOpen={showLocationModal}
       />
 
-     {showLocationModal && (
-  <LocationModal
-    onClose={() => setShowLocationModal(false)}
-    onLocationSelect={handleLocationSelect}
-  />
-)}
+      {showLocationModal && (
+        <LocationModal
+          onClose={() => setShowLocationModal(false)}
+          onLocationSelect={handleLocationSelect}
+        />
+      )}
       {/* Loading */}
 
       {loading && (
@@ -114,24 +112,18 @@ const Services = () => {
       {/* Error */}
 
       {error && (
-        <div className="rounded-lg bg-red-50 p-4 text-red-600">
-          {error}
-        </div>
+        <div className="rounded-lg bg-red-50 p-4 text-red-600">{error}</div>
       )}
 
       {/* Empty */}
 
       {!loading && services.length === 0 && (
         <div className="py-16 text-center">
-
-          <h2 className="text-2xl font-semibold">
-            No Services Found
-          </h2>
+          <h2 className="text-2xl font-semibold">No Services Found</h2>
 
           <p className="mt-2 text-gray-500">
             Try changing your location or search filters.
           </p>
-
         </div>
       )}
 
@@ -139,30 +131,29 @@ const Services = () => {
 
       {!loading && services.length > 0 && (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-
           {services.map((service) => (
-            <ServiceCard
-              key={service._id}
-              service={service}
-            />
+            <ServiceCard key={service._id} service={service}
+            onViewDetails={() => setSelectedServiceId(service._id)} />
           ))}
-
         </div>
       )}
+      {selectedServiceId && (
+  <ServiceDetailsModal
+    serviceId={selectedServiceId}
+    onClose={() => setSelectedServiceId(null)}
+    onBook={(service) => {
+      console.log("Book service:", service);
+    }}
+  />
+)}
 
       {/* Pagination */}
 
       {services.length > 0 && (
         <div className="mt-10">
-
-          <ServicePagination
-            currentPage={page}
-            onPageChange={setPage}
-          />
-
+          <ServicePagination currentPage={page} onPageChange={setPage} />
         </div>
       )}
-
     </div>
   );
 };

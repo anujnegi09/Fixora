@@ -1,4 +1,4 @@
-import { useState , useEffect} from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
@@ -10,9 +10,8 @@ import { loginWithGoogle } from "../../api/auth.api";
 import { State, City } from "country-state-city";
 
 import Button from "../../components/common/Button.jsx";
-import Input from "../../components/common/Input.jsx"
-import PasswordInput from "../../components/common/PasswordInput.jsx"
-
+import Input from "../../components/common/Input.jsx";
+import PasswordInput from "../../components/common/PasswordInput.jsx";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -26,13 +25,10 @@ const Register = () => {
   const [cities, setCities] = useState([]);
   const [selectedStateCode, setSelectedStateCode] = useState("");
 
-
   // const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
-    setStates(
-        State.getStatesOfCountry("IN")
-    );
+    setStates(State.getStatesOfCountry("IN"));
   }, []);
 
   const {
@@ -44,26 +40,18 @@ const Register = () => {
   } = useForm();
 
   const handleStateChange = (e) => {
-
     const stateCode = e.target.value;
 
     setSelectedStateCode(stateCode);
 
-    const selectedState = states.find(
-        state => state.isoCode === stateCode
-    );
+    const selectedState = states.find((state) => state.isoCode === stateCode);
 
     setValue("state", selectedState.name);
 
-    setCities(
-        City.getCitiesOfState(
-            "IN",
-            stateCode
-        )
-    );
+    setCities(City.getCitiesOfState("IN", stateCode));
 
     setValue("city", "");
-};
+  };
 
   // const password = watch("password");
 
@@ -93,20 +81,13 @@ const Register = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-5 py-10">
       <div className="w-full max-w-lg bg-white rounded-xl shadow-lg p-8">
-
         <h1 className="text-3xl font-bold text-center text-blue-600">
           Create Account
         </h1>
 
-        <p className="text-center text-gray-500 mt-2 mb-8">
-          Join Fixora today
-        </p>
+        <p className="text-center text-gray-500 mt-2 mb-8">Join Fixora today</p>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-5"
-        >
-
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Full Name */}
 
           {/* <div>
@@ -127,15 +108,15 @@ const Register = () => {
               </p>
             )}
           </div> */}
-      <Input
-  label="Full Name"
-  type="text"
-  placeholder="Enter full name"
-  error={errors.fullName?.message}
-  {...register("fullName", {
-    required: "Full name is required",
-  })}
-/>
+          <Input
+            label="Full Name"
+            type="text"
+            placeholder="Enter full name"
+            error={errors.fullName?.message}
+            {...register("fullName", {
+              required: "Full name is required",
+            })}
+          />
 
           {/* Username */}
 
@@ -157,19 +138,19 @@ const Register = () => {
               </p>
             )}
           </div> */}
-         <Input
-  label="userName"
-  type="text"
-  placeholder="Enter username"
-  error={errors.userName?.message}
-  {...register("userName", {
-    required: "Username is required",
-  })}
-/>
+          <Input
+            label="userName"
+            type="text"
+            placeholder="Enter username"
+            error={errors.userName?.message}
+            {...register("userName", {
+              required: "Username is required",
+            })}
+          />
 
           {/* Phone Number */}
 
-{/* <div>
+          {/* <div>
   <label className="font-medium">
     Phone Number
   </label>
@@ -194,20 +175,19 @@ const Register = () => {
   )}
 </div>   */}
 
-<Input
-  label="Phone Number"
-  type="tel"
-  placeholder="Enter phone number"
-  error={errors.phoneNumber?.message}
-  {...register("phoneNumber", {
-    required: "Phone number is required",
-    pattern: {
-      value: /^[6-9]\d{9}$/,
-      message: "Enter a valid 10-digit phone number",
-    },
-  })}
-/>
-
+          <Input
+            label="Phone Number"
+            type="tel"
+            placeholder="Enter phone number"
+            error={errors.phoneNumber?.message}
+            {...register("phoneNumber", {
+              required: "Phone number is required",
+              pattern: {
+                value: /^[6-9]\d{9}$/,
+                message: "Enter a valid 10-digit phone number",
+              },
+            })}
+          />
 
           {/* Email */}
 
@@ -230,111 +210,76 @@ const Register = () => {
             )}
           </div> */}
           <Input
-  label="Email"
-  type="email"
-  name="email"
-  placeholder="Enter your email"
-  error={errors.email?.message}
-  {...register("email", {
-    required: "Email is required",
-  })}
-/>
+            label="Email"
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            error={errors.email?.message}
+            {...register("email", {
+              required: "Email is required",
+            })}
+          />
 
+          {/* State */}
 
- {/* State */}
+          <div>
+            <label className="font-medium">State</label>
 
-<div>
+            <select
+              className="w-full mt-2 border rounded-lg p-3"
+              onChange={handleStateChange}
+            >
+              <option value="">Select State</option>
 
-<label className="font-medium">
-State
-</label>
+              {states.map((state) => (
+                <option key={state.isoCode} value={state.isoCode}>
+                  {state.name}
+                </option>
+              ))}
+            </select>
 
-<select
-    className="w-full mt-2 border rounded-lg p-3"
-    onChange={handleStateChange}
->
+            <input
+              type="hidden"
+              {...register("state", {
+                required: "State is required",
+              })}
+            />
 
-<option value="">
-Select State
-</option>
+            {errors.state && (
+              <p className="text-red-500 text-sm">{errors.state.message}</p>
+            )}
+          </div>
 
-{
-states.map((state)=>(
-<option
-key={state.isoCode}
-value={state.isoCode}
->
-{state.name}
-</option>
-))
-}
+          {/* City */}
 
-</select>
+          <div>
+            <label className="font-medium">City</label>
 
-<input
-type="hidden"
-{...register("state",{
-required:"State is required"
-})}
-/>
+            <select
+              className="w-full mt-2 border rounded-lg p-3"
+              onChange={(e) => setValue("city", e.target.value)}
+              disabled={!selectedStateCode}
+            >
+              <option value="">Select City</option>
 
-{errors.state && (
-<p className="text-red-500 text-sm">
-{errors.state.message}
-</p>
-)}
+              {cities.map((city) => (
+                <option key={city.name} value={city.name}>
+                  {city.name}
+                </option>
+              ))}
+            </select>
 
-</div>
+            <input
+              type="hidden"
+              {...register("city", {
+                required: "City is required",
+              })}
+            />
 
-
-
-      {/* City */}
-
-<div>
-
-<label className="font-medium">
-City
-</label>
-
-<select
-className="w-full mt-2 border rounded-lg p-3"
-
-onChange={(e)=>setValue("city",e.target.value)}
-
-disabled={!selectedStateCode}
->
-
-<option value="">
-Select City
-</option>
-
-{
-cities.map((city)=>(
-<option
-key={city.name}
-value={city.name}
->
-{city.name}
-</option>
-))
-}
-
-</select>
-
-<input
-type="hidden"
-{...register("city",{
-required:"City is required"
-})}
-/>
-
-{errors.city && (
-<p className="text-red-500 text-sm">
-{errors.city.message}
-</p>
-)}
-
-</div>
+            {errors.city && (
+              <p className="text-red-500 text-sm">{errors.city.message}</p>
+            )}
+          </div>
 
           {/* Password */}
 
@@ -380,17 +325,17 @@ required:"City is required"
           </div> */}
 
           <PasswordInput
-  label="Password"
-  placeholder="Create a password"
-  error={errors.password?.message}
-  {...register("password", {
-    required: "Password is required",
-    minLength: {
-      value: 6,
-      message: "Password must be at least 6 characters",
-    },
-  })}
-/>
+            label="Password"
+            placeholder="Create a password"
+            error={errors.password?.message}
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
+            })}
+          />
 
           {/* Confirm Password */}
 
@@ -443,9 +388,7 @@ required:"City is required"
           {/* Profile Photo */}
 
           <div>
-            <label className="font-medium">
-              Profile Photo
-            </label>
+            <label className="font-medium">Profile Photo</label>
 
             <input
               type="file"
@@ -456,21 +399,14 @@ required:"City is required"
           </div>
 
           {/* Register Button */}
-          <Button
-            type="submit"
-            loading={loading}
-            fullWidth
-          >
-          Register
+          <Button type="submit" loading={loading} fullWidth>
+            Register
           </Button>
-
         </form>
 
         <div className="flex items-center my-6">
           <div className="flex-grow border-t"></div>
-          <span className="mx-3 text-gray-500">
-            OR
-          </span>
+          <span className="mx-3 text-gray-500">OR</span>
           <div className="flex-grow border-t"></div>
         </div>
 
@@ -482,20 +418,17 @@ required:"City is required"
           Continue with Google
         </button> */}
         <Button
-    variant="google"
-    size=""
-    onClick={loginWithGoogle}
-    leftIcon={<FaGoogle />}
->
-    Continue with Google
-</Button>
+          variant="google"
+          size=""
+          onClick={loginWithGoogle}
+          leftIcon={<FaGoogle />}
+        >
+          Continue with Google
+        </Button>
 
         <p className="text-center mt-6">
           Already have an account?
-          <Link
-            to="/login"
-            className="ml-1 text-blue-600 hover:underline"
-          >
+          <Link to="/login" className="ml-1 text-blue-600 hover:underline">
             Login
           </Link>
         </p>
@@ -506,13 +439,12 @@ required:"City is required"
 
 export default Register;
 
-
-
-
- {/* <button
+{
+  /* <button
             type="submit"
             disabled={loading}
             className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
           >
             {loading ? "Creating Account..." : "Register"}
-          </button> */}
+          </button> */
+}

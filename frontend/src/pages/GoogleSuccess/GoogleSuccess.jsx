@@ -5,42 +5,28 @@ import { useDispatch } from "react-redux";
 import { checkAuthentication } from "../../features/auth/authThunks.js";
 
 export default function GoogleSuccess() {
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  useEffect(() => {
+    const verify = async () => {
+      const result = await dispatch(checkAuthentication());
+      if (checkAuthentication.fulfilled.match(result)) {
+        const profileCompleted = result.payload.profileCompleted;
 
-    useEffect(() => {
+        if (!profileCompleted) {
+          navigate("/complete-profile");
+        } else {
+          navigate("/");
+        }
+      } else {
+        navigate("/login");
+      }
+    };
 
-        const verify = async () => {
-            const result = await dispatch(checkAuthentication());
-            if (checkAuthentication.fulfilled.match(result)) {
+    verify();
+  }, []);
 
-                const profileCompleted =
-                    result.payload.profileCompleted;
-
-                if (!profileCompleted) {
-
-                    navigate("/complete-profile");
-
-                } else {
-
-                    navigate("/");
-
-                }
-
-            } else {
-
-                navigate("/login");
-
-            }
-
-        };
-
-        verify();
-
-    }, []);
-
-    return <h2>Signing you in...</h2>;
-
+  return <h2>Signing you in...</h2>;
 }

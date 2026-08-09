@@ -5,12 +5,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 import { resetPassword } from "../../features/auth/authThunks";
-import {
-  selectResetPasswordLoading,
-} from "../../features/auth/authSelectors";
+import { selectResetPasswordLoading } from "../../features/auth/authSelectors";
 
-import Button from "../../components/common/Button.jsx"
-import PasswordInput from "../../components/common/PasswordInput.jsx"
+import Button from "../../components/common/Button.jsx";
+import PasswordInput from "../../components/common/PasswordInput.jsx";
 
 const ResetPassword = () => {
   const dispatch = useDispatch();
@@ -38,9 +36,9 @@ const ResetPassword = () => {
         token,
         formData: {
           newPassword: data.password,
-          confirmPassword: data.confirmPassword
+          confirmPassword: data.confirmPassword,
         },
-      })
+      }),
     );
 
     if (resetPassword.fulfilled.match(result)) {
@@ -51,7 +49,6 @@ const ResetPassword = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-5">
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
-
         <h1 className="text-3xl font-bold text-center text-blue-600">
           Reset Password
         </h1>
@@ -60,11 +57,7 @@ const ResetPassword = () => {
           Enter your new password.
         </p>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-5"
-        >
-
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Password */}
 
           {/* <div>
@@ -116,19 +109,18 @@ const ResetPassword = () => {
 
           </div> */}
 
-
           <PasswordInput
-  label="Password"
-  placeholder="Create a new password"
-  error={errors.password?.message}
-  {...register("password", {
-    required: "Password is required",
-    minLength: {
-      value: 6,
-      message: "Password must be at least 6 characters",
-    },
-  })}
-/>
+            label="Password"
+            placeholder="Create a new password"
+            error={errors.password?.message}
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
+            })}
+          />
 
           {/* Confirm Password */}
 
@@ -185,45 +177,24 @@ const ResetPassword = () => {
           </div> */}
 
           <PasswordInput
-  label="Password"
-  placeholder="Enter your password"
-  error={errors.password?.message}
-  {...register("password", {
-    required: "Password is required",
-  })}
-/>
+            label="Password"
+            placeholder="Enter your password"
+            error={errors.password?.message}
+            {...register("password", {
+              required: "Password is required",
+            })}
+          />
 
-          <Button
-            type="submit"
-            loading={changePasswordLoading}
-          >
+          <Button type="submit" loading={changePasswordLoading}>
             Change Password
           </Button>
-
         </form>
-
       </div>
     </div>
   );
 };
 
 export default ResetPassword;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import { useState } from "react";
 // import { useForm } from "react-hook-form";
