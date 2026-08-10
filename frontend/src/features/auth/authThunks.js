@@ -1,5 +1,8 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {toast} from "react-hot-toast";
+import {
+  showSuccessToast,
+  showErrorToast,
+} from "../../utils/customToast.jsx";
 
 import {loginUser,registerUser,logoutUser,checkAuth,resetPassword as ResetPassword ,forgotPassword as ForgotPassword} from "../../api/auth.api.js";
 
@@ -11,12 +14,12 @@ export const register = createAsyncThunk(
     async(formData,{rejectWithValue}) =>{
         try{
             const response = await registerUser(formData);
-            toast.success(response.message || "Registration successful");
+            showSuccessToast(response.message || "Registration successful");
             return response;
         }
         catch(error){
             const message = error.response?.data?.message || "Registration failed";
-            toast.error(message);
+            showErrorToast(message);
             return rejectWithValue(message);
         }
     }
@@ -27,11 +30,11 @@ export const login = createAsyncThunk(
     async(credentials,{rejectWithValue}) =>{
         try{
             const response = await loginUser(credentials);
-            toast.success(response.message || "Login successful");
+            showSuccessToast(response.message || "Login successful");
             return response;
         }catch(error){
             const message = error.response?.data?.message || "Login failed";
-            toast.error(message);
+            showErrorToast(message);
             return rejectWithValue(message);
         }
     }
@@ -42,11 +45,11 @@ export const logout = createAsyncThunk(
     async(_,{rejectWithValue}) =>{
         try{
             const response = await logoutUser();
-            toast.success(response.message || "Logged out");
+            showSuccessToast(response.message || "Logged out");
             return response;
         }catch(error){
             const message = error.response?.data?.message || "Logout failed";
-            toast.error(message);
+            showErrorToast(message);
             return rejectWithValue(message);
         }
     }
@@ -73,17 +76,13 @@ export const forgotPassword = createAsyncThunk(
     async (formData, { rejectWithValue }) => {
         try {
             const response = await ForgotPassword(formData);
-
-            toast.success(response.message);
-
+            showSuccessToast(response.message);
             return response;
         } catch (error) {
             const message =
                 error.response?.data?.message ||
                 "Failed to send reset link.";
-
-            toast.error(message);
-
+                showErrorToast(message);
             return rejectWithValue(message);
         }
     }
@@ -94,11 +93,11 @@ export const resetPassword = createAsyncThunk(
     async ({ token, formData }, { rejectWithValue }) => {
         try {
             const response = await ResetPassword(token, formData);
-            toast.success(response.message);
+            showSuccessToast(response.message);
             return response;
         } catch (error) {
             const message = error.response?.data?.message || "Password reset failed";
-            toast.error(message);
+            showErrorToast(message);
             return rejectWithValue(message);
         }
     }

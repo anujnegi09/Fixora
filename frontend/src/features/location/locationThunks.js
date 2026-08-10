@@ -1,6 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { toast } from "react-hot-toast";
-
+import {
+  showSuccessToast,
+  showErrorToast,
+} from "../../utils/customToast.jsx";
 import { reverseGeocodeApi, searchLocationApi} from "../../api/location.api.js";
 
 
@@ -13,7 +15,7 @@ export const reverseGeocode = createAsyncThunk(
             return response;
         }catch (error) {
             const message = error.response?.data?.message || "Failed to fetch address";
-            toast.error(message);
+            showErrorToast(message);
             return rejectWithValue(message);
         }
     }
@@ -27,7 +29,7 @@ export const searchLocation = createAsyncThunk(
             return response;
         } catch (error) {
             const message = error.response?.data?.message || "Failed to search location";
-            toast.error(message);
+            showErrorToast(message);
             return rejectWithValue(message);
         }
     }

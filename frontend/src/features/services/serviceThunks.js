@@ -1,6 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { toast } from "react-hot-toast";
-
+import {
+  showSuccessToast,
+  showErrorToast,
+} from "../../utils/customToast.jsx";
 import {createServiceApi, getAllServicesApi, getServiceByIdApi,
      updateServiceApi, deleteServiceApi,getMyServicesApi,
   toggleServiceVisibilityApi,} from "../../api/service.api.js";
@@ -10,11 +12,11 @@ export const createService= createAsyncThunk(
     async(formData,{rejectWithValue}) =>{
         try{
         const response = await createServiceApi(formData);
-        toast.success(response.message);
+        showSuccessToast(response.message);
         return response;
         }catch(error){
             const message = error.response?.data?.message || "Failed to create service";
-            toast.error(message);
+            showErrorToast(message);
             return rejectWithValue(message);
         }
     } 
@@ -31,7 +33,7 @@ export const getAllServices = createAsyncThunk(
                 error.response?.data?.message ||
                 "Failed to fetch services";
 
-            toast.error(message);
+            showErrorToast(message);
 
             return rejectWithValue(message);
         }
@@ -59,7 +61,7 @@ export const getServiceById= createAsyncThunk(
         return response;
         }catch(error){
             const message = error.response?.data?.message || "Failed to fetch service by Id";
-            toast.error(message);
+            showErrorToast(message);
             return rejectWithValue(message);
         }
     } 
@@ -71,11 +73,11 @@ export const updateService = createAsyncThunk(
     async ({ serviceId, serviceData }, { rejectWithValue }) => {
         try {
             const response = await updateServiceApi(serviceId, serviceData);
-            toast.success(response.message);
+            showSuccessToast(response.message);
             return response;
         } catch (error) {
             const message = error.response?.data?.message || "Failed to update service";
-            toast.error(message);
+            showErrorToast(message);
             return rejectWithValue(message);
         }
     }
@@ -88,14 +90,14 @@ export const deleteService = createAsyncThunk(
     async(serviceId,{rejectWithValue}) =>{
         try{
         const response = await deleteServiceApi(serviceId);
-        toast.success(response.message);
+        showSuccessToast(response.message);
          return {
         ...response,
         serviceId,
         };
         }catch(error){
             const message = error.response?.data?.message || "Failed to delete service";
-            toast.error(message);
+            showErrorToast(message);
             return rejectWithValue(message);
         }
     } 
@@ -108,10 +110,8 @@ export const getMyServices = createAsyncThunk(
       const response = await getMyServicesApi();
       return response;
     } catch (error) {
-      const message =
-        error.response?.data?.message || "Failed to fetch your services";
-
-      toast.error(message);
+      const message = error.response?.data?.message || "Failed to fetch your services";
+      showErrorToast(message);
       return rejectWithValue(message);
     }
   }
@@ -122,16 +122,11 @@ export const toggleServiceVisibility = createAsyncThunk(
   async (serviceId, { rejectWithValue }) => {
     try {
       const response = await toggleServiceVisibilityApi(serviceId);
-
-      toast.success(response.message);
-
+      showSuccessToast(response.message);
       return response;
     } catch (error) {
-      const message =
-        error.response?.data?.message ||
-        "Failed to toggle service visibility";
-
-      toast.error(message);
+      const message = error.response?.data?.message || "Failed to toggle service visibility";
+      showErrorToast(message);
       return rejectWithValue(message);
     }
   }

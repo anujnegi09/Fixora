@@ -1,6 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { toast } from "react-hot-toast";
-
+import {
+  showSuccessToast,
+  showErrorToast,
+} from "../../utils/customToast.jsx";
 import { getProfileApi, updateProfileApi,
     completeProfileApi, changePasswordApi, updateLocationApi  } from "../../api/user.api.js";
 
@@ -13,7 +15,7 @@ export const getProfile = createAsyncThunk(
         return response;
         }catch(error){
             const message = error.response?.data?.message || "Failed to fetch profile";
-            toast.error(message);
+            showErrorToast(message);
             return rejectWithValue(message);
         }
     } 
@@ -26,11 +28,11 @@ export const updateProfile = createAsyncThunk(
     async(formData,{rejectWithValue}) =>{
         try{
         const response = await updateProfileApi(formData);
-        toast.success(response.message);
+        showSuccessToast(response.message);
         return response;
         }catch(error){
             const message = error.response?.data?.message || "Failed to update profile";
-            toast.error(message);
+            showErrorToast(message);
             return rejectWithValue(message);
         }
     } 
@@ -41,11 +43,11 @@ export const completeProfile = createAsyncThunk(
     async(formData,{rejectWithValue}) =>{
         try{
         const response = await completeProfileApi(formData);
-        toast.success(response.message);
+        showSuccessToast(response.message);
         return response;
         }catch(error){
             const message = error.response?.data?.message || "Failed to complete profile";
-            toast.error(message);
+            showErrorToast(message);
             return rejectWithValue(message);
         }
     } 
@@ -57,11 +59,11 @@ export const changePassword = createAsyncThunk(
     async(formData,{rejectWithValue}) =>{
         try{
         const response = await changePasswordApi(formData);
-        toast.success(response.message);
+        showSuccessToast(response.message);
         return response;
         }catch(error){
             const message = error.response?.data?.message || "Failed to change password";
-            toast.error(message);
+            showErrorToast(message);
             return rejectWithValue(message);
         }
     } 
@@ -72,13 +74,11 @@ export const updateLocation = createAsyncThunk(
     async (locationData, { rejectWithValue }) => {
         try {
             const response = await updateLocationApi(locationData);
-            toast.success(response.message);
+            showSuccessToast(response.message);
             return response;
         } catch (error) {
-            const message =
-                error.response?.data?.message ||
-                "Failed to update location";
-            toast.error(message);
+            const message = error.response?.data?.message || "Failed to update location";
+            showErrorToast(message);
             return rejectWithValue(message);
         }
     }
