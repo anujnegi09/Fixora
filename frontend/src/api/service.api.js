@@ -19,6 +19,8 @@ export const getAllServicesApi = async (params) => {
       page: params?.page,
       limit: params?.limit,
       title: params?.search,
+      category: params?.category,
+      sortBy: params?.sortBy,
       latitude: params?.latitude,
       longitude: params?.longitude,
     },
