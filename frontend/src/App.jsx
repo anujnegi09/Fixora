@@ -1,55 +1,96 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
-import NavBar from "./components/NavBar";
-import Footer from "./components/Footer";
-import ScrollToTop from "./components/ScrollToTop";
+import { checkAuthentication } from "./features/auth/authThunks";
+import AppRoutes from "./routes/AppRoutes";
 
-import Homepage from "./pages/HomePage";
-import About from "./pages/About";
-import ServiceProviderPage from "./pages/ServiceProviderPage";
-import LoginPage from "./pages/LoginPage";
-import Services from "./pages/Services";
+function App() {
+  const dispatch = useDispatch();
+
+    useEffect(() => {
+    dispatch(checkAuthentication());
+}, [dispatch]);
+
+  return <AppRoutes />;
+}
+
+export default App;
 
 
 
-// Inner component to handle footer visibility
-const AppContent = () => {
-  const location = useLocation();
-  const hideNavbarRoutes = ["/LoginPage" ];
-  const hideFooterRoutes = ["/LoginPage" ];
+// import { useEffect } from "react";
+// import { useDispatch } from "react-redux";
 
-  return (
-    <>
-      <ScrollToTop />
-       {!hideNavbarRoutes.includes(location.pathname) && <NavBar />}
+// import { checkAuthentication } from "./features/auth/authThunks";
+// import AppRoutes from "./routes/AppRoutes";
 
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/ServiceProviderPage" element={<ServiceProviderPage />} />
-        <Route path="/LoginPage" element={<LoginPage />} />
-      </Routes>
+// function App() {
+//   const dispatch = useDispatch();
+
+//   useEffect(() => {
+//     dispatch(checkAuthentication());
+//   }, [dispatch]);
+
+//   return <AppRoutes />;
+// }
+
+// export default App;
+
+
+
+
+// import React from "react";
+// import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+
+// import NavBar from "./components/NavBar";
+// import Footer from "./components/Footer";
+// import ScrollToTop from "./components/ScrollToTop";
+
+// import Homepage from "./pages/HomePage";
+// import About from "./pages/About";
+// import ServiceProviderPage from "./pages/ServiceProviderPage";
+// import LoginPage from "./pages/LoginPage";
+// import Services from "./pages/Services";
+
+
+
+// // Inner component to handle footer visibility
+// const AppContent = () => {
+//   const location = useLocation();
+//   const hideNavbarRoutes = ["/LoginPage" ];
+//   const hideFooterRoutes = ["/LoginPage" ];
+
+//   return (
+//     <>
+//       <ScrollToTop />
+//        {!hideNavbarRoutes.includes(location.pathname) && <NavBar />}
+
+//       <Routes>
+//         <Route path="/" element={<Homepage />} />
+//         <Route path="/about" element={<About />} />
+//         <Route path="/services" element={<Services />} />
+//         <Route path="/ServiceProviderPage" element={<ServiceProviderPage />} />
+//         <Route path="/LoginPage" element={<LoginPage />} />
+//       </Routes>
      
-      {!hideFooterRoutes.includes(location.pathname) && <Footer />}
-    </>
-  );
-};
+//       {!hideFooterRoutes.includes(location.pathname) && <Footer />}
+//     </>
+//   );
+// };
 
-const App = () => {
-  return (
+// const App = () => {
+//   return (
     
      
         
-          <AppContent />
+//           <AppContent />
        
   
 
-  );
-};
+//   );
+// };
 
-export default App;
+// export default App;
 
 
 
