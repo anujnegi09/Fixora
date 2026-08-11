@@ -9,8 +9,6 @@ import ForgotPassword from "../pages/ForgotPassword/ForgotPassword.jsx";
 import ResetPassword from "../pages/ResetPassword/ResetPassword.jsx";
 import VerifyEmail from "../pages/VerifyEmail/VerifyEmail.jsx";
 import GoogleSuccess from "../pages/GoogleSuccess/GoogleSuccess.jsx";
-import CompleteProfile from "../pages/CompleteProfile/CompleteProfile.jsx";
-import UpdateProfile from "../pages/UpdateProfile/UpdateProfile.jsx";
 import ChangePassword from "../pages/ChangePassword/ChangePassword.jsx";
 import BecomeProvider from "../pages/BecomeProvider/BecomeProvider";
 import Services from "../pages/Services/Services.jsx";
@@ -41,16 +39,6 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <Profile />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Update Profile */}
-        <Route
-          path="/update-profile"
-          element={
-            <ProtectedRoute>
-              <UpdateProfile />
             </ProtectedRoute>
           }
         />
@@ -159,15 +147,6 @@ const AppRoutes = () => {
       <Route
         path="/auth/google/success"
         element={<GoogleSuccess />}
-      />
-
-      <Route
-        path="/complete-profile"
-        element={
-          <ProtectedRoute>
-            <CompleteProfile />
-          </ProtectedRoute>
-        }
       />
 
       {/* 404 */}
