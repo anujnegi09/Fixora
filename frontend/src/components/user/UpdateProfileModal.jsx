@@ -73,8 +73,6 @@ const UpdateProfileModal = ({ onClose }) => {
   // Submit
   // ==============================
   const onSubmit = async (data) => {
-    console.log("1. SUBMIT FIRED");
-  console.log("FORM DATA:", data);
 
   const formData = new FormData();
 
@@ -86,22 +84,11 @@ const UpdateProfileModal = ({ onClose }) => {
     formData.append("avatar", data.avatar[0]);
   }
 
-  console.log("2. DISPATCHING UPDATE PROFILE");
-  
-  // Debug
-  for (const [key, value] of formData.entries()) {
-    console.log(key, value);
-  }
-
   const result = await dispatch(updateProfile(formData));
 
-  console.log("3. DISPATCH RESULT:", result);
 
   if (updateProfile.fulfilled.match(result)) {
-    console.log("4. UPDATE SUCCESS");
     onClose();
-  }else{
-    console.log("4. UPDATE FAILED");
   }
 };
 
