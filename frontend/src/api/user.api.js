@@ -8,11 +8,7 @@ export const getProfileApi = async () => {
 
 
 export const updateProfileApi = async (formData) => {
-  const response = await api.patch("/users/update-profile", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await api.patch("/users/update-profile", formData);
 
   return response.data;
 };
