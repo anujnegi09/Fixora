@@ -37,7 +37,8 @@ export const getProfile = asyncHandler(async (req, res) => {
 
 export const updateProfile = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const {fullName,phoneNumber} = req.body;
+
+  const {fullName,userName, phoneNumber } = req.body;
   const user = await User.findById(userId);
 
   if (!user) {
@@ -47,6 +48,10 @@ export const updateProfile = asyncHandler(async (req, res) => {
   if (fullName) {
     user.fullName = fullName.trim();
   }
+  if (userName) {
+  user.userName = userName.trim();
+  }
+
   // ✅ Update phone number
   if (phoneNumber) {
     const phoneRegex = /^[6-9]\d{9}$/;
@@ -290,7 +295,6 @@ export const updateLocation = asyncHandler(async (req, res) => {
     await user.save({ validateBeforeSave: false });
     const updatedUser = await User.findById(userId)
     .select("-password -refreshToken");
-    console.log(updatedUser.location);
 
     return res.status(200).json(
         new apiResponse(
