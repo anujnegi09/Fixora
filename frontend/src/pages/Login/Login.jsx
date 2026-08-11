@@ -27,13 +27,8 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-      console.log("Login started");
-
       await dispatch(login(data)).unwrap();
-      console.log("Login success");
-
       await dispatch(checkAuthentication()).unwrap();
-      console.log("Check auth success");
 
       navigate("/");
     } catch (error) {

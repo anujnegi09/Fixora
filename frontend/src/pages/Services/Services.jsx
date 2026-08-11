@@ -10,6 +10,7 @@ import {
 } from "../../features/services/serviceSelectors";
 
 import { selectUserLocation } from "../../features/user/userSelectors";
+import {selectIsAuthenticated} from "../../features/auth/authSelectors";
 import { updateLocation } from "../../features/user/userThunks";
 
 import ServiceCard from "../../components/service/ServiceCard";
@@ -20,12 +21,15 @@ import ServiceDetailsModal from "../../components/service/ServiceDetailsModal";
 
 const Services = () => {
   const dispatch = useDispatch();
-
+  const isAuthenticated = useSelector(selectIsAuthenticated);
   const services = useSelector(selectServices);
   const loading = useSelector(selectServiceLoading);
   const error = useSelector(selectServiceError);
+  
 
   const selectedLocation = useSelector(selectUserLocation);
+  const latitude = selectedLocation?.coordinates?.coordinates?.[1];
+  const longitude = selectedLocation?.coordinates?.coordinates?.[0];
 
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
@@ -44,24 +48,26 @@ const Services = () => {
 
   // Fetch services
   useEffect(() => {
+    if (!isAuthenticated) return;
     dispatch(
       getAllServices({
         search,
         category,
         sortBy,
         page,
-        latitude: selectedLocation?.latitude,
-        longitude: selectedLocation?.longitude,
+        latitude,
+        longitude,
       }),
     );
   }, [
     dispatch,
+    isAuthenticated,
     search,
     category,
     sortBy,
     page,
-    selectedLocation?.latitude,
-    selectedLocation?.longitude,
+    latitude,
+    longitude,
   ]);
 
   const handleLocationSelect = async (location) => {
@@ -72,9 +78,8 @@ const Services = () => {
       console.error("Failed to update location:", error);
     }
   };
-
   return (
-    <div className="mx-auto max-w-7xl px-5 py-24">
+    <div className="mx-auto max-w-7xl px-5 py-24 scrollbar-hide">
       <h1 className="mb-8 text-4xl font-bold">Services</h1>
 
       <ServiceSearchHeader

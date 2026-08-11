@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect ,useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaUserCircle, FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -10,8 +10,10 @@ import {
   selectProfile,
   selectUserLoading,
 } from "../../features/user/userSelectors";
+import UpdateProfileModal from "../../components/user/UpdateProfileModal.jsx";
 
 const Profile = () => {
+  const [showUpdateProfile, setShowUpdateProfile] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -24,6 +26,7 @@ const Profile = () => {
 
   if (loading) {
     return (
+      
       <div className="flex justify-center items-center min-h-screen">
         Loading...
       </div>
@@ -31,13 +34,14 @@ const Profile = () => {
   }
 
   return (
+    <>
     <div className="max-w-7xl mx-auto px-8 py-20">
       {/* Header */}
 
       <div className="bg-white rounded-2xl shadow p-8 flex flex-col md:flex-row gap-8 items-center">
-        {user?.profilePhoto ? (
+        {user?.avatar ? (
           <img
-            src={user.profilePhoto}
+            src={user.avatar}
             alt="Profile"
             className="w-40 h-40 rounded-full object-cover border-4 border-blue-500"
           />
@@ -51,16 +55,6 @@ const Profile = () => {
           <p className="text-gray-500 text-lg">@{user?.userName}</p>
 
           <div className="flex gap-4 mt-4 flex-wrap">
-            {/* <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 flex items-center gap-2">
-              <FaCheckCircle />
-              {user?.isEmailVerified
-                ? "Verified"
-                : "Not Verified"}
-            </span> */}
-
-            {/* <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700">
-              {user?.role || "User"}
-            </span> */}
 
             <span className="px-3 py-1 rounded-full bg-purple-100 text-purple-700">
               {user?.subscription?.plan || "Free Plan"}
@@ -69,7 +63,7 @@ const Profile = () => {
         </div>
 
         <div className="flex flex-col gap-3">
-          <Button size="sm" onClick={() => navigate("/update-profile")}>
+          <Button size="sm" onClick={() => setShowUpdateProfile(true)}>
             Update Profile
           </Button>
 
@@ -101,32 +95,6 @@ const Profile = () => {
 
               <p>{user?.phoneNumber || "Not Added"}</p>
             </div>
-
-            {/* <div>
-              <h4 className="font-semibold">
-                Address
-              </h4>
-
-              <p>
-                {user?.address || "Not Added"}
-              </p>
-            </div> */}
-
-            {/* <div>
-              <h4 className="font-semibold">
-                City
-              </h4>
-
-              <p>{user?.city || "Not Added"}</p>
-            </div>
-
-            <div>
-              <h4 className="font-semibold">
-                State
-              </h4>
-
-              <p>{user?.state || "Not Added"}</p>
-            </div> */}
           </div>
         </div>
 
@@ -171,6 +139,13 @@ const Profile = () => {
         </div>
       </div>
     </div>
+    {/* Update Profile Modal */}
+    {showUpdateProfile && (
+      <UpdateProfileModal
+        onClose={() => setShowUpdateProfile(false)}
+      />
+    )}
+    </>
   );
 };
 

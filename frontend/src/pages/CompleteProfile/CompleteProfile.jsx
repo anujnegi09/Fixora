@@ -32,12 +32,9 @@ const CompleteProfile = () => {
       const formData = new FormData();
 
       formData.append("phoneNumber", data.phoneNumber);
-      // formData.append("address", data.address || "");
-      // formData.append("city", data.city || "");
-      // formData.append("state", data.state || "");
 
       if (data.profileImage?.[0]) {
-        formData.append("profileImage", data.profileImage[0]);
+        formData.append("avatar", data.profileImage[0]);
       }
 
       const response = await completeProfileApi(formData);
@@ -64,32 +61,8 @@ const CompleteProfile = () => {
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+
           {/* Phone Number */}
-
-          {/* <div>
-            <label className="font-medium">
-              Phone Number <span className="text-red-500">*</span>
-            </label>
-
-            <input
-              type="tel"
-              placeholder="Enter phone number"
-              {...register("phoneNumber", {
-                required: "Phone number is required",
-                pattern: {
-                  value: /^[6-9]\d{9}$/,
-                  message: "Enter a valid 10-digit phone number",
-                },
-              })}
-              className="w-full mt-2 border rounded-lg p-3"
-            />
-
-            {errors.phoneNumber && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.phoneNumber.message}
-              </p>
-            )}
-          </div> */}
           <Input
             label="Phone Number"
             type="tel"
@@ -103,8 +76,8 @@ const CompleteProfile = () => {
               },
             })}
           />
-          {/* Profile Image */}
 
+          {/* Profile Image */}
           <div>
             <label className="font-medium">Profile Picture (Optional)</label>
 
@@ -124,61 +97,6 @@ const CompleteProfile = () => {
               />
             )}
           </div>
-
-          {/* Address */}
-
-          {/* <div>
-            <label className="font-medium">
-              Address
-            </label>
-
-            <textarea
-              rows={3}
-              placeholder="Enter your address"
-              {...register("address")}
-              className="w-full mt-2 border rounded-lg p-3"
-            />
-          </div> */}
-
-          {/* City */}
-
-          {/* <div>
-            <label className="font-medium">
-              City
-            </label>
-
-            <input
-              type="text"
-              placeholder="Enter city"
-              {...register("city")}
-              className="w-full mt-2 border rounded-lg p-3"
-            />
-          </div> */}
-
-          {/* State */}
-
-          {/* <div>
-            <label className="font-medium">
-              State
-            </label>
-
-            <input
-              type="text"
-              placeholder="Enter state"
-              {...register("state")}
-              className="w-full mt-2 border rounded-lg p-3"
-            />
-          </div> */}
-
-          {/* <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50"
-          >
-            {isSubmitting
-              ? "Saving..."
-              : "Complete Profile"}
-          </button> */}
           <Button type="submit" loading={isSubmitting} fullWidth>
             Complete Profile
           </Button>
