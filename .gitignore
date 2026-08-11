@@ -1,6 +1,9 @@
 # frontend & backend
 node_modules/
-logs/*
+backend/logs/*
+backend/public/*
+backend/temp/*
+
 # environment files
 .env
 .env.local
