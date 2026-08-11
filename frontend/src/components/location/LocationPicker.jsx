@@ -24,11 +24,22 @@ function ChangeMapView({ center }) {
   const map = useMap();
 
   useEffect(() => {
+    if (!map || !map.getContainer()) return;
+
     map.setView(center, 16);
   }, [center, map]);
 
   return null;
 }
+// function ChangeMapView({ center }) {
+//   const map = useMap();
+
+//   useEffect(() => {
+//     map.setView(center, 16);
+//   }, [center, map]);
+
+//   return null;
+// }
 
 function LocationSelector({ onLocationChange }) {
   useMapEvents({
@@ -147,16 +158,33 @@ const LocationPicker = ({ onClose, onSaveLocation }) => {
   };
 
   function FixMapSize() {
-    const map = useMap();
+  const map = useMap();
 
-    useEffect(() => {
-      setTimeout(() => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (map && map.getContainer()) {
         map.invalidateSize();
-      }, 100);
-    }, [map]);
+      }
+    }, 300);
 
-    return null;
-  }
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [map]);
+
+  return null;
+}
+  // function FixMapSize() {
+  //   const map = useMap();
+
+  //   useEffect(() => {
+  //     setTimeout(() => {
+  //       map.invalidateSize();
+  //     }, 100);
+  //   }, [map]);
+
+  //   return null;
+  // }
 
   return (
     <>
@@ -257,6 +285,20 @@ const LocationPicker = ({ onClose, onSaveLocation }) => {
       {/* Map */}
 
       <MapContainer
+  center={position}
+  zoom={15}
+  style={{
+    width: "100%",
+    height: "250px",
+    borderRadius: "12px",
+  }}
+  whenReady={(event) => {
+    setTimeout(() => {
+      event.target.invalidateSize();
+    }, 300);
+  }}
+>
+      {/* <MapContainer
         center={position}
         zoom={15}
         style={{
@@ -264,8 +306,8 @@ const LocationPicker = ({ onClose, onSaveLocation }) => {
           height: "250px",
           borderRadius: "12px",
         }}
-      >
-        <FixMapSize />
+      > */}
+        {/* <FixMapSize /> */}
 
         <ChangeMapView center={position} />
 

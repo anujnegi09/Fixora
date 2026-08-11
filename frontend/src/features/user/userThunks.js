@@ -28,9 +28,14 @@ export const updateProfile = createAsyncThunk(
     async(formData,{rejectWithValue}) =>{
         try{
         const response = await updateProfileApi(formData);
+        console.log("UPDATED USER:", response.data);
+console.log("UPDATED AVATAR:", response.data?.avatar);
         showSuccessToast(response.message);
         return response;
         }catch(error){
+            console.log("UPDATE PROFILE ERROR:", error);
+      console.log("STATUS:", error.response?.status);
+      console.log("DATA:", error.response?.data);
             const message = error.response?.data?.message || "Failed to update profile";
             showErrorToast(message);
             return rejectWithValue(message);
