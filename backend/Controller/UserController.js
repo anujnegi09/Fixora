@@ -3,6 +3,7 @@ import { asyncHandler } from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";
 import uploadOnCloudinary from "../Utils/uploadOnCloudinary.js";
+import bcrypt from "bcryptjs";
 import fs from "fs";
 
 /**
@@ -194,7 +195,7 @@ export const changePassword = asyncHandler(async (req, res) => {
         );
     }
 
-    if (newPassword.length < 8) {
+    if (newPassword.length < 6) {
         throw new apiError(
             400,
             "Password must be at least 8 characters"
