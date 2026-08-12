@@ -30,15 +30,15 @@ router.get("/my-bookings", verifyJWT, getMyBookings);
 router.get("/my-service-bookings", verifyJWT, getBookingsForMyServices);
 
 // ✅ Get booking by ID
-router.get("/:id", verifyJWT, getBookingById);
+router.get("/:bookingId", verifyJWT, getBookingById);
 
 // ✅ Update booking
-router.patch("/:id", verifyJWT, updateBookingDetails);
+router.patch("/:bookingId", verifyJWT, updateBookingDetails);
 
 // ✅ Delete booking
-router.delete("/delete/:id", verifyJWT, deleteBooking);
+router.delete("/delete/:bookingId", verifyJWT, deleteBooking);
 
-router.patch("/:id/update-booking-status", verifyJWT, updateBookingStatus);
+router.patch("/:bookingId/update-booking-status", verifyJWT, updateBookingStatus);
 
 router.patch("/:bookingId/request-completion", verifyJWT, requestCompletion);
 
