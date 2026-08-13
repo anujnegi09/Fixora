@@ -238,7 +238,7 @@ const Navbar = () => {
             </NavLink>
 
             <NavLink
-              to="/my-services"
+              to="/become-provider"
               onClick={closeSidebar}
               className="flex items-center gap-3 px-5 py-2.5 text-gray-700 hover:bg-gray-100 transition"
             >

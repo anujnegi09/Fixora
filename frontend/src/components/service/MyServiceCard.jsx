@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import {
   FaEdit,
   FaTrash,
@@ -20,15 +19,16 @@ import {
 } from "../../features/services/serviceSelectors";
 
 import ConfirmModal from "../common/ConfirmModal";
+import UpdateServiceModal from "./UpdateServiceModal";
 
 const MyServiceCard = ({ service }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const deleteLoading = useSelector(selectDeleteServiceLoading);
   const updateLoading = useSelector(selectUpdateServiceLoading);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   if (!service) {
     return null;
@@ -65,12 +65,13 @@ const MyServiceCard = ({ service }) => {
   // ==========================
 
   const handleEdit = () => {
-    navigate(`/update-service/${service._id}`);
+    setShowUpdateModal(true);
   };
 
   return (
     <>
-      <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:shadow-md">
+      {/* <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:shadow-md"> */}
+      <div className="flex h-full flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:shadow-md">
         {/* Service Header */}
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -101,6 +102,22 @@ const MyServiceCard = ({ service }) => {
             {service.description}
           </p>
         )}
+        {/* Booking Options */}
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+
+
+          {service.bookingOptions?.includes("instant") && (
+            <span className="rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-700">
+              Instant Booking
+            </span>
+          )}
+
+          {service.bookingOptions?.includes("scheduled") && (
+            <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+              Scheduled Booking
+            </span>
+          )}
+        </div>
 
         {/* Service Information */}
         <div className="mt-5 space-y-4">
@@ -144,13 +161,9 @@ const MyServiceCard = ({ service }) => {
 
         {/* Actions */}
         <div className="mt-5 grid grid-cols-3 gap-2 border-t border-gray-100 pt-4">
+
+          
           {/* Edit */}
-          {/* <Link
-  to={`/update-service/${service._id}`}
-  className="px-3 py-1 bg-yellow-400 text-white rounded-md hover:bg-yellow-500"
->
-  Edit
-</Link> */}
           <button
             type="button"
             onClick={handleEdit}
@@ -207,6 +220,13 @@ const MyServiceCard = ({ service }) => {
           onConfirm={handleDelete}
           onCancel={() => setShowDeleteModal(false)}
           loading={deleteLoading}
+        />
+      )}
+
+      {showUpdateModal && (
+        <UpdateServiceModal
+          service={service}
+          onClose={() => setShowUpdateModal(false)}
         />
       )}
     </>
