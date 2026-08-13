@@ -30,6 +30,7 @@ export const createService = asyncHandler(async (req, res) => {
     price,
     serviceRadius,
     location,
+    bookingOptions,
   } = req.body;
 
   const requiredFields = {
@@ -41,6 +42,7 @@ export const createService = asyncHandler(async (req, res) => {
     price,
     serviceRadius,
     location,
+    bookingOptions,
   };
 
   for (const [key, value] of Object.entries(requiredFields)) {
@@ -56,16 +58,6 @@ export const createService = asyncHandler(async (req, res) => {
   ) {
     throw new apiError(400, "Location coordinates are required");
   }
-  // if (
-  //     !location.latitude ||
-  //     !location.longitude
-  // ) {
-  //     throw new apiError(
-  //         400,
-  //         "Location coordinates are required"
-  //     );
-  // }
-
   const service = await Service.create({
     userId: req.user._id,
 
@@ -76,6 +68,7 @@ export const createService = asyncHandler(async (req, res) => {
     availability,
     price,
     serviceRadius,
+    bookingOptions,
     location: {
       address: location.address,
       city: location.city,
@@ -300,7 +293,7 @@ export const getServiceById = asyncHandler(async (req, res) => {
     throw new apiError(400, "Invalid service ID");
   }
 
-  const service = await Service.findById({ _id: id, isVisible: true })
+  const service = await Service.findOne({ _id: id, isVisible: true })
     .populate("userId", "fullName email")
     .lean();
 
@@ -324,7 +317,7 @@ export const updateService = asyncHandler(async (req, res) => {
     throw new apiError(400, "Invalid service ID");
   }
 
-  const service = await Service.findOne({ _id: id, isVisible: true });
+  const service = await Service.findOne({ _id: id});
   if (!service) {
     throw new apiError(404, "Service not found");
   }
@@ -341,19 +334,49 @@ export const updateService = asyncHandler(async (req, res) => {
     phoneNumber,
     availability,
     price,
+    category,
     serviceRadius,
+    bookingOptions,
   } = req.body;
 
   // ✅ Clean update
-  Object.assign(service, {
-    ...(title && { title }),
-    ...(description && { description }),
-    ...(location && { location }),
-    ...(phoneNumber && { phoneNumber }),
-    ...(availability && { availability }),
-    ...(price && { price }),
-    ...(serviceRadius !== undefined && { serviceRadius }),
-  });
+Object.assign(service, {
+  ...(title !== undefined && { title }),
+  ...(description !== undefined && { description }),
+  ...(category !== undefined && { category }),
+  ...(phoneNumber !== undefined && { phoneNumber }),
+
+  ...(availability !== undefined && { availability }),
+  ...(bookingOptions !== undefined && { bookingOptions }),
+
+  ...(price !== undefined && { price }),
+  ...(serviceRadius !== undefined && { serviceRadius }),
+});
+if (location) {
+  if (
+    location.latitude === undefined ||
+    location.longitude === undefined ||
+    location.latitude === null ||
+    location.longitude === null
+  ) {
+    throw new apiError(400, "Location coordinates are required");
+  }
+
+  service.location = {
+    address: location.address,
+    city: location.city,
+    state: location.state,
+    pincode: location.pincode,
+
+    coordinates: {
+      type: "Point",
+      coordinates: [
+        Number(location.longitude),
+        Number(location.latitude),
+      ],
+    },
+  };
+}
 
   const updatedService = await service.save();
 

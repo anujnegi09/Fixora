@@ -9,50 +9,85 @@ import Notification from "../Models/Notification.js";
 import { sendNotification } from "../Services/NotificationService.js";
 import redisClient from "../Config/Redis.js";
 
-/**
- * =====================================================
- * BOOKING CREATE BY USER
- * =====================================================
- */
 export const createBooking = asyncHandler(async (req, res) => {
-  const { serviceId, bookingDate, notes } = req.body;
+  const { serviceId, bookingType, startTime, notes } = req.body;
 
-  if (!serviceId || !bookingDate) {
-    throw new apiError(400, "Service ID and booking date are required");
+  if (!serviceId || !bookingType) {
+    throw new apiError(400, "Service ID and booking type are required");
   }
-
-  // ✅ Validate ObjectId
   if (!mongoose.Types.ObjectId.isValid(serviceId)) {
     throw new apiError(400, "Invalid service ID");
   }
 
-  const service = await Service.findById(serviceId);
+  if (!["instant", "scheduled"].includes(bookingType)) {
+    throw new apiError(400, "Invalid booking type");
+  }
+  const service = await Service.findById({
+    _id: serviceId,
+    isVisible: true,
+  });
   if (!service) {
     throw new apiError(404, "Service not found");
   }
 
-  // 🚨 Prevent booking own service
+  // PREVENT BOOKING OWN SERVICE
   if (service.userId.toString() === req.user._id.toString()) {
     throw new apiError(400, "You cannot book your own service");
   }
 
-  // 🚨 Prevent past date booking
-  if (new Date(bookingDate) < new Date()) {
-    throw new apiError(400, "Booking date cannot be in the past");
+  if (!service.bookingOptions.includes(bookingType)) {
+    throw new apiError(
+      400,
+      `This service does not support ${bookingType} booking`,
+    );
   }
-
+  let bookingStartTime;
+  if (bookingType === "instant") {
+    bookingStartTime = new Date();
+  } else {
+    if (!startTime) {
+      throw new apiError(400, "Start time is required for scheduled booking");
+    }
+    bookingStartTime = new Date(startTime);
+    if (isNaN(bookingStartTime.getTime())) {
+      throw new apiError(400, "Invalid start time");
+    }
+    if (bookingStartTime <= new Date()) {
+      throw new apiError(400, "Scheduled booking must be in the future");
+    }
+  }
   const booking = await Booking.create({
     bookedBy: req.user._id,
     serviceId: service._id,
     serviceOwner: service.userId,
-    bookingDate,
+    bookingType,
+    startTime: bookingStartTime,
+    price: service.price,
     notes,
+    status: "pending",
   });
 
+  let notificationMessage;
+  if (bookingType === "instant") {
+    notificationMessage = `${req.user.fullName} requested your "${service.title}" service instantly.`;
+  } else {
+    const formattedDate = bookingStartTime.toLocaleDateString("en-IN", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+    const formattedTime = bookingStartTime.toLocaleTimeString("en-IN", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+    notificationMessage = `${req.user.fullName} scheduled your "${service.title}" service for ${formattedDate} at ${formattedTime}.`;
+  }
   await sendNotification({
     userId: service.userId,
     type: "booking_request",
-    message: `${req.user.fullName} booked your "${service.title}" service.`,
+    message: notificationMessage,
     bookingId: booking._id,
     serviceId: service._id,
     redirectTo: `/bookings/${booking._id}`,
@@ -63,11 +98,64 @@ export const createBooking = asyncHandler(async (req, res) => {
     message: "📢 New booking request!",
     booking,
   });
-
-  res
+  return res
     .status(201)
     .json(new apiResponse(201, booking, "Booking created successfully"));
 });
+// export const createBooking = asyncHandler(async (req, res) => {
+//   const { serviceId, bookingType, startTime, notes } = req.body;
+
+//   if (!serviceId || !bookingType) {
+//     throw new apiError(400, "Service ID and booking date are required");
+//   }
+
+//   // ✅ Validate ObjectId
+//   if (!mongoose.Types.ObjectId.isValid(serviceId)) {
+//     throw new apiError(400, "Invalid service ID");
+//   }
+
+//   const service = await Service.findById(serviceId);
+//   if (!service) {
+//     throw new apiError(404, "Service not found");
+//   }
+
+//   // 🚨 Prevent booking own service
+//   if (service.userId.toString() === req.user._id.toString()) {
+//     throw new apiError(400, "You cannot book your own service");
+//   }
+
+//   // 🚨 Prevent past date booking
+//   if (new Date(bookingDate) < new Date()) {
+//     throw new apiError(400, "Booking date cannot be in the past");
+//   }
+
+//   const booking = await Booking.create({
+//     bookedBy: req.user._id,
+//     serviceId: service._id,
+//     serviceOwner: service.userId,
+//     bookingDate,
+//     notes,
+//   });
+
+//   await sendNotification({
+//     userId: service.userId,
+//     type: "booking_request",
+//     message: `${req.user.fullName} booked your "${service.title}" service.`,
+//     bookingId: booking._id,
+//     serviceId: service._id,
+//     redirectTo: `/bookings/${booking._id}`,
+//   });
+
+//   const io = getIO();
+//   io.to(booking.serviceOwner.toString()).emit("newBooking", {
+//     message: "📢 New booking request!",
+//     booking,
+//   });
+
+//   res
+//     .status(201)
+//     .json(new apiResponse(201, booking, "Booking created successfully"));
+// });
 /**
  * =====================================================
  * GET BOOKING BY USER
@@ -154,7 +242,7 @@ export const deleteBooking = asyncHandler(async (req, res) => {
  */
 export const updateBookingDetails = asyncHandler(async (req, res) => {
   const { bookingId } = req.params;
-  const { bookingDate, notes } = req.body;
+  const { startTime, notes } = req.body;
 
   // Validate ObjectId
   if (!mongoose.Types.ObjectId.isValid(bookingId)) {
@@ -178,14 +266,26 @@ export const updateBookingDetails = asyncHandler(async (req, res) => {
   }
 
   // Validate booking date
-  if (bookingDate) {
-    const selectedDate = new Date(bookingDate);
+  if (startTime) {
+    const selectedStartTime = new Date(startTime);
 
-    if (selectedDate <= new Date()) {
-      throw new apiError(400, "Booking date must be in the future.");
+    if (isNaN(selectedStartTime.getTime())) {
+      throw new apiError(400, "Invalid start time.");
     }
 
-    booking.bookingDate = bookingDate;
+    if (selectedStartTime <= new Date()) {
+      throw new apiError(400, "Booking time must be in the future.");
+    }
+
+    // Only scheduled bookings should change their time
+    if (booking.bookingType !== "scheduled") {
+      throw new apiError(
+        400,
+        "Instant bookings cannot have their time changed.",
+      );
+    }
+
+    booking.startTime = selectedStartTime;
   }
 
   if (notes !== undefined) {
@@ -433,7 +533,7 @@ export const requestCompletion = asyncHandler(async (req, res) => {
   await sendNotification({
     userId: booking.bookedBy,
     type: "otp_generated",
-    message: `Service provider has requested service completion. Your OTP is ${otp}.`,
+    message:`The service provider is asking for an OTP to complete your "${service.title}" service. Your OTP is ${otp}.`,
     bookingId: booking._id,
     serviceId: booking.serviceId,
     redirectTo: `/notifications`,
