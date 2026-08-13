@@ -9,13 +9,10 @@ import ForgotPassword from "../pages/ForgotPassword/ForgotPassword.jsx";
 import ResetPassword from "../pages/ResetPassword/ResetPassword.jsx";
 import VerifyEmail from "../pages/VerifyEmail/VerifyEmail.jsx";
 import GoogleSuccess from "../pages/GoogleSuccess/GoogleSuccess.jsx";
-import ChangePassword from "../pages/ChangePassword/ChangePassword.jsx";
 import BecomeProvider from "../pages/BecomeProvider/BecomeProvider";
 import Services from "../pages/Services/Services.jsx";
 import CreateService from "../pages/CreateService/CreateService.jsx";
 import ServiceDetails from "../pages/ServiceDetails/ServiceDetails";
-import UpdateService from "../pages/UpdateService/UpdateService";
-
 
 import MainLayout from "../components/layout/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
@@ -24,10 +21,8 @@ import GuestRoute from "./GuestRoute";
 const AppRoutes = () => {
   return (
     <Routes>
-
       {/* Routes with Navbar & Footer */}
       <Route element={<MainLayout />}>
-
         {/* Public Route */}
         <Route path="/" element={<Home />} />
 
@@ -43,16 +38,6 @@ const AppRoutes = () => {
           }
         />
 
-         {/* change password */}
-        <Route
-          path="/change-password"
-          element={
-            <ProtectedRoute>
-              <ChangePassword />
-            </ProtectedRoute>
-          }
-        />
-
         <Route
           path="/services"
           element={
@@ -63,13 +48,13 @@ const AppRoutes = () => {
         />
 
         <Route
-  path="/become-provider"
-  element={
-    <ProtectedRoute>
-      <BecomeProvider />
-    </ProtectedRoute>
-  }
-/>
+          path="/become-provider"
+          element={
+            <ProtectedRoute>
+              <BecomeProvider />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/create-service"
@@ -80,22 +65,7 @@ const AppRoutes = () => {
           }
         />
 
-        <Route
-  path="/services/:serviceId"
-  element={<ServiceDetails />}
-/>
-
-      <Route
-  path="/update-service/:serviceId"
-  element={
-    <ProtectedRoute>
-      <UpdateService />
-    </ProtectedRoute>
-  }
-/>
-
-
-
+        <Route path="/services/:serviceId" element={<ServiceDetails />} />
       </Route>
 
       {/* Guest Routes (No Navbar/Footer) */}
@@ -144,14 +114,10 @@ const AppRoutes = () => {
         }
       />
 
-      <Route
-        path="/auth/google/success"
-        element={<GoogleSuccess />}
-      />
+      <Route path="/auth/google/success" element={<GoogleSuccess />} />
 
       {/* 404 */}
       <Route path="*" element={<NotFound />} />
-
     </Routes>
   );
 };
