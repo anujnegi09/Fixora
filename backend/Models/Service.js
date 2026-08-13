@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
- 
+
 const ServiceSchema = new mongoose.Schema(
   {
     // Link to User model (creator of the service)
@@ -10,13 +10,13 @@ const ServiceSchema = new mongoose.Schema(
       index: true, // NEW: you'll constantly query "all services created by this user"
       // for the owner's dashboard, so this needs to be indexed.
     },
- 
+
     title: {
       type: String,
       required: true,
       trim: true,
     },
- 
+
     description: {
       type: String,
       required: true,
@@ -27,52 +27,96 @@ const ServiceSchema = new mongoose.Schema(
       min: 0,
       max: 5,
     },
-   totalReviews: {
-    type: Number,
-    default: 0,
-},
+    totalReviews: {
+      type: Number,
+      default: 0,
+    },
+    // availability: {
+    //   days: {
+    //     type: [
+    //       {
+    //         day: {
+    //           type: String,
+    //           required: true,
+    //           enum: [
+    //             "Monday",
+    //             "Tuesday",
+    //             "Wednesday",
+    //             "Thursday",
+    //             "Friday",
+    //             "Saturday",
+    //             "Sunday",
+    //           ],
+    //         },
+    //         available: { type: Boolean, required: true },
+    //       },
+    //     ],
+    //     // FIX: `required: true` on an array does NOT stop someone from
+    //     // saving an EMPTY array []. Mongoose's `required` only blocks
+    //     // `undefined`/`null`, not "empty". We add a custom validator
+    //     // below to actually enforce "at least one day must be provided".
+    //     validate: {
+    //       validator: function (value) {
+    //         return Array.isArray(value) && value.length > 0;
+    //       },
+    //       message: "Please provide availability for at least one day.",
+    //     },
+    //   },
+    // },
     availability: {
-      days: {
-        type: [
-          {
-            day: {
-              type: String,
-              required: true,
-              enum: [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday",
-              ],
-            },
-            available: { type: Boolean, required: true },
+      days: [
+        {
+          day: {
+            type: String,
+            required: true,
+            enum: [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday",
+            ],
           },
-        ],
-        // FIX: `required: true` on an array does NOT stop someone from
-        // saving an EMPTY array []. Mongoose's `required` only blocks
-        // `undefined`/`null`, not "empty". We add a custom validator
-        // below to actually enforce "at least one day must be provided".
-        validate: {
-          validator: function (value) {
-            return Array.isArray(value) && value.length > 0;
+
+          available: {
+            type: Boolean,
+            required: true,
           },
-          message: "Please provide availability for at least one day.",
+
+          startTime: {
+            type: String,
+            default: null,
+          },
+
+          endTime: {
+            type: String,
+            default: null,
+          },
         },
+      ],
+    },
+    bookingOptions: {
+      type: [String],
+      enum: ["instant", "scheduled"],
+      default: ["scheduled"],
+      validate: {
+        validator: function (value) {
+          return value.length > 0;
+        },
+        message: "At least one booking option is required.",
       },
     },
-
     location: {
       address: {
-          type: String,
-          required: true,
+        type: String,
+        required: true,
       },
       city: {
-          type: String,
-          // required: true,
-          index: true,
+        type: String,
+        // required: true,
+        index: true,
       },
       state: {
         type: String,
@@ -82,21 +126,22 @@ const ServiceSchema = new mongoose.Schema(
         type: String,
         // required: true,
       },
-     coordinates: {
+      coordinates: {
         type: {
-            type: String,
-            enum: ["Point"],
-            default: "Point",
+          type: String,
+          enum: ["Point"],
+          default: "Point",
         },
         coordinates: {
-            type: [Number], // [longitude, latitude]
-            required: true,
+          type: [Number], // [longitude, latitude]
+          required: true,
         },
       },
     },
     serviceRadius: {
-    type: Number,
-    required: true,
+      type: Number,
+      required: true,
+      min: 1,
     },
     phoneNumber: {
       type: String,
@@ -106,23 +151,24 @@ const ServiceSchema = new mongoose.Schema(
     price: {
       type: Number,
       required: true,
+      min: 0,
     },
-  category: {
-  type: String,
-  required: true,
-  enum: [
-    "Electrician",
-    "Plumber",
-    "Carpenter",
-    "Painter",
-    "Cleaner",
-    "Mechanic",
-    "AC Repair",
-    "Tutor",
-    "Beautician",
-    "other",
-    ],
-  },
+    category: {
+      type: String,
+      required: true,
+      enum: [
+        "Electrician",
+        "Plumber",
+        "Carpenter",
+        "Painter",
+        "Cleaner",
+        "Mechanic",
+        "AC Repair",
+        "Tutor",
+        "Beautician",
+        "other",
+      ],
+    },
     // used to control whether the service shows up in browse results
     // (should be tied to the user's active subscription status)
     isVisible: {
@@ -130,14 +176,14 @@ const ServiceSchema = new mongoose.Schema(
       default: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 // NEW: helps full-text search across title & description when users
 // search for services (e.g. "plumber", "AC repair").
 
-ServiceSchema.index({"location.coordinates": "2dsphere",});
+ServiceSchema.index({ "location.coordinates": "2dsphere" });
 ServiceSchema.index({ title: "text", description: "text" });
- 
+
 const Service = mongoose.model("Service", ServiceSchema);
- 
+
 export default Service;

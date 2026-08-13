@@ -7,7 +7,7 @@ const BookingSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index : true // for faster lookups when user wants to see their bookings
+      index: true, // for faster lookups when user wants to see their bookings
     },
 
     // Service being booked
@@ -15,6 +15,7 @@ const BookingSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Service",
       required: true,
+      index: true,
     },
 
     // Owner of the service (creator)
@@ -22,44 +23,52 @@ const BookingSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index : true // for faster lookups when service owner wants to see bookings for their services
+      index: true, // for faster lookups when service owner wants to see bookings for their services
+    },
+    bookingType: {
+      type: String,
+      enum: ["instant", "scheduled"],
+      required: true,
+      default: "scheduled",
+    },
+    // Date & time of booking
+    startTime: {
+      type: Date,
+      required: true,
+      index: true,
     },
 
-    // Date & time of booking
-    bookingDate: {
-      type: Date,
-      required: true
-    },
     price: {
-      type: Number
+      type: Number,
     },
     // Booking status
     status: {
       type: String,
-      enum: ["pending",
-          "confirmed",
-          "completed",
-          "completion_requested",
-          "cancelled",   // user cancelled
-          "rejected"     // owner rejected
-        ],
-      default: "pending"
+      enum: [
+        "pending",
+        "confirmed",
+        "completed",
+        "completion_requested",
+        "cancelled", // user cancelled
+        "rejected", // owner rejected
+      ],
+      default: "pending",
     },
-    // additional notes 
+    // additional notes
     notes: {
       type: String,
-      trim : true
+      trim: true,
     },
     isRead: {
       type: Boolean,
-      default: false
+      default: false,
     },
     otpVerified: {
       type: Boolean,
       default: false,
-    },    
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Booking = mongoose.model("Booking", BookingSchema);
