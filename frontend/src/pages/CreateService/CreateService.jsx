@@ -35,6 +35,11 @@ const weekDays = [
   "Sunday",
 ];
 
+const bookingOptions = [
+  { value: "instant", label: "Instant Booking" },
+  { value: "scheduled", label: "Scheduled Booking" },
+];
+
 const CreateService = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -57,6 +62,7 @@ const CreateService = () => {
       availability: [],
       category: "",
       serviceRadius: "",
+      bookingOptions: [],
     },
   });
 
@@ -80,6 +86,7 @@ const CreateService = () => {
       phoneNumber: data.phoneNumber,
       price: data.price,
       serviceRadius: data.serviceRadius,
+      bookingOptions: data.bookingOptions,
 
       // Backend expects latitude/longitude here
       location: {
@@ -252,25 +259,39 @@ const CreateService = () => {
             },
           })}
         />
-        {/* <Input
-          label="Radius (km)"
-          type="number"
-          placeholder="10"
-          error={errors.serviceRadius?.message}
-          {...register("serviceRadius", {
-            required: "Service radius is required",
-            valueAsNumber: true,
-            min: {
-              value: 1,
-              message: "Minimum radius is 1 km",
-            },
-            max: {
-              value: 100,
-              message: "Maximum radius is 100 km",
-            },
-          })}
-        /> */}
 
+        {/* Booking Options */}
+
+        <div>
+          <h3 className="mb-3 text-lg font-semibold">Booking Options</h3>
+
+          <div className="space-y-3">
+            {bookingOptions.map((option) => (
+              <label
+                key={option.value}
+                className="flex cursor-pointer items-center gap-3 rounded-lg border p-3 hover:bg-gray-50"
+              >
+                <input
+                  type="checkbox"
+                  value={option.value}
+                  {...register("bookingOptions", {
+                    validate: (value) =>
+                      value?.length > 0 ||
+                      "Please select at least one booking option",
+                  })}
+                />
+
+                {option.label}
+              </label>
+            ))}
+          </div>
+
+          {errors.bookingOptions && (
+            <p className="mt-2 text-sm text-red-500">
+              {errors.bookingOptions.message}
+            </p>
+          )}
+        </div>
         {/* Availability */}
 
         <div>
