@@ -219,14 +219,14 @@ const Navbar = () => {
               <span>Profile</span>
             </NavLink>
 
-            <NavLink
+            {/* <NavLink
               to="/account"
               onClick={closeSidebar}
               className="flex items-center gap-3 px-5 py-2.5 text-gray-700 hover:bg-gray-100 transition"
             >
               <FaUser size={17} />
               <span>Account</span>
-            </NavLink>
+            </NavLink> */}
 
             <NavLink
               to="/my-bookings"
