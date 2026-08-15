@@ -357,30 +357,8 @@ const BookService = () => {
                 )}
               </div>
             </div>
-            {/* <div className="mt-5 border-t border-gray-100 pt-4">
-              <p className="text-sm font-medium text-gray-500">
-                Booking Options
-              </p>
-
-              <div className="mt-2 flex flex-nowrap items-center gap-2">
-                {service?.bookingOptions?.includes("instant") && (
-                  <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-yellow-50 px-3 py-1.5 text-sm font-medium text-yellow-700">
-                    <FaBolt />
-                    Instant Booking
-                  </span>
-                )}
-
-                {service?.bookingOptions?.includes("scheduled") && (
-                  <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700">
-                    <FaCalendarAlt />
-                    Scheduled Booking
-                  </span>
-                )}
-              </div>
-            </div> */}
 
             {/* Location */}
-
             <div className="border-t border-gray-100 p-6">
               <h3 className="text-sm font-semibold text-gray-500">
                 Service Location
