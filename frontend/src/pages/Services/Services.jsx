@@ -17,7 +17,6 @@ import ServiceCard from "../../components/service/ServiceCard";
 import ServicePagination from "../../components/service/Pagination";
 import ServiceSearchHeader from "../../components/service/ServiceSearchHeader";
 import LocationModal from "../../components/location/LocationModal";
-import ServiceDetailsModal from "../../components/service/ServiceDetailsModal";
 
 const Services = () => {
   const dispatch = useDispatch();
@@ -35,8 +34,6 @@ const Services = () => {
   const [category, setCategory] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [page, setPage] = useState(1);
-
-  const [selectedServiceId, setSelectedServiceId] = useState(null);
 
   const [showLocationModal, setShowLocationModal] = useState(false);
 
@@ -133,27 +130,18 @@ const Services = () => {
       )}
 
       {/* Services */}
-
       {!loading && services.length > 0 && (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {services.map((service) => (
-            <ServiceCard key={service._id} service={service}
-            onViewDetails={() => setSelectedServiceId(service._id)} />
+            <ServiceCard 
+              key={service._id}
+              service={service}
+            />
           ))}
         </div>
       )}
-      {selectedServiceId && (
-  <ServiceDetailsModal
-    serviceId={selectedServiceId}
-    onClose={() => setSelectedServiceId(null)}
-    onBook={(service) => {
-      console.log("Book service:", service);
-    }}
-  />
-)}
 
       {/* Pagination */}
-
       {services.length > 0 && (
         <div className="mt-10">
           <ServicePagination currentPage={page} onPageChange={setPage} />
