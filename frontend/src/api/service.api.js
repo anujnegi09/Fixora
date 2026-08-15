@@ -8,11 +8,7 @@ export const createServiceApi = async (formData) => {
   return response.data;
 };
 
-//get all services 
-// export const getAllServicesApi = async (params) => {
-//     const response = await api.get("/services", params,);
-//     return response.data;
-// };
+
 export const getAllServicesApi = async (params) => {
   const response = await api.get("/services", {
     params: {
@@ -28,10 +24,6 @@ export const getAllServicesApi = async (params) => {
 
   return response.data;
 };
-// export const getAllServicesApi = async (params) => {
-//   const response = await api.get("/services",{params});
-//   return response.data;
-// };
 
 //get by id 
 export const getServiceByIdApi = async (serviceId)=>{
