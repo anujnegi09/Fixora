@@ -22,10 +22,10 @@ export const createBooking = asyncHandler(async (req, res) => {
   if (!["instant", "scheduled"].includes(bookingType)) {
     throw new apiError(400, "Invalid booking type");
   }
-  const service = await Service.findById({
+  const service = await Service.findOne({
     _id: serviceId,
     isVisible: true,
-  });
+  }).populate("userId", "fullName avatar");;
   if (!service) {
     throw new apiError(404, "Service not found");
   }
@@ -328,7 +328,7 @@ export const getMyBookings = asyncHandler(async (req, res) => {
 
   const bookings = await Booking.find(query)
     .populate("serviceId", "title description location phoneNumber")
-    .populate("serviceOwner", "fullName email profilePhoto")
+    .populate("serviceOwner", "fullName email avatar")
     .sort({ _id: -1 })
     .limit(limit + 1)
     .lean();
@@ -372,7 +372,7 @@ export const getBookingsForMyServices = asyncHandler(async (req, res) => {
   }
 
   const bookings = await Booking.find(query)
-    .populate("bookedBy", "fullName email profilePhoto")
+    .populate("bookedBy", "fullName email avatar")
     .populate("serviceId", "title description location phoneNumber")
     .sort({ _id: -1 })
     .limit(limit + 1)
@@ -423,9 +423,48 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
     throw new apiError(404, "Booking not found");
   }
 
-  // Only service provider
-  if (booking.serviceOwner.toString() !== userId.toString()) {
-    throw new apiError(403, "Not authorized");
+  // // Only service provider
+  // if (booking.serviceOwner.toString() !== userId.toString()) {
+  //   throw new apiError(403, "Not authorized");
+  // }
+  const isServiceOwner = booking.serviceOwner.toString() === userId.toString();
+
+  const isCustomer = booking.bookedBy.toString() === userId.toString();
+
+  // ==========================================
+  // CONFIRM / REJECT
+  // Only service provider can do this
+  // ==========================================
+
+  if (status === "confirmed" || status === "rejected") {
+    if (!isServiceOwner) {
+      throw new apiError(
+        403,
+        "Only the service provider can confirm or reject the booking",
+      );
+    }
+
+    if (booking.status !== "pending") {
+      throw new apiError(
+        400,
+        "Only pending bookings can be confirmed or rejected",
+      );
+    }
+  }
+
+  // ==========================================
+  // CANCEL
+  // Only customer can do this
+  // ==========================================
+
+  if (status === "cancelled") {
+    if (!isCustomer) {
+      throw new apiError(403, "Only the customer can cancel this booking");
+    }
+
+    if (!["pending", "confirmed"].includes(booking.status)) {
+      throw new apiError(400, "This booking cannot be cancelled");
+    }
   }
 
   // Finalized bookings cannot be changed
@@ -533,7 +572,7 @@ export const requestCompletion = asyncHandler(async (req, res) => {
   await sendNotification({
     userId: booking.bookedBy,
     type: "otp_generated",
-    message:`The service provider is asking for an OTP to complete your "${service.title}" service. Your OTP is ${otp}.`,
+    message: `The service provider is asking for an OTP to complete your "${service.title}" service. Your OTP is ${otp}.`,
     bookingId: booking._id,
     serviceId: booking.serviceId,
     redirectTo: `/notifications`,
