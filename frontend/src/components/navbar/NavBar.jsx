@@ -87,14 +87,14 @@ const Navbar = () => {
             </NavLink>
 
             <NavLink
-              to="/about"
+              to="/become-provider"
               className={({ isActive }) =>
                 isActive
                   ? "text-blue-600 font-semibold"
                   : "text-gray-700 hover:text-blue-600 transition"
               }
             >
-              About
+              become provider
             </NavLink>
           </div>
 
@@ -131,7 +131,7 @@ const Navbar = () => {
               >
                 {user?.avatar ? (
                   <img
-                    src={user.avatar}
+                    src={user.avatar }
                     alt="profile"
                     className="
         w-10
@@ -146,18 +146,7 @@ const Navbar = () => {
                   />
                 ) : (
                   <div
-                    className="
-        w-10
-        h-10
-        shrink-0
-        rounded-full
-        bg-gray-200
-        flex
-        items-center
-        justify-center
-        border
-        border-gray-200
-      "
+                    className="w-10 h-10 shrink-0 rounded-full bg-gray-200 flex items-center justify-center border border-gray-200"
                   >
                     <FaUserCircle size={22} className="text-gray-700" />
                   </div>
