@@ -16,15 +16,22 @@ const Button = ({
     "transition duration-300 rounded-lg font-medium focus:outline-none cursor-pointer";
 
   const variants = {
-    primary:"bg-blue-600 text-white hover:bg-blue-700",
+    primary: "bg-blue-600 text-white hover:bg-blue-700",
 
-    secondary:"bg-gray-200 text-gray-800 hover:bg-gray-300",
+    secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
 
-    danger:"bg-red-600 text-white hover:bg-red-700",
+    danger: "bg-red-600 text-white hover:bg-red-700",
 
-    outline:"border border-blue-600 text-blue-600 hover:bg-blue-50",
+    outline: "border border-blue-600 text-blue-600 hover:bg-blue-50",
 
-    google:"flex items-center justify-center gap-3 w-full border rounded-lg py-3 bg-white text-gray-700 hover:bg-gray-100 transition",
+    google:
+      "flex items-center justify-center gap-3 w-full border rounded-lg py-3 bg-white text-gray-700 hover:bg-gray-100 transition",
+
+    success:
+      "rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700 active:scale-95", // for booking accept, confirm  "bg-green-600 text-white hover:bg-green-700",
+
+    dangerLight:
+      "rounded-lg bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50", // for booking  cancel "bg-red-50 text-red-600 hover:bg-red-100",
   };
 
   const sizes = {
@@ -49,16 +56,16 @@ const Button = ({
         ${className}
       `}
     >
-     <>
-  {loading ? (
-    "Loading..."
-  ) : (
-    <>
-      {leftIcon && leftIcon}
-      {children}
-    </>
-  )}
-</>
+      <>
+        {loading ? (
+          "loadingText" // loading...
+        ) : (
+          <>
+            {leftIcon && leftIcon}
+            {children}
+          </>
+        )}
+      </>
     </button>
   );
 };

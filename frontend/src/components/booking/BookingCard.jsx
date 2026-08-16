@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   FaCalendarAlt,
   FaClock,
@@ -11,38 +12,66 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateBookingStatus } from "../../features/bookings/bookingThunks";
 import { selectBookingStatusLoading } from "../../features/bookings/bookingSelectors";
 
+import Button from "../common/Button";
+import defaultAvatar from "../../assets/default-avatar-profile.png";
+
 const BookingCard = ({ booking, type }) => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const statusLoading = useSelector(selectBookingStatusLoading);
+  const [updatingBookingId, setUpdatingBookingId] = useState(null);
   if (!booking) {
     return null;
   }
 
   const handleAccept = async () => {
-  try {
-    await dispatch(
-      updateBookingStatus({
-        bookingId: booking._id,
-        status: "confirmed",
-      })
-    ).unwrap();
-  } catch (error) {
-    console.error("Failed to accept booking:", error);
-  }
-};
+    try {
+      setUpdatingBookingId(booking._id);
+      await dispatch(
+        updateBookingStatus({
+          bookingId: booking._id,
+          status: "confirmed",
+        }),
+      ).unwrap();
+    } catch (error) {
+      console.error("Failed to accept booking:", error);
+    } finally {
+      setUpdatingBookingId(null);
+    }
+  };
 
-const handleReject = async () => {
-  try {
-    await dispatch(
-      updateBookingStatus({
-        bookingId: booking._id,
-        status: "cancelled",
-      })
-    ).unwrap();
-  } catch (error) {
-    console.error("Failed to reject booking:", error);
-  }
-};
+  const handleReject = async () => {
+    try {
+      setUpdatingBookingId(booking._id);
+      await dispatch(
+        updateBookingStatus({
+          bookingId: booking._id,
+          status: "cancelled",
+        }),
+      ).unwrap();
+    } catch (error) {
+      console.error("Failed to reject booking:", error);
+    } finally {
+      setUpdatingBookingId(null);
+    }
+  };
+
+  // ADD HERE
+  const handleCancel = async () => {
+    try {
+      setUpdatingBookingId(booking._id);
+
+      await dispatch(
+        updateBookingStatus({
+          bookingId: booking._id,
+          status: "cancelled",
+        }),
+      ).unwrap();
+    } catch (error) {
+      console.error("Failed to cancel booking:", error);
+    } finally {
+      setUpdatingBookingId(null);
+    }
+  };
 
   // ==========================================
   // Determine booking type
@@ -54,9 +83,7 @@ const handleReject = async () => {
   // Start Time
   // ==========================================
 
-  const startTime = booking.startTime
-    ? new Date(booking.startTime)
-    : null;
+  const startTime = booking.startTime ? new Date(booking.startTime) : null;
 
   const formattedDate = startTime
     ? startTime.toLocaleDateString("en-IN", {
@@ -86,38 +113,30 @@ const handleReject = async () => {
   };
 
   const statusClass =
-    statusStyles[booking.status] ||
-    "bg-gray-100 text-gray-600";
+    statusStyles[booking.status] || "bg-gray-100 text-gray-600";
 
   // ==========================================
   // Person
   // ==========================================
 
   const person =
-    type === "my-bookings"
-      ? booking.serviceOwner
-      : booking.bookedBy;
+    type === "my-bookings" ? booking.serviceOwner : booking.bookedBy;
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md">
-
       {/* ======================================
           Header
       ====================================== */}
 
       <div className="border-b border-gray-100 p-5">
-
         <div className="flex items-start justify-between gap-3">
-
           <div>
             <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
               Service
             </p>
 
             <h2 className="mt-1 text-lg font-bold text-gray-800">
-              {booking.serviceId?.title ||
-                booking.service?.title ||
-                "Service"}
+              {booking.serviceId?.title || booking.service?.title || "Service"}
             </h2>
           </div>
 
@@ -128,9 +147,7 @@ const handleReject = async () => {
           >
             {booking.status || "Pending"}
           </span>
-
         </div>
-
       </div>
 
       {/* ======================================
@@ -138,37 +155,35 @@ const handleReject = async () => {
       ====================================== */}
 
       <div className="space-y-4 p-5">
-
         {/* Person */}
 
         <div className="flex items-center gap-3">
-
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-500">
-            <FaUser size={14} />
+          <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-gray-200 bg-gray-100">
+            <img
+              src={person?.avatar || defaultAvatar }
+              alt={person?.fullName || "User"}
+              className="h-full w-full object-cover"
+            />
           </div>
+          {/* <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-500">
+            <FaUser size={14} />
+          </div> */}
 
           <div>
             <p className="text-xs text-gray-500">
-              {type === "my-bookings"
-                ? "Service Provider"
-                : "Customer"}
+              {type === "my-bookings" ? "Service Provider" : "Customer"}
             </p>
 
             <p className="font-medium text-gray-800">
-              {person?.fullName ||
-                person?.userName ||
-                "Unknown User"}
+              {person?.fullName || person?.userName || "Unknown User"}
             </p>
           </div>
-
         </div>
 
         {/* Booking Type */}
 
         <div className="flex items-center justify-between border-t border-gray-100 pt-4">
-
           <div className="flex items-center gap-2">
-
             {isInstant ? (
               <FaBolt className="text-yellow-500" />
             ) : (
@@ -176,103 +191,72 @@ const handleReject = async () => {
             )}
 
             <div>
-              <p className="text-xs text-gray-500">
-                Booking Type
-              </p>
+              <p className="text-xs text-gray-500">Booking Type</p>
 
               <p className="font-medium text-gray-700">
-                {isInstant
-                  ? "Instant Booking"
-                  : "Scheduled Booking"}
+                {isInstant ? "Instant Booking" : "Scheduled Booking"}
               </p>
             </div>
-
           </div>
-
         </div>
 
         {/* Date & Time */}
 
         <div className="grid grid-cols-2 gap-3 border-t border-gray-100 pt-4">
-
           {/* Date */}
 
           <div className="flex items-center gap-2">
-
             <FaCalendarAlt className="shrink-0 text-gray-400" />
 
             <div>
-              <p className="text-xs text-gray-500">
-                Date
-              </p>
+              <p className="text-xs text-gray-500">Date</p>
 
               <p className="text-sm font-medium text-gray-700">
                 {formattedDate}
               </p>
             </div>
-
           </div>
 
           {/* Time */}
 
           <div className="flex items-center gap-2">
-
             <FaClock className="shrink-0 text-gray-400" />
 
             <div>
-              <p className="text-xs text-gray-500">
-                Time
-              </p>
+              <p className="text-xs text-gray-500">Time</p>
 
               <p className="text-sm font-medium text-gray-700">
                 {formattedTime}
               </p>
             </div>
-
           </div>
-
         </div>
 
         {/* Location */}
 
-        {(booking.serviceId?.location ||
-          booking.service?.location) && (
-
+        {(booking.serviceId?.location || booking.service?.location) && (
           <div className="flex items-start gap-3 border-t border-gray-100 pt-4">
-
             <FaMapMarkerAlt className="mt-1 shrink-0 text-red-500" />
 
             <div>
-
-              <p className="text-xs text-gray-500">
-                Location
-              </p>
+              <p className="text-xs text-gray-500">Location</p>
 
               <p className="text-sm font-medium text-gray-700">
-                {(
-                  booking.serviceId?.location ||
-                  booking.service?.location
-                )?.city || "Unknown City"}
+                {(booking.serviceId?.location || booking.service?.location)
+                  ?.city || "Unknown City"}
                 {", "}
-                {(
-                  booking.serviceId?.location ||
-                  booking.service?.location
-                )?.state || "Unknown State"}
+                {(booking.serviceId?.location || booking.service?.location)
+                  ?.state || "Unknown State"}
               </p>
-
             </div>
-
           </div>
         )}
 
         {/* Price */}
 
         <div className="flex items-center justify-between border-t border-gray-100 pt-4">
-
           <div>
-            <p className="text-xs text-gray-500">
-              Price
-            </p>
+            <p className="text-xs text-gray-500">Price</p>
 
             <p className="flex items-center text-lg font-bold text-gray-800">
               <FaRupeeSign size={13} />
@@ -282,9 +266,7 @@ const handleReject = async () => {
                 0}
             </p>
           </div>
-
         </div>
-
       </div>
 
       {/* ======================================
@@ -292,39 +274,86 @@ const handleReject = async () => {
       ====================================== */}
 
       <div className="border-t border-gray-100 bg-gray-50 p-4">
-
         {type === "my-bookings" ? (
-
-          <button
-            type="button"
-            className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 active:scale-95"
-          >
-            View Booking
-          </button>
-
-        ) : (
-
           <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 active:scale-95"
+            >
+              View Booking
+            </button>
 
+            {["pending", "confirmed"].includes(booking.status) && (
+              <Button
+                type="button"
+                variant="dangerLight"
+                size="sm"
+                onClick={handleCancel}
+                loading={updatingBookingId === booking._id}
+                loadingText="Cancelling..."
+              >
+                Cancel
+              </Button>
+              // <button
+              //   type="button"
+              //   onClick={handleCancel}
+              //   disabled={updatingBookingId === booking._id}
+              //   className="rounded-lg bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+              // >
+              //   {updatingBookingId === booking._id
+              //     ? "Cancelling..."
+              //     : "Cancel Booking"}
+              // </button>
+            )}
+          </div>
+        ) : (
+          // <button
+          //   type="button"
+          //   className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 active:scale-95"
+          // >
+          //   View Booking
+          // </button>
+          <div className="grid grid-cols-2 gap-2">
             {booking.status === "pending" && (
               <>
-                <button
+                {/* <button
                   type="button"
                   className="rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700 active:scale-95"
                   onClick={handleAccept}
-  disabled={statusLoading}
+                  disabled={updatingBookingId === booking._id}
                 >
                   {statusLoading ? "Accepting..." : "Accept"}
-                </button>
+                </button> */}
+                <Button
+                  type="button"
+                  variant="success"
+                  size="sm"
+                  onClick={handleAccept}
+                  loading={updatingBookingId === booking._id}
+                  loadingText="Accepting..."
+                >
+                  Accept
+                </Button>
 
-                <button
+                {/* <button
                   type="button"
                   className="rounded-lg bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-100 active:scale-95"
                   onClick={handleReject}
-  disabled={statusLoading}
+                  disabled={updatingBookingId === booking._id}
                 >
-                   {statusLoading ? "Updating..." : "Reject"}
-                </button>
+                  {statusLoading ? "Updating..." : "Reject"}
+                </button> */}
+
+                <Button
+                  type="button"
+                  variant="danger"
+                  size="sm"
+                  onClick={handleReject}
+                  loading={updatingBookingId === booking._id}
+                  loadingText="Updating..."
+                >
+                  Reject
+                </Button>
               </>
             )}
 
@@ -336,12 +365,9 @@ const handleReject = async () => {
                 View Booking
               </button>
             )}
-
           </div>
         )}
-
       </div>
-
     </div>
   );
 };
