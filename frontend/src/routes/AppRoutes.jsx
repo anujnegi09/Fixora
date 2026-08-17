@@ -12,7 +12,9 @@ import GoogleSuccess from "../pages/GoogleSuccess/GoogleSuccess.jsx";
 import BecomeProvider from "../pages/BecomeProvider/BecomeProvider";
 import Services from "../pages/Services/Services.jsx";
 import CreateService from "../pages/CreateService/CreateService.jsx";
-import ServiceDetails from "../pages/ServiceDetails/ServiceDetails";
+import BookService from "../pages/Booking/BookService.jsx";
+import Bookings from "../pages/booking/Bookings";
+
 
 import MainLayout from "../components/layout/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
@@ -65,8 +67,26 @@ const AppRoutes = () => {
           }
         />
 
-        <Route path="/services/:serviceId" element={<ServiceDetails />} />
+        <Route
+          path="/bookings"
+          element={
+            <ProtectedRoute>
+              <Bookings />
+            </ProtectedRoute>
+          }
+        />
+
+       
       </Route>
+
+       <Route
+          path="/booking/:serviceId"
+          element={
+            <ProtectedRoute>
+              <BookService/>
+            </ProtectedRoute>
+          }
+        />
 
       {/* Guest Routes (No Navbar/Footer) */}
       <Route
