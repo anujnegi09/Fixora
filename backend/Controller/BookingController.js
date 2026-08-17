@@ -25,7 +25,7 @@ export const createBooking = asyncHandler(async (req, res) => {
   const service = await Service.findOne({
     _id: serviceId,
     isVisible: true,
-  }).populate("userId", "fullName avatar");;
+  }).populate("userId", "fullName avatar");
   if (!service) {
     throw new apiError(404, "Service not found");
   }
@@ -480,6 +480,10 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
   booking.status = status;
 
   await booking.save();
+  const updatedBooking = await Booking.findById(bookingId)
+    .populate("serviceId")
+    .populate("serviceOwner", "fullName userName avatar")
+    .populate("bookedBy", "fullName userName avatar");
 
   const io = getIO();
 
@@ -491,28 +495,18 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
   switch (status) {
     case "confirmed":
       notificationType = "booking_confirmed";
-
       notificationMessage = "✅ Your booking has been confirmed.";
-
       break;
-
     case "rejected":
       notificationType = "booking_rejected";
-
       notificationMessage = "❌ Your booking has been rejected.";
-
       break;
-
     case "cancelled":
       notificationType = "booking_cancelled";
-
       notificationMessage = "🚫 Your booking has been cancelled.";
-
       break;
-
     default:
       notificationType = "system";
-
       notificationMessage = `Booking status updated to ${status}.`;
   }
 
@@ -527,7 +521,9 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new apiResponse(200, booking, `Booking ${status} successfully`));
+    .json(
+      new apiResponse(200, updatedBooking, `Booking ${status} successfully`),
+    );
 });
 
 /**
@@ -540,7 +536,10 @@ export const requestCompletion = asyncHandler(async (req, res) => {
 
   const providerId = req.user._id;
 
-  const booking = await Booking.findById(bookingId);
+  const booking = await Booking.findById(bookingId).populate(
+  "serviceId",
+  "title"
+);
 
   if (!booking) {
     throw new apiError(404, "Booking not found");
@@ -572,7 +571,7 @@ export const requestCompletion = asyncHandler(async (req, res) => {
   await sendNotification({
     userId: booking.bookedBy,
     type: "otp_generated",
-    message: `The service provider is asking for an OTP to complete your "${service.title}" service. Your OTP is ${otp}.`,
+    message: `The service provider is asking for an OTP to complete your "${booking.serviceId.title}" service. Your OTP is ${otp}.`,
     bookingId: booking._id,
     serviceId: booking.serviceId,
     redirectTo: `/notifications`,
