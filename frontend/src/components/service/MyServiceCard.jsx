@@ -120,7 +120,7 @@ const MyServiceCard = ({ service }) => {
         </div>
 
         {/* Service Information */}
-        <div className="mt-5 space-y-4">
+        <div className="mt-5  space-y-4">
           {/* Location */}
           <div className="flex items-start gap-3">
             <FaMapMarkerAlt className="mt-1 shrink-0 text-red-500" />
@@ -140,7 +140,7 @@ const MyServiceCard = ({ service }) => {
           </div>
 
           {/* Price + Radius */}
-          <div className="flex items-center justify-between border-t border-gray-100 pt-4">
+          <div className=" flex items-center justify-between border-t border-gray-100 pt-4">
             <div>
               <p className="text-xs text-gray-500">Price</p>
 
