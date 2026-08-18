@@ -48,7 +48,7 @@ const BookingSchema = new mongoose.Schema(
         "pending",
         "confirmed",
         "completed",
-        "completion_requested",
+        // "completion_requested",
         "cancelled", // user cancelled
         "rejected", // owner rejected
       ],

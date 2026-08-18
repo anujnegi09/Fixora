@@ -509,7 +509,6 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
       notificationType = "system";
       notificationMessage = `Booking status updated to ${status}.`;
   }
-
   await sendNotification({
     userId: booking.bookedBy,
     type: notificationType,
@@ -518,7 +517,6 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
     serviceId: booking.serviceId,
     redirectTo: `/bookings/${booking._id}`,
   });
-
   return res
     .status(200)
     .json(
@@ -533,40 +531,27 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
  */
 export const requestCompletion = asyncHandler(async (req, res) => {
   const { bookingId } = req.params;
-
   const providerId = req.user._id;
-
   const booking = await Booking.findById(bookingId).populate(
-  "serviceId",
-  "title"
-);
-
+    "serviceId",
+    "title",
+  );
   if (!booking) {
     throw new apiError(404, "Booking not found");
   }
-
   // Only service provider
-
   if (booking.serviceOwner.toString() !== providerId.toString()) {
     throw new apiError(403, "Not authorized");
   }
-
   if (booking.status !== "confirmed") {
     throw new apiError(400, "Booking is not in confirmed state");
   }
-
   // Generate OTP
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
   // Store OTP in Redis for 15 minutes
   await redisClient.set(`booking:${booking._id}:otp`, otp, {
     EX: 15 * 60, // 15 minutes
   });
-
-  booking.status = "completion_requested";
-
-  await booking.save();
-
   // Notification
   await sendNotification({
     userId: booking.bookedBy,
@@ -587,19 +572,12 @@ export const requestCompletion = asyncHandler(async (req, res) => {
  */
 export const getCompletionOTP = asyncHandler(async (req, res) => {
   const { bookingId } = req.params;
-
   const booking = await Booking.findById(bookingId);
-
   if (!booking) {
     throw new apiError(404, "Booking not found");
   }
-
   if (booking.bookedBy.toString() !== req.user._id.toString()) {
     throw new apiError(403, "Not authorized");
-  }
-
-  if (booking.status !== "completion_requested") {
-    throw new apiError(400, "OTP not generated yet");
   }
   const otp = await redisClient.get(`booking:${booking._id}:otp`);
   if (!otp) {
@@ -612,7 +590,6 @@ export const getCompletionOTP = asyncHandler(async (req, res) => {
       {
         otp,
       },
-
       "OTP fetched successfully",
     ),
   );
@@ -624,52 +601,36 @@ export const getCompletionOTP = asyncHandler(async (req, res) => {
  */
 export const verifyCompletionOTP = asyncHandler(async (req, res) => {
   const { bookingId } = req.params;
-
   const { otp } = req.body;
-
   if (!otp) {
     throw new apiError(400, "OTP is required");
   }
-
   if (!/^\d{6}$/.test(otp)) {
     throw new apiError(400, "OTP must be a 6-digit number");
   }
-
   const booking = await Booking.findById(bookingId);
-
   if (!booking) {
     throw new apiError(404, "Booking not found");
   }
-
   // Only provider
-
   if (booking.serviceOwner.toString() !== req.user._id.toString()) {
     throw new apiError(403, "Not authorized");
   }
-
-  if (booking.status !== "completion_requested") {
-    throw new apiError(400, "Completion not requested");
+  if (booking.status !== "confirmed") {
+    throw new apiError(400, "Only confirmed bookings can be completed");
   }
   const savedOTP = await redisClient.get(`booking:${booking._id}:otp`);
-
   if (!savedOTP) {
     throw new apiError(400, "OTP expired or not found");
   }
-
   if (savedOTP !== otp) {
     throw new apiError(400, "Invalid OTP");
   }
-
   booking.status = "completed";
-
   booking.otpVerified = true;
-
   await redisClient.del(`booking:${booking._id}:otp`);
-
   await booking.save();
-
   await booking.populate("serviceId", "title");
-
   await sendNotification({
     userId: booking.bookedBy,
     type: "review_reminder",
@@ -678,14 +639,7 @@ export const verifyCompletionOTP = asyncHandler(async (req, res) => {
     serviceId: booking.serviceId,
     redirectTo: `/bookings/${booking._id}`,
   });
-
-  return res.status(200).json(
-    new apiResponse(
-      200,
-
-      booking,
-
-      "Booking completed successfully",
-    ),
-  );
+  return res
+    .status(200)
+    .json(new apiResponse(200, booking, "Booking completed successfully"));
 });
