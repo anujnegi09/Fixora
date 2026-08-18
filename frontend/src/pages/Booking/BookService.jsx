@@ -20,6 +20,7 @@ import {
 } from "../../features/services/serviceSelectors";
 
 import { createBooking } from "../../features/bookings/bookingThunks";
+import DefaultAvatar from "../../assets/default-avatar-profile.png";
 
 const BookService = () => {
   const { serviceId } = useParams();
@@ -126,7 +127,6 @@ const BookService = () => {
             notes,
           }),
         ).unwrap();
-
 
         // navigate("/bookings");
       } catch (error) {
@@ -273,10 +273,9 @@ const BookService = () => {
               </div>
 
               {/* Provider */}
-
               <div className="mt-5 flex items-center gap-3">
                 <img
-                  src={service.userId?.avatar || "/default-avatar-profile.png"}
+                  src={service.userId?.avatar || DefaultAvatar }
                   alt={service.userId?.fullName || "Service Provider"}
                   className="h-12 w-12 rounded-full border object-cover"
                 />

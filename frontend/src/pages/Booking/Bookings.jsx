@@ -4,33 +4,99 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getMyBookings,
   getBookingsForMyServices,
+  requestCompletion,
+  getBookingById,
+  updateBookingDetails,
+  deleteBooking,
 } from "../../features/bookings/bookingThunks";
 
 import {
   selectMyBookings,
   selectServiceBookings,
+  selectBooking,
   selectBookingLoading,
   selectBookingError,
+  selectUpdateBookingLoading,
+  selectDeleteBookingLoading
 } from "../../features/bookings/bookingSelectors";
 
 import BookingTabs from "../../components/booking/BookingTabs";
 import BookingCard from "../../components/booking/BookingCard";
+import OtpVerificationModal from "../../components/booking/OtpVerificationModal";
+// import BookingDetailModal from "../../components/booking/BookingDetailModal";
+// import UpdateBookingModal from "../../components/booking/UpdateBookingModal";
+// import DeleteBookingModal from "../../components/booking/DeleteBookingModal";
 
 const Bookings = () => {
   const dispatch = useDispatch();
 
   // Active tab (controlled by BookingTabs)
   const [activeTab, setActiveTab] = useState("my-bookings");
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+ const [showUpdateModal, setShowUpdateModal] = useState(false);
+const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  const booking = useSelector(selectBooking);
   const myBookings = useSelector(selectMyBookings);
   const serviceBookings = useSelector(selectServiceBookings);
   const loading = useSelector(selectBookingLoading);
   const error = useSelector(selectBookingError);
+ 
 
   useEffect(() => {
     dispatch(getMyBookings());
     dispatch(getBookingsForMyServices());
   }, [dispatch]);
+
+  const handleViewBooking = async (booking) => {
+  try {
+    setSelectedBooking(booking);
+
+    await dispatch(
+      getBookingById(booking._id)
+    ).unwrap();
+
+    setShowDetailModal(true);
+  } catch (error) {
+    console.error("Failed to fetch booking:", error);
+  }
+};
+
+const handleUpdateBooking = async (booking) => {
+  try {
+    setSelectedBooking(booking);
+
+    await dispatch(
+      getBookingById(booking._id)
+    ).unwrap();
+
+    setShowUpdateModal(true);
+  } catch (error) {
+    console.error("Failed to fetch booking:", error);
+  }
+};
+
+const handleDeleteBooking = (booking) => {
+  setSelectedBooking(booking);
+  setShowDeleteModal(true);
+};
+
+  const handleCompleteBooking = async (booking) => {
+    try {
+      // Request OTP from backend
+      await dispatch(requestCompletion(booking._id)).unwrap();
+
+      // Store the booking whose OTP we are verifying
+      setSelectedBooking(booking);
+
+      // Open OTP modal
+      setShowOtpModal(true);
+    } catch (error) {
+      console.error("Failed to request completion:", error);
+    }
+  };
 
   const bookings = activeTab === "my-bookings" ? myBookings : serviceBookings;
 
@@ -84,9 +150,30 @@ const Bookings = () => {
       {!loading && !error && bookings.length > 0 && (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {bookings.map((booking) => (
-            <BookingCard key={booking._id} booking={booking} type={activeTab} />
+            <BookingCard
+              key={booking._id}
+              booking={booking}
+              type={activeTab}
+              onCompleteBooking={handleCompleteBooking}
+                onViewBooking={handleViewBooking}
+  onUpdateBooking={handleUpdateBooking}
+  onDeleteBooking={handleDeleteBooking}
+            />
           ))}
         </div>
+      )}
+      {showOtpModal && selectedBooking && (
+        <OtpVerificationModal
+          bookingId={selectedBooking._id}
+          onCancel={() => {
+            setShowOtpModal(false);
+            setSelectedBooking(null);
+          }}
+          onVerified={() => {
+            setShowOtpModal(false);
+            setSelectedBooking(null);
+          }}
+        />
       )}
     </div>
   );
