@@ -4,6 +4,7 @@ import userSlice from "../features/user/userSlice.js";
 import serviceSlice from "../features/services/serviceSlice.js"
 import locationSlice from "../features/location/locationSlice.js"
 import bookingSlice from "../features/bookings/bookingSlice.js"
+import notificationSlice from "../features/notifications/notificationSlice.js"
 
 
 export const store = configureStore({
@@ -13,7 +14,7 @@ export const store = configureStore({
         service : serviceSlice,
         location : locationSlice,
         booking : bookingSlice,
-        
+        notification : notificationSlice,
     },
     devTools : import.meta.env.DEV,
 });
