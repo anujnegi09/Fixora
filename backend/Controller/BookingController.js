@@ -220,16 +220,6 @@ export const deleteBooking = asyncHandler(async (req, res) => {
   }
 
   await booking.deleteOne();
-
-  await sendNotification({
-    userId: booking.serviceOwner,
-    type: "booking_deleted",
-    message: `${req.user.fullName} delete the booking details for "${booking.serviceId.title}".`,
-    bookingId: booking._id,
-    serviceId: booking.serviceId,
-    redirectTo: `/bookings/${booking._id}`,
-  });
-
   res
     .status(200)
     .json(new apiResponse(200, null, "Booking deleted successfully"));
