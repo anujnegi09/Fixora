@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import {
   FaBars,
@@ -24,15 +25,24 @@ import {
 } from "../../features/auth/authSelectors.js";
 
 import { logout } from "../../features/auth/authThunks.js";
+import { getNotifications } from "../../features/notifications/notificationThunks";
+
+import { selectUnreadNotificationCount } from "../../features/notifications/notificationSelectors";
 import fixoraLogo from "../../assets/fixora-logo.png";
 
 const Navbar = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const user = useSelector(selectUser);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const unreadCount = useSelector(selectUnreadNotificationCount);
+
+  useEffect(() => {
+    dispatch(getNotifications());
+  }, [dispatch]);
 
   const handleLogout = () => {
     dispatch(logout()).unwrap();
@@ -103,8 +113,19 @@ const Navbar = () => {
           <div className="flex items-center gap-4">
             {/* Notification */}
 
-            <button className="text-gray-700 hover:text-blue-600">
+            <button
+              type="button"
+              onClick={() => navigate("/notifications")}
+              className="relative text-gray-700 transition hover:text-blue-600"
+              title="Notifications"
+            >
               <FaBell size={22} />
+
+              {unreadCount > 0 && (
+                <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </span>
+              )}
             </button>
 
             {!isAuthenticated ? (
@@ -131,7 +152,7 @@ const Navbar = () => {
               >
                 {user?.avatar ? (
                   <img
-                    src={user.avatar }
+                    src={user.avatar}
                     alt="profile"
                     className="
         w-10
@@ -145,9 +166,7 @@ const Navbar = () => {
       "
                   />
                 ) : (
-                  <div
-                    className="w-10 h-10 shrink-0 rounded-full bg-gray-200 flex items-center justify-center border border-gray-200"
-                  >
+                  <div className="w-10 h-10 shrink-0 rounded-full bg-gray-200 flex items-center justify-center border border-gray-200">
                     <FaUserCircle size={22} className="text-gray-700" />
                   </div>
                 )}

@@ -152,7 +152,7 @@ const BookingCard = ({ booking,type,onCompleteBooking,onViewBooking,onUpdateBook
       : booking.bookedBy;
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+    <div className="overflow-hidden mt-5 rounded-xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md">
 
       {/* ======================================
           Header
@@ -181,11 +181,10 @@ const BookingCard = ({ booking,type,onCompleteBooking,onViewBooking,onUpdateBook
 
       {/* Edit */}
 
-      {booking.status === "pending" && (
+      {booking.status === "pending" && type === "my-bookings" && (
         <button
           type="button"
           onClick={() => onUpdateBooking(booking)}
-          // onClick={() => onUpdateBooking(booking._id)}
           title="Edit booking"
           className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-600 transition hover:bg-gray-200 active:scale-95"
         >
@@ -417,13 +416,6 @@ const BookingCard = ({ booking,type,onCompleteBooking,onViewBooking,onUpdateBook
                 view more
               </Button>
 
-            {/* <button
-              type="button"
-              className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 active:scale-95"
-            >
-              View Booking
-            </button> */}
-
             {["pending", "confirmed"].includes(
               booking.status
             ) && (
@@ -494,7 +486,7 @@ const BookingCard = ({ booking,type,onCompleteBooking,onViewBooking,onUpdateBook
                 leftIcon={<FaCheckCircle />}
                 onClick={handleCompleteBooking}
               >
-                Complete Booking
+                Complete
               </Button>
             )}
 
