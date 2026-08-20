@@ -5,7 +5,6 @@ import { asyncHandler } from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";
 import { getIO } from "../Config/Socket.js";
-import Notification from "../Models/Notification.js";
 import { sendNotification } from "../Services/NotificationService.js";
 import redisClient from "../Config/Redis.js";
 
@@ -87,6 +86,7 @@ export const createBooking = asyncHandler(async (req, res) => {
   await sendNotification({
     userId: service.userId,
     type: "booking_request",
+    category: "my_service_booking",
     message: notificationMessage,
     bookingId: booking._id,
     serviceId: service._id,
@@ -102,60 +102,7 @@ export const createBooking = asyncHandler(async (req, res) => {
     .status(201)
     .json(new apiResponse(201, booking, "Booking created successfully"));
 });
-// export const createBooking = asyncHandler(async (req, res) => {
-//   const { serviceId, bookingType, startTime, notes } = req.body;
 
-//   if (!serviceId || !bookingType) {
-//     throw new apiError(400, "Service ID and booking date are required");
-//   }
-
-//   // ✅ Validate ObjectId
-//   if (!mongoose.Types.ObjectId.isValid(serviceId)) {
-//     throw new apiError(400, "Invalid service ID");
-//   }
-
-//   const service = await Service.findById(serviceId);
-//   if (!service) {
-//     throw new apiError(404, "Service not found");
-//   }
-
-//   // 🚨 Prevent booking own service
-//   if (service.userId.toString() === req.user._id.toString()) {
-//     throw new apiError(400, "You cannot book your own service");
-//   }
-
-//   // 🚨 Prevent past date booking
-//   if (new Date(bookingDate) < new Date()) {
-//     throw new apiError(400, "Booking date cannot be in the past");
-//   }
-
-//   const booking = await Booking.create({
-//     bookedBy: req.user._id,
-//     serviceId: service._id,
-//     serviceOwner: service.userId,
-//     bookingDate,
-//     notes,
-//   });
-
-//   await sendNotification({
-//     userId: service.userId,
-//     type: "booking_request",
-//     message: `${req.user.fullName} booked your "${service.title}" service.`,
-//     bookingId: booking._id,
-//     serviceId: service._id,
-//     redirectTo: `/bookings/${booking._id}`,
-//   });
-
-//   const io = getIO();
-//   io.to(booking.serviceOwner.toString()).emit("newBooking", {
-//     message: "📢 New booking request!",
-//     booking,
-//   });
-
-//   res
-//     .status(201)
-//     .json(new apiResponse(201, booking, "Booking created successfully"));
-// });
 /**
  * =====================================================
  * GET BOOKING BY USER
@@ -239,14 +186,17 @@ export const updateBookingDetails = asyncHandler(async (req, res) => {
     throw new apiError(400, "Invalid booking ID");
   }
 
-  const booking = await Booking.findById(bookingId);
+  const booking = await Booking.findById(bookingId)
+    .populate("serviceId", "title")
+    .populate("bookedBy", "fullName userName avatar")
+    .populate("serviceOwner", "fullName userName avatar");
 
   if (!booking) {
     throw new apiError(404, "Booking not found");
   }
 
   // Only the customer can update
-  if (booking.bookedBy.toString() !== req.user._id.toString()) {
+  if (booking.bookedBy._id.toString() !== req.user._id.toString()) {
     throw new apiError(403, "Only the customer can update booking details.");
   }
 
@@ -284,14 +234,13 @@ export const updateBookingDetails = asyncHandler(async (req, res) => {
 
   await booking.save();
 
-  const service = await Service.findById(booking.serviceId);
-
   await sendNotification({
-    userId: booking.serviceOwner,
+    userId: booking.serviceOwner._id,
     type: "booking_updated",
-    message: `${req.user.fullName} updated the booking details for "${service.title}".`,
+    category: "my_service_booking",
+    message: `${booking.bookedBy.fullName} updated the booking details for "${booking.serviceId.title}".`,
     bookingId: booking._id,
-    serviceId: booking.serviceId,
+    serviceId: booking.serviceId._id,
     redirectTo: `/bookings/${booking._id}`,
   });
 
@@ -407,19 +356,18 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
     throw new apiError(400, "Invalid status value");
   }
 
-  const booking = await Booking.findById(bookingId);
+  const booking = await Booking.findById(bookingId)
+    .populate("serviceId", "title")
+    .populate("serviceOwner", "fullName userName avatar")
+    .populate("bookedBy", "fullName userName avatar");
 
   if (!booking) {
     throw new apiError(404, "Booking not found");
   }
 
-  // // Only service provider
-  // if (booking.serviceOwner.toString() !== userId.toString()) {
-  //   throw new apiError(403, "Not authorized");
-  // }
-  const isServiceOwner = booking.serviceOwner.toString() === userId.toString();
-
-  const isCustomer = booking.bookedBy.toString() === userId.toString();
+  const isServiceOwner =
+    booking.serviceOwner._id.toString() === userId.toString();
+  const isCustomer = booking.bookedBy._id.toString() === userId.toString();
 
   // ==========================================
   // CONFIRM / REJECT
@@ -446,7 +394,6 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
   // CANCEL
   // Only customer can do this
   // ==========================================
-
   if (status === "cancelled") {
     if (!isCustomer) {
       throw new apiError(403, "Only the customer can cancel this booking");
@@ -477,7 +424,9 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
 
   const io = getIO();
 
-  io.to(booking.bookedBy.toString()).emit("bookingStatusChanged", booking);
+  const socketUserId =
+    status === "cancelled" ? booking.serviceOwner._id : booking.bookedBy._id;
+  io.to(socketUserId.toString()).emit("bookingStatusChanged", updatedBooking);
 
   let notificationType;
   let notificationMessage;
@@ -485,22 +434,31 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
   switch (status) {
     case "confirmed":
       notificationType = "booking_confirmed";
-      notificationMessage = "✅ Your booking has been confirmed.";
+      notificationMessage = `${booking.serviceOwner.fullName} confirmed your "${booking.serviceId.title}" booking.`;
       break;
+
     case "rejected":
       notificationType = "booking_rejected";
-      notificationMessage = "❌ Your booking has been rejected.";
+      notificationMessage = `${booking.serviceOwner.fullName} rejected your "${booking.serviceId.title}" booking.`;
       break;
+
     case "cancelled":
       notificationType = "booking_cancelled";
-      notificationMessage = "🚫 Your booking has been cancelled.";
+      notificationMessage = `${booking.bookedBy.fullName} cancelled the "${booking.serviceId.title}" booking.`;
       break;
+
     default:
       notificationType = "system";
-      notificationMessage = `Booking status updated to ${status}.`;
+      notificationMessage = `The "${booking.serviceId.title}" booking status was updated to ${status}.`;
   }
+
+  const isCancellation = status === "cancelled";
+  const notificationUserId = isCancellation ? booking.serviceOwner._id : booking.bookedBy._id;
+
+  const notificationCategory = isCancellation ? "my_service_booking" : "my_booking";
   await sendNotification({
-    userId: booking.bookedBy,
+    userId: notificationUserId,
+    category: notificationCategory,
     type: notificationType,
     message: notificationMessage,
     bookingId: booking._id,
@@ -522,15 +480,16 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
 export const requestCompletion = asyncHandler(async (req, res) => {
   const { bookingId } = req.params;
   const providerId = req.user._id;
-  const booking = await Booking.findById(bookingId).populate(
-    "serviceId",
-    "title",
-  );
+  const booking = await Booking.findById(bookingId)
+    .populate("serviceId", "title")
+    .populate("serviceOwner", "fullName userName avatar")
+    .populate("bookedBy", "fullName userName avatar");
+
   if (!booking) {
     throw new apiError(404, "Booking not found");
   }
   // Only service provider
-  if (booking.serviceOwner.toString() !== providerId.toString()) {
+  if (booking.serviceOwner._id.toString() !== providerId.toString()) {
     throw new apiError(403, "Not authorized");
   }
   if (booking.status !== "confirmed") {
@@ -546,7 +505,8 @@ export const requestCompletion = asyncHandler(async (req, res) => {
   await sendNotification({
     userId: booking.bookedBy,
     type: "otp_generated",
-    message: `The service provider is asking for an OTP to complete your "${booking.serviceId.title}" service. Your OTP is ${otp}.`,
+    category : "my_booking",
+    message: `${booking.serviceOwner.fullName} is asking for an OTP to complete your "${booking.serviceId.title}" service. Your OTP is ${otp}.`,
     bookingId: booking._id,
     serviceId: booking.serviceId,
     redirectTo: `/notifications`,
@@ -624,6 +584,7 @@ export const verifyCompletionOTP = asyncHandler(async (req, res) => {
   await sendNotification({
     userId: booking.bookedBy,
     type: "review_reminder",
+    category : "my_booking",
     message: `Please rate your experience with "${booking.serviceId.title}".`,
     bookingId: booking._id,
     serviceId: booking.serviceId,

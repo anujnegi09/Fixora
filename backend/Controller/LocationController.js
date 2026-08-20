@@ -1,7 +1,7 @@
 import axios from "axios";
 import { asyncHandler } from "../Utils/asyncHandler.js";
-import apiError from "../utils/apiError.js";
-import apiResponse from "../utils/apiResponse.js";
+import apiError from "../Utils/apiError.js";
+import apiResponse from "../Utils/apiResponse.js";
 
 export const reverseGeocode = asyncHandler(async (req, res) => {
 
