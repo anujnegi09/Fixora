@@ -4,6 +4,7 @@ import { getIO } from "../Config/Socket.js";
 export const sendNotification = async ({
   userId,
   type,
+  category = null,
   message,
   bookingId = null,
   serviceId = null,
@@ -16,6 +17,7 @@ export const sendNotification = async ({
   const notification = await Notification.create({
     userId,
     type,
+    category,
     message,
     bookingId,
     serviceId,
