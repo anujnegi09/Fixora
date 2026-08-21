@@ -197,7 +197,6 @@ const BookingCard = ({ booking,type,onCompleteBooking,onViewBooking,onUpdateBook
       <button
         type="button"
         onClick={() => onDeleteBooking(booking)}
-        // onClick={() => onDeleteBooking(booking._id)}
         title="Delete booking"
         className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-50 text-red-500 transition hover:bg-red-100 active:scale-95"
       >
@@ -216,31 +215,7 @@ const BookingCard = ({ booking,type,onCompleteBooking,onViewBooking,onUpdateBook
 
   </div>
 </div>
-      {/* <div className="border-b border-gray-100 p-5">
-        <div className="flex items-start justify-between gap-3">
-
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
-              Service
-            </p>
-
-            <h2 className="mt-1 text-lg font-bold text-gray-800">
-              {booking.serviceId?.title ||
-                booking.service?.title ||
-                "Service"}
-            </h2>
-          </div>
-
-          {/* Status */}
-
-          {/* <span
-            className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold capitalize ${statusClass}`}
-          >
-            {booking.status || "Pending"}
-          </span>
-        </div>
-      </div> */} 
-
+      
       {/* ======================================
           Booking Information
       ====================================== */}
@@ -412,6 +387,7 @@ const BookingCard = ({ booking,type,onCompleteBooking,onViewBooking,onUpdateBook
                 size="md"
                 fullWidth
                 onClick={() => onViewBooking(booking)}
+                loadingText="Wait..."
               >
                 view more
               </Button>
@@ -485,6 +461,7 @@ const BookingCard = ({ booking,type,onCompleteBooking,onViewBooking,onUpdateBook
                 fullWidth
                 leftIcon={<FaCheckCircle />}
                 onClick={handleCompleteBooking}
+                loadingText="Confirming..."
               >
                 Complete
               </Button>
@@ -499,6 +476,7 @@ const BookingCard = ({ booking,type,onCompleteBooking,onViewBooking,onUpdateBook
                 size="md"
                 fullWidth
                 onClick={() => onViewBooking(booking)}
+                loadingText="Wait..."
               >
                 view more
               </Button>
