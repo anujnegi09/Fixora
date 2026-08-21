@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 
 import {
   getMyBookings,
@@ -29,11 +30,13 @@ import DeleteBookingModal from "../../components/booking/DeleteBookingModal";
 const Bookings = () => {
   const dispatch = useDispatch();
 
+
   // ==========================================
   // UI STATE
   // ==========================================
 
   const [activeTab, setActiveTab] = useState("my-bookings");
+  const [searchParams] = useSearchParams();
 
   const [selectedBooking, setSelectedBooking] = useState(null);
 
@@ -181,6 +184,17 @@ const Bookings = () => {
     activeTab === "my-bookings"
       ? myBookings
       : serviceBookings;
+
+// ==========================================
+  // for redirect user between tabs from notification page
+  // ==========================================
+  useEffect(() => {
+  const tab = searchParams.get("tab");
+
+  if (tab === "my-bookings" || tab === "service-bookings") {
+    setActiveTab(tab);
+  }
+}, [searchParams]);
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-28">
