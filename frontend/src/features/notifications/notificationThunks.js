@@ -26,9 +26,16 @@ export const getNotifications = createAsyncThunk(
 
       return response;
     } catch (error) {
+       // Don't show an error toast when User is not logged in
+      const status = error.response?.status;
+      if (status === 401) {
+        return rejectWithValue(null);
+      }
       const message =
         error.response?.data?.message ||
         "Failed to fetch notifications";
+
+       
 
       showErrorToast(message);
 
@@ -101,19 +108,11 @@ export const markAllNotificationsAsRead = createAsyncThunk(
     try {
       const response =
         await markAllNotificationsAsReadApi();
-
-      showSuccessToast(
-        response.message || "All notifications marked as read"
-      );
-
       return response;
     } catch (error) {
       const message =
         error.response?.data?.message ||
         "Failed to mark all notifications as read";
-
-      showErrorToast(message);
-
       return rejectWithValue(message);
     }
   }
