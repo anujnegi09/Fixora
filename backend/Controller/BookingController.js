@@ -90,7 +90,7 @@ export const createBooking = asyncHandler(async (req, res) => {
     message: notificationMessage,
     bookingId: booking._id,
     serviceId: service._id,
-    redirectTo: `/bookings/${booking._id}`,
+    redirectTo: "/bookings?tab=service-bookings",
   });
 
   const io = getIO();
@@ -241,7 +241,7 @@ export const updateBookingDetails = asyncHandler(async (req, res) => {
     message: `${booking.bookedBy.fullName} updated the booking details for "${booking.serviceId.title}".`,
     bookingId: booking._id,
     serviceId: booking.serviceId._id,
-    redirectTo: `/bookings/${booking._id}`,
+    redirectTo: "/bookings?tab=service-bookings",
   });
 
   return res
@@ -456,6 +456,8 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
   const notificationUserId = isCancellation ? booking.serviceOwner._id : booking.bookedBy._id;
 
   const notificationCategory = isCancellation ? "my_service_booking" : "my_booking";
+  const redirectTo = isCancellation  ? "/bookings?tab=service-bookings" : "/bookings?tab=my-bookings";
+
   await sendNotification({
     userId: notificationUserId,
     category: notificationCategory,
@@ -463,7 +465,7 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
     message: notificationMessage,
     bookingId: booking._id,
     serviceId: booking.serviceId,
-    redirectTo: `/bookings/${booking._id}`,
+    redirectTo,
   });
   return res
     .status(200)
@@ -509,7 +511,7 @@ export const requestCompletion = asyncHandler(async (req, res) => {
     message: `${booking.serviceOwner.fullName} is asking for an OTP to complete your "${booking.serviceId.title}" service. Your OTP is ${otp}.`,
     bookingId: booking._id,
     serviceId: booking.serviceId,
-    redirectTo: `/notifications`,
+    redirectTo: "/bookings?tab=my-bookings",
   });
   return res
     .status(200)
@@ -588,7 +590,7 @@ export const verifyCompletionOTP = asyncHandler(async (req, res) => {
     message: `Please rate your experience with "${booking.serviceId.title}".`,
     bookingId: booking._id,
     serviceId: booking.serviceId,
-    redirectTo: `/bookings/${booking._id}`,
+    redirectTo: "/bookings?tab=my-bookings",
   });
   return res
     .status(200)
