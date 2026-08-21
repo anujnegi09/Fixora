@@ -41,8 +41,10 @@ const Navbar = () => {
   const unreadCount = useSelector(selectUnreadNotificationCount);
 
   useEffect(() => {
-    dispatch(getNotifications());
-  }, [dispatch]);
+    if(isAuthenticated){
+       dispatch(getNotifications());
+    }
+  }, [isAuthenticated,dispatch]);
 
   const handleLogout = () => {
     dispatch(logout()).unwrap();
@@ -113,7 +115,7 @@ const Navbar = () => {
           <div className="flex items-center gap-4">
             {/* Notification */}
 
-            <button
+            {isAuthenticated && <button
               type="button"
               onClick={() => navigate("/notifications")}
               className="relative text-gray-700 transition hover:text-blue-600"
@@ -127,6 +129,7 @@ const Navbar = () => {
                 </span>
               )}
             </button>
+            }
 
             {!isAuthenticated ? (
               <>
