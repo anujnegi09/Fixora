@@ -47,7 +47,7 @@ const notificationSlice = createSlice({
     clearNotificationError: (state) => {
       state.error = null;
     },
-
+    
     clearCurrentNotification: (state) => {
       state.notification = null;
     },
@@ -80,7 +80,6 @@ const notificationSlice = createSlice({
         state.error = action.payload;
       })
 
-
       // ==========================================
       // GET NOTIFICATION BY ID
       // ==========================================
@@ -101,7 +100,6 @@ const notificationSlice = createSlice({
         state.error = action.payload;
       })
 
-
       // ==========================================
       // MARK AS READ
       // ==========================================
@@ -114,22 +112,18 @@ const notificationSlice = createSlice({
       .addCase(markNotificationAsRead.fulfilled, (state, action) => {
         state.markReadLoading = false;
 
-        const notificationId =
-          action.payload.notificationId;
+        const notificationId = action.payload.notificationId;
 
-        state.notifications = state.notifications.map(
-          (notification) =>
-            notification._id === notificationId
-              ? {
-                  ...notification,
-                  isRead: true,
-                }
-              : notification
+        state.notifications = state.notifications.map((notification) =>
+          notification._id === notificationId
+            ? {
+                ...notification,
+                isRead: true,
+              }
+            : notification,
         );
 
-        if (
-          state.notification?._id === notificationId
-        ) {
+        if (state.notification?._id === notificationId) {
           state.notification.isRead = true;
         }
       })
@@ -138,7 +132,6 @@ const notificationSlice = createSlice({
         state.markReadLoading = false;
         state.error = action.payload;
       })
-
 
       // ==========================================
       // MARK ALL AS READ
@@ -149,29 +142,19 @@ const notificationSlice = createSlice({
         state.error = null;
       })
 
-      .addCase(
-        markAllNotificationsAsRead.fulfilled,
-        (state) => {
-          state.markAllReadLoading = false;
+      .addCase(markAllNotificationsAsRead.fulfilled, (state) => {
+        state.markAllReadLoading = false;
 
-          state.notifications =
-            state.notifications.map(
-              (notification) => ({
-                ...notification,
-                isRead: true,
-              })
-            );
-        }
-      )
+        state.notifications = state.notifications.map((notification) => ({
+          ...notification,
+          isRead: true,
+        }));
+      })
 
-      .addCase(
-        markAllNotificationsAsRead.rejected,
-        (state, action) => {
-          state.markAllReadLoading = false;
-          state.error = action.payload;
-        }
-      )
-
+      .addCase(markAllNotificationsAsRead.rejected, (state, action) => {
+        state.markAllReadLoading = false;
+        state.error = action.payload;
+      })
 
       // ==========================================
       // DELETE NOTIFICATION
@@ -185,18 +168,13 @@ const notificationSlice = createSlice({
       .addCase(deleteNotification.fulfilled, (state, action) => {
         state.deleteLoading = false;
 
-        const notificationId =
-          action.payload.notificationId;
+        const notificationId = action.payload.notificationId;
 
-        state.notifications =
-          state.notifications.filter(
-            (notification) =>
-              notification._id !== notificationId
-          );
+        state.notifications = state.notifications.filter(
+          (notification) => notification._id !== notificationId,
+        );
 
-        if (
-          state.notification?._id === notificationId
-        ) {
+        if (state.notification?._id === notificationId) {
           state.notification = null;
         }
       })
@@ -208,9 +186,7 @@ const notificationSlice = createSlice({
   },
 });
 
-export const {
-  clearNotificationError,
-  clearCurrentNotification,
-} = notificationSlice.actions;
+export const { clearNotificationError, clearCurrentNotification, } =
+  notificationSlice.actions;
 
 export default notificationSlice.reducer;

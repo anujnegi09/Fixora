@@ -65,6 +65,9 @@ export const checkAuthentication = createAsyncThunk(
       await dispatch(getProfile()).unwrap();
       return response;
     } catch (error) {
+        if (error.response?.status === 401) {
+        return rejectWithValue(null);
+      }
       return rejectWithValue(error.response?.data);
     }
   }
