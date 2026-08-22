@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import {
   FaBars,
@@ -33,18 +34,29 @@ import fixoraLogo from "../../assets/fixora-logo.png";
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isNotificationsPage = location.pathname === "/notifications";
 
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const user = useSelector(selectUser);
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const unreadCount = useSelector(selectUnreadNotificationCount);
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [notificationBadgeCount, setNotificationBadgeCount] = useState(0);
+
   useEffect(() => {
-    if(isAuthenticated){
-       dispatch(getNotifications());
+    if (isAuthenticated) {
+      dispatch(getNotifications());
     }
-  }, [isAuthenticated,dispatch]);
+  }, [isAuthenticated, dispatch]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      setNotificationBadgeCount(unreadCount);
+    } else {
+      setNotificationBadgeCount(0);
+    }
+  }, [isAuthenticated, unreadCount]);
 
   const handleLogout = () => {
     dispatch(logout()).unwrap();
@@ -53,6 +65,11 @@ const Navbar = () => {
 
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+  };
+
+  const handleNotificationNavigation = () => {
+    setNotificationBadgeCount(0);
+    navigate("/notifications");
   };
 
   return (
@@ -115,21 +132,33 @@ const Navbar = () => {
           <div className="flex items-center gap-4">
             {/* Notification */}
 
-            {isAuthenticated && <button
-              type="button"
-              onClick={() => navigate("/notifications")}
-              className="relative text-gray-700 transition hover:text-blue-600"
-              title="Notifications"
-            >
-              <FaBell size={22} />
+            {isAuthenticated && (
+              <button
+                type="button"
+                onClick={handleNotificationNavigation}
+                className={`relative transition ${
+                  isNotificationsPage
+                    ? "text-blue-600"
+                    : "text-gray-700 hover:text-blue-600"
+                }`}
+                title="Notifications"
+              >
+                <FaBell
+                  size={22}
+                  className={`transition-transform duration-200 ${
+                    isNotificationsPage ? "rotate-[15deg]" : "rotate-0"
+                  }`}
+                />
 
-              {unreadCount > 0 && (
-                <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
-                  {unreadCount > 99 ? "99+" : unreadCount}
-                </span>
-              )}
-            </button>
-            }
+                {notificationBadgeCount > 0 && (
+                  <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                    {notificationBadgeCount > 99
+                      ? "99+"
+                      : notificationBadgeCount}
+                  </span>
+                )}
+              </button>
+            )}
 
             {!isAuthenticated ? (
               <>

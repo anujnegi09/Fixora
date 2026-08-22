@@ -5,6 +5,7 @@ import {
   FaCalendarAlt,
   FaBolt,
 } from "react-icons/fa";
+import Button from "../common/Button";
 
 const ServiceCard = ({ service }) => {
   const navigate = useNavigate();
@@ -39,7 +40,10 @@ const ServiceCard = ({ service }) => {
 
   return (
     <div
-      className="
+    className="
+    flex
+    min-h-[640px]
+    flex-col
         group
         relative
         overflow-hidden
@@ -53,14 +57,13 @@ const ServiceCard = ({ service }) => {
         ease-out
         hover:-translate-y-1
         hover:shadow-xl
-        my-30
       "
     >
       {/* ==========================
           HEADER
       =========================== */}
 
-      <div className="relative border-b border-gray-100 px-5 py-6">
+      <div className="relative border-b border-gray-100 px-5 py-6 pb-3">
 
         {/* Category */}
 
@@ -94,7 +97,7 @@ const ServiceCard = ({ service }) => {
           PROVIDER
       =========================== */}
 
-      <div className="flex items-center justify-between border-b border-gray-100 px-5 py-3">
+      <div className="flex items-center justify-between border-b border-gray-100 px-5 py-2">
 
         <p className="text-lg font-semibold text-gray-800">
           {service.userId?.fullName || "Service Provider"}
@@ -121,7 +124,7 @@ const ServiceCard = ({ service }) => {
           SERVICE INFORMATION
       =========================== */}
 
-      <div className="space-y-4 p-5">
+      <div className="flex-1 space-y-4 p-5">
 
         {/* Rating */}
 
@@ -141,7 +144,7 @@ const ServiceCard = ({ service }) => {
         {/* Description */}
 
         {service.description && (
-          <p className="line-clamp-1 text-sm leading-6 text-gray-600">
+          <p className="h-6 overflow-hidden text-ellipsis line-clamp-1 text-sm leading-6 text-gray-600">
             {service.description}
           </p>
         )}
@@ -157,7 +160,8 @@ const ServiceCard = ({ service }) => {
               Booking
             </p>
 
-            <div className="flex flex-wrap gap-2">
+            {/* <div className="flex flex-wrap gap-2"> */}
+            <div className="flex items-center gap-2 whitespace-nowrap">
 
               {supportsInstant && (
                 <span
@@ -244,7 +248,7 @@ const ServiceCard = ({ service }) => {
             </p>
 
             {service.location?.address && (
-              <p className="mt-1 line-clamp-2 text-xs text-gray-500">
+              <p className="mt-1 line-clamp-1 text-xs text-gray-500">
                 {service.location.address}
               </p>
             )}
@@ -256,7 +260,7 @@ const ServiceCard = ({ service }) => {
         =========================== */}
 
         {availableDays.length > 0 && (
-          <div className="border-t border-gray-100 pt-3">
+          <div className="min-h-[60px] overflow-hidden border-t border-gray-100 pt-3">
 
             <p className="mb-2 text-xs font-medium text-gray-500">
               Available Days
@@ -290,32 +294,18 @@ const ServiceCard = ({ service }) => {
           BOOK NOW
       =========================== */}
 
-      <div className="border-t border-gray-100 bg-gray-50 p-4">
+      <div className="mt-auto shrink-0 border-t border-gray-100 bg-gray-50 p-4 h-[80px]">
 
-        <button
-          type="button"
-          onClick={handleBookNow}
-          className="
-            block
-            w-full
-            rounded-lg
-            bg-blue-600
-            px-4
-            py-2.5
-            text-center
-            text-sm
-            font-semibold
-            text-white
-            shadow-sm
-            transition-all
-            duration-200
-            hover:bg-blue-700
-            hover:shadow-md
-            active:scale-95
-          "
-        >
-          Book Now
-        </button>
+        <Button
+    type="button"
+    variant="primary"
+    size="sm"
+    fullWidth
+    onClick={handleBookNow}
+    className="py-2.5 text-sm font-semibold shadow-sm hover:shadow-md active:scale-95"
+  >
+    Book Now
+  </Button>
 
       </div>
     </div>

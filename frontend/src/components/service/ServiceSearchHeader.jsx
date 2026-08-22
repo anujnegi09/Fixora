@@ -23,7 +23,7 @@ const ServiceSearchHeader = ({
   showSort = true,
 }) => {
   return (
-    <div className="mb-8 flex flex-wrap items-center gap-4">
+    <div className="mb-20 flex flex-wrap items-center gap-4">
       {/* Location */}
 
       <button
