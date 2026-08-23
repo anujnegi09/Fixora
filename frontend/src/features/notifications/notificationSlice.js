@@ -31,6 +31,8 @@ const initialState = {
   markAllReadLoading: false,
   deleteLoading: false,
 
+   newNotificationCount: 0,
+
   // ===============================
   // Error
   // ===============================
@@ -51,6 +53,14 @@ const notificationSlice = createSlice({
     clearCurrentNotification: (state) => {
       state.notification = null;
     },
+
+    incrementNewNotificationCount: (state) => {
+    state.newNotificationCount += 1;
+  },
+
+  resetNewNotificationCount: (state) => {
+    state.newNotificationCount = 0;
+  },
   },
 
   extraReducers: (builder) => {
@@ -186,7 +196,8 @@ const notificationSlice = createSlice({
   },
 });
 
-export const { clearNotificationError, clearCurrentNotification, } =
+export const { clearNotificationError, clearCurrentNotification,incrementNewNotificationCount,
+  resetNewNotificationCount, } =
   notificationSlice.actions;
 
 export default notificationSlice.reducer;

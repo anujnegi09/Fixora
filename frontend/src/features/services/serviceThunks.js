@@ -39,19 +39,7 @@ export const getAllServices = createAsyncThunk(
         }
     }
 );
-// export const getAllServices = createAsyncThunk(
-//     "services/getAllServices",
-//     async(_, {rejectWithValue}) =>{
-//         try{
-//         const response = await getAllServicesApi();
-//         return response;
-//         }catch(error){
-//             const message = error.response?.data?.message || "Failed to fetch services";
-//             toast.error(message);
-//             return rejectWithValue(message);
-//         }
-//     } 
-// );
+
 // get service by id 
 export const getServiceById= createAsyncThunk(
     "services/getServiceById",

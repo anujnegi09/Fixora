@@ -54,3 +54,7 @@ export const selectUnreadNotificationCount = (state) =>
         (notification) => !notification.isRead
       ).length
     : 0;
+
+
+export const selectNewNotificationCount = (state) =>
+  state.notifications.newNotificationCount;
