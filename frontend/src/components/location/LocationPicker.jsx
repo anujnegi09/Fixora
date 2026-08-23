@@ -31,15 +31,7 @@ function ChangeMapView({ center }) {
 
   return null;
 }
-// function ChangeMapView({ center }) {
-//   const map = useMap();
 
-//   useEffect(() => {
-//     map.setView(center, 16);
-//   }, [center, map]);
-
-//   return null;
-// }
 
 function LocationSelector({ onLocationChange }) {
   useMapEvents({
@@ -74,9 +66,6 @@ const LocationPicker = ({ onClose, onSaveLocation }) => {
   const handleLocationChange = (lat, lng) => {
     const latitude = Number(lat);
     const longitude = Number(lng);
-
-    console.log("SELECTED LATITUDE:", latitude);
-    console.log("SELECTED LONGITUDE:", longitude);
 
     setPosition([latitude, longitude]);
 
