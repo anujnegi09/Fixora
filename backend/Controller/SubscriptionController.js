@@ -148,13 +148,36 @@ export const verifySubscriptionPayment = asyncHandler(async (req, res) => {
     );
 });
 
+// export const getMySubscription = asyncHandler(async (req, res) => {
+//     const userId = req.user._id;
+
+//     const subscription = await Subscription.findOne({ userId });
+
+//     if (!subscription) {
+//         throw new apiError(404, "Subscription not found");
+//     }
+
+//     return res.status(200).json(
+//         new apiResponse(
+//             200,
+//             subscription,
+//             "Subscription fetched successfully"
+//         )
+//     );
+// });
 export const getMySubscription = asyncHandler(async (req, res) => {
     const userId = req.user._id;
 
     const subscription = await Subscription.findOne({ userId });
 
     if (!subscription) {
-        throw new apiError(404, "Subscription not found");
+        return res.status(200).json(
+            new apiResponse(
+                200,
+                null,
+                "No subscription found"
+            )
+        );
     }
 
     return res.status(200).json(
