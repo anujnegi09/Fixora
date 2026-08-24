@@ -2,6 +2,7 @@ import Notification from "../Models/Notification.js";
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import apiError from "../Utils/apiError.js";
 import apiResponse from "../Utils/apiResponse.js";
+import mongoose from "mongoose";
 
 /**
  * =========================================
@@ -48,49 +49,42 @@ export const getNotifications = asyncHandler(async (req, res) => {
         nextCursor,
         hasMore,
       },
-      "Notifications fetched successfully"
-    )
+      "Notifications fetched successfully",
+    ),
   );
 });
 
 export const getNotificationById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
 
-    const { id } = req.params;
+  // Validate ObjectId
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new apiError(400, "Invalid notification ID");
+  }
 
-    // Validate ObjectId
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        throw new apiError(400, "Invalid notification ID");
-    }
+  const notification = await Notification.findById(id)
+    .populate("bookingId")
+    .populate("serviceId")
+    .populate("reviewId")
+    .lean();
 
-    const notification = await Notification.findById(id)
-        .populate("bookingId")
-        .populate("serviceId")
-        .populate("reviewId")
-        .lean();
+  if (!notification) {
+    throw new apiError(404, "Notification not found");
+  }
 
-    if (!notification) {
-        throw new apiError(404, "Notification not found");
-    }
-
-    // Only notification owner can access it
-    if (
-        notification.userId.toString() !==
-        req.user._id.toString()
-    ) {
-        throw new apiError(
-            403,
-            "You are not authorized to view this notification."
-        );
-    }
-
-    return res.status(200).json(
-        new apiResponse(
-            200,
-            notification,
-            "Notification fetched successfully."
-        )
+  // Only notification owner can access it
+  if (notification.userId.toString() !== req.user._id.toString()) {
+    throw new apiError(
+      403,
+      "You are not authorized to view this notification.",
     );
+  }
 
+  return res
+    .status(200)
+    .json(
+      new apiResponse(200, notification, "Notification fetched successfully."),
+    );
 });
 /**
  * =========================================
@@ -114,11 +108,10 @@ export const markAsRead = asyncHandler(async (req, res) => {
   notification.isRead = true;
   await notification.save();
 
-  return res.status(200).json(
-    new apiResponse(200, notification, "Notification marked as read")
-  );
+  return res
+    .status(200)
+    .json(new apiResponse(200, notification, "Notification marked as read"));
 });
-
 
 /**
  * =========================================
@@ -130,14 +123,13 @@ export const markAllAsRead = asyncHandler(async (req, res) => {
 
   await Notification.updateMany(
     { userId, isRead: false },
-    { $set: { isRead: true } }
+    { $set: { isRead: true } },
   );
 
-  return res.status(200).json(
-    new apiResponse(200, {}, "All notifications marked as read")
-  );
+  return res
+    .status(200)
+    .json(new apiResponse(200, {}, "All notifications marked as read"));
 });
-
 
 /**
  * =========================================
@@ -160,7 +152,46 @@ export const deleteNotification = asyncHandler(async (req, res) => {
 
   await notification.deleteOne();
 
-  return res.status(200).json(
-    new apiResponse(200, {}, "Notification deleted successfully")
+  return res
+    .status(200)
+    .json(new apiResponse(200, {}, "Notification deleted successfully"));
+});
+
+export const getNewNotificationCount = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const count = await Notification.countDocuments({
+    userId,
+    isNew: true,
+  });
+
+  return res
+    .status(200)
+    .json(
+      new apiResponse(
+        200,
+        { count },
+        "New notification count fetched successfully",
+      ),
+    );
+});
+
+export const markNewNotificationsAsSeen = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  await Notification.updateMany(
+    {
+      userId,
+      isNew: true,
+    },
+    {
+      $set: {
+        isNew: false,
+      },
+    },
   );
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, null, "New notifications marked as seen"));
 });

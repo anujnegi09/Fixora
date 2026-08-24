@@ -84,7 +84,7 @@ export const createBooking = asyncHandler(async (req, res) => {
     notificationMessage = `${req.user.fullName} scheduled your "${service.title}" service for ${formattedDate} at ${formattedTime}.`;
   }
   await sendNotification({
-    userId: service.userId,
+    userId: service.userId._id,
     type: "booking_request",
     category: "my_service_booking",
     message: notificationMessage,
@@ -94,10 +94,14 @@ export const createBooking = asyncHandler(async (req, res) => {
   });
 
   const io = getIO();
-  io.to(booking.serviceOwner.toString()).emit("newBooking", {
+
+  const serviceOwnerId = service.userId._id.toString();
+
+  io.to(serviceOwnerId).emit("newBooking", {
     message: "📢 New booking request!",
     booking,
   });
+
   return res
     .status(201)
     .json(new apiResponse(201, booking, "Booking created successfully"));
@@ -453,10 +457,16 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
   }
 
   const isCancellation = status === "cancelled";
-  const notificationUserId = isCancellation ? booking.serviceOwner._id : booking.bookedBy._id;
+  const notificationUserId = isCancellation
+    ? booking.serviceOwner._id
+    : booking.bookedBy._id;
 
-  const notificationCategory = isCancellation ? "my_service_booking" : "my_booking";
-  const redirectTo = isCancellation  ? "/bookings?tab=service-bookings" : "/bookings?tab=my-bookings";
+  const notificationCategory = isCancellation
+    ? "my_service_booking"
+    : "my_booking";
+  const redirectTo = isCancellation
+    ? "/bookings?tab=service-bookings"
+    : "/bookings?tab=my-bookings";
 
   await sendNotification({
     userId: notificationUserId,
@@ -507,7 +517,7 @@ export const requestCompletion = asyncHandler(async (req, res) => {
   await sendNotification({
     userId: booking.bookedBy,
     type: "otp_generated",
-    category : "my_booking",
+    category: "my_booking",
     message: `${booking.serviceOwner.fullName} is asking for an OTP to complete your "${booking.serviceId.title}" service. Your OTP is ${otp}.`,
     bookingId: booking._id,
     serviceId: booking.serviceId,
@@ -586,7 +596,7 @@ export const verifyCompletionOTP = asyncHandler(async (req, res) => {
   await sendNotification({
     userId: booking.bookedBy,
     type: "review_reminder",
-    category : "my_booking",
+    category: "my_booking",
     message: `Please rate your experience with "${booking.serviceId.title}".`,
     bookingId: booking._id,
     serviceId: booking.serviceId,
