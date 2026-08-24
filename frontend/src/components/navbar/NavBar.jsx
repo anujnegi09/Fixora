@@ -26,9 +26,9 @@ import {
 } from "../../features/auth/authSelectors.js";
 
 import { logout } from "../../features/auth/authThunks.js";
-import { getNotifications } from "../../features/notifications/notificationThunks";
+import { getNotifications, getNewNotificationCount } from "../../features/notifications/notificationThunks";
 
-import { selectUnreadNotificationCount } from "../../features/notifications/notificationSelectors";
+import { selectNewNotificationCount } from "../../features/notifications/notificationSelectors";
 import fixoraLogo from "../../assets/fixora-logo.png";
 
 const Navbar = () => {
@@ -39,24 +39,15 @@ const Navbar = () => {
 
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const user = useSelector(selectUser);
-  const unreadCount = useSelector(selectUnreadNotificationCount);
-
+  const newNotificationCount = useSelector(selectNewNotificationCount);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [notificationBadgeCount, setNotificationBadgeCount] = useState(0);
 
   useEffect(() => {
     if (isAuthenticated) {
       dispatch(getNotifications());
+      dispatch(getNewNotificationCount());
     }
   }, [isAuthenticated, dispatch]);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      setNotificationBadgeCount(unreadCount);
-    } else {
-      setNotificationBadgeCount(0);
-    }
-  }, [isAuthenticated, unreadCount]);
 
   const handleLogout = () => {
     dispatch(logout()).unwrap();
@@ -68,7 +59,6 @@ const Navbar = () => {
   };
 
   const handleNotificationNavigation = () => {
-    setNotificationBadgeCount(0);
     navigate("/notifications");
   };
 
@@ -150,11 +140,9 @@ const Navbar = () => {
                   }`}
                 />
 
-                {notificationBadgeCount > 0 && (
+                {newNotificationCount > 0 && (
                   <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
-                    {notificationBadgeCount > 99
-                      ? "99+"
-                      : notificationBadgeCount}
+                    {newNotificationCount > 99 ? "99+" : newNotificationCount}
                   </span>
                 )}
               </button>

@@ -57,4 +57,4 @@ export const selectUnreadNotificationCount = (state) =>
 
 
 export const selectNewNotificationCount = (state) =>
-  state.notifications.newNotificationCount;
+  state.notification.newNotificationCount;

@@ -6,6 +6,8 @@ import {
   markNotificationAsReadApi,
   markAllNotificationsAsReadApi,
   deleteNotificationApi,
+  getNewNotificationCountApi,
+  markNewNotificationsAsSeenApi
 } from "../../api/notification.api";
 
 import {
@@ -142,6 +144,37 @@ export const deleteNotification = createAsyncThunk(
       showErrorToast(message);
 
       return rejectWithValue(message);
+    }
+  }
+);
+
+export const getNewNotificationCount = createAsyncThunk(
+  "notifications/getNewNotificationCount",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getNewNotificationCountApi();
+
+      return response.data.count;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+        "Failed to get new notification count"
+      );
+    }
+  }
+);
+
+export const markNewNotificationsAsSeen = createAsyncThunk(
+  "notifications/markNewNotificationsAsSeen",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await markNewNotificationsAsSeenApi();
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+        "Failed to mark new notifications as seen"
+      );
     }
   }
 );

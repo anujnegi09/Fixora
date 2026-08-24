@@ -6,6 +6,8 @@ import {
   markNotificationAsRead,
   markAllNotificationsAsRead,
   deleteNotification,
+  getNewNotificationCount,
+  markNewNotificationsAsSeen,
 } from "./notificationThunks";
 
 const initialState = {
@@ -30,8 +32,9 @@ const initialState = {
   markReadLoading: false,
   markAllReadLoading: false,
   deleteLoading: false,
-
-   newNotificationCount: 0,
+  newNotificationCountLoading: false,
+  markNewNotificationsLoading: false,
+  newNotificationCount: 0,
 
   // ===============================
   // Error
@@ -49,18 +52,14 @@ const notificationSlice = createSlice({
     clearNotificationError: (state) => {
       state.error = null;
     },
-    
+
     clearCurrentNotification: (state) => {
       state.notification = null;
     },
 
-    incrementNewNotificationCount: (state) => {
-    state.newNotificationCount += 1;
-  },
-
-  resetNewNotificationCount: (state) => {
-    state.newNotificationCount = 0;
-  },
+    // resetNewNotificationCount: (state) => {
+    //   state.newNotificationCount = 0;
+    // },
   },
 
   extraReducers: (builder) => {
@@ -192,12 +191,41 @@ const notificationSlice = createSlice({
       .addCase(deleteNotification.rejected, (state, action) => {
         state.deleteLoading = false;
         state.error = action.payload;
+      })
+
+      .addCase(getNewNotificationCount.pending, (state) => {
+        state.newNotificationCountLoading = true;
+        state.error = null;
+      })
+
+      .addCase(getNewNotificationCount.fulfilled, (state, action) => {
+        state.newNotificationCountLoading = false;
+        state.newNotificationCount = action.payload;
+      })
+
+      .addCase(getNewNotificationCount.rejected, (state, action) => {
+        state.newNotificationCountLoading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(markNewNotificationsAsSeen.pending, (state) => {
+        state.markNewNotificationsLoading = true;
+        state.error = null;
+      })
+
+      .addCase(markNewNotificationsAsSeen.fulfilled, (state) => {
+        state.markNewNotificationsLoading = false;
+        state.newNotificationCount = 0;
+      })
+
+      .addCase(markNewNotificationsAsSeen.rejected, (state, action) => {
+        state.markNewNotificationsLoading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { clearNotificationError, clearCurrentNotification,incrementNewNotificationCount,
-  resetNewNotificationCount, } =
+export const { clearNotificationError, clearCurrentNotification } =
   notificationSlice.actions;
 
 export default notificationSlice.reducer;
