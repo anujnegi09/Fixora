@@ -33,3 +33,17 @@ export const deleteNotificationApi = async (notificationId) => {
 
   return response.data;
 };
+
+export const getNewNotificationCountApi = async () => {
+  const response = await api.get("/notifications/new-count");
+
+  return response.data;
+};
+
+export const markNewNotificationsAsSeenApi = async () => {
+  const response = await api.patch(
+    "/notifications/mark-new-as-seen"
+  );
+
+  return response.data;
+};
