@@ -6,6 +6,8 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import { store } from "./app/store.js";
+import NotificationSocket from "./components/socket/NotificationSocket.jsx";
+
 
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
@@ -17,6 +19,7 @@ document.body.classList.add("scrollbar-hide");
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
+      <NotificationSocket />
       <BrowserRouter>
         <Toaster
           position="top-right"
