@@ -6,6 +6,7 @@ import {
   getNotifications,
   markNotificationAsRead,
   deleteNotification,
+  markNewNotificationsAsSeen
 } from "../../features/notifications/notificationThunks";
 
 import {
@@ -42,6 +43,7 @@ const Notifications = () => {
   useEffect(() => {
     if (isAuthenticated) {
       dispatch(getNotifications());
+      dispatch(markNewNotificationsAsSeen());
     }
   }, [isAuthenticated, dispatch]);
 
