@@ -14,6 +14,9 @@ import Services from "../pages/Services/Services.jsx";
 import CreateService from "../pages/CreateService/CreateService.jsx";
 import BookService from "../pages/Booking/BookService.jsx";
 import Bookings from "../pages/booking/Bookings";
+import Notifications from "../pages/Notifications/Notifications";
+import Subscription from "../pages/Subscription/Subscription";
+
 
 
 import MainLayout from "../components/layout/MainLayout";
@@ -74,6 +77,24 @@ const AppRoutes = () => {
               <Bookings />
             </ProtectedRoute>
           }
+        /> 
+
+        <Route
+          path="/notifications" 
+          element={
+            <ProtectedRoute>
+              <Notifications />
+            </ProtectedRoute>
+            } 
+        />
+
+        <Route
+          path="/subscription" 
+          element={
+            <ProtectedRoute>
+              <Subscription />
+            </ProtectedRoute>
+            } 
         />
 
        

@@ -116,10 +116,10 @@ export const verifySubscriptionPayment = asyncHandler(async (req, res) => {
 
     if (subscription.plan === "monthly") {
         expiryDate.setMonth(expiryDate.getMonth() + 1);
-        subscription.amountPaid = 299;
+        subscription.amountPaid = 149;
     } else {
         expiryDate.setFullYear(expiryDate.getFullYear() + 1);
-        subscription.amountPaid = 2999;
+        subscription.amountPaid = 1599;
     }
 
     subscription.status = "active";
@@ -148,23 +148,6 @@ export const verifySubscriptionPayment = asyncHandler(async (req, res) => {
     );
 });
 
-// export const getMySubscription = asyncHandler(async (req, res) => {
-//     const userId = req.user._id;
-
-//     const subscription = await Subscription.findOne({ userId });
-
-//     if (!subscription) {
-//         throw new apiError(404, "Subscription not found");
-//     }
-
-//     return res.status(200).json(
-//         new apiResponse(
-//             200,
-//             subscription,
-//             "Subscription fetched successfully"
-//         )
-//     );
-// });
 export const getMySubscription = asyncHandler(async (req, res) => {
     const userId = req.user._id;
 
