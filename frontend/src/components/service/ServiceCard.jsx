@@ -100,7 +100,9 @@ const ServiceCard = ({ service }) => {
       <div className="flex items-center justify-between border-b border-gray-100 px-5 py-2">
 
         <p className="text-lg font-semibold text-gray-800">
-          {service.userId?.fullName || "Service Provider"}
+          <span className="mb-2 text-sm font-medium text-gray-500 pr-3">
+            Provider</span>
+            {service.userId?.fullName || "Service Provider"}
         </p>
 
         <img

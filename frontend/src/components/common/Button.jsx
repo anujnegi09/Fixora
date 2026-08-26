@@ -7,13 +7,14 @@ const Button = ({
   variant = "primary",
   size = "md",
   loading = false,
+  loadingText = "Loading...",
   disabled = false,
   fullWidth = false,
   className = "",
   onClick,
 }) => {
   const baseClasses =
-    "transition duration-300 rounded-lg font-medium focus:outline-none cursor-pointer";
+    "flex items-center justify-center gap-2 transition duration-300 rounded-lg font-medium focus:outline-none cursor-pointer";
 
   const variants = {
     primary: "bg-blue-600 text-white hover:bg-blue-700",
@@ -32,6 +33,12 @@ const Button = ({
 
     dangerLight:
       "rounded-lg bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50", // for booking  cancel "bg-red-50 text-red-600 hover:bg-red-100",
+
+    subscription: "bg-[#6E42E5] text-white hover:bg-[#5B34C7] hover:shadow-lg hover:shadow-[#6E42E5]/20 active:scale-[0.98]",
+
+    rating : "flex items-center gap-2 text-[#6E42E5] text-base font-semibold px-4 py-4 hover:opacity-80 cursor-pointer transition",
+    location:
+  "bg-transparent text-[#6E42E5] hover:opacity-80",
   };
 
   const sizes = {
@@ -58,7 +65,7 @@ const Button = ({
     >
       <>
         {loading ? (
-          "loadingText" // loading...
+          loadingText // loading...
         ) : (
           <>
             {leftIcon && leftIcon}

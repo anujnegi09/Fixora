@@ -10,6 +10,7 @@ import {
   FaCheckCircle,
   FaTrash,
   FaEdit,
+  FaPlus,
 } from "react-icons/fa";
 
 import { updateBookingStatus } from "../../features/bookings/bookingThunks";
@@ -363,6 +364,18 @@ const BookingCard = ({ booking,type,onCompleteBooking,onViewBooking,onUpdateBook
                 0}
             </p>
           </div>
+
+           { !booking.hasReviewed && type === "my-bookings" && (
+      <Button
+        type="button"
+        variant="rating"
+        size="sm"
+        leftIcon={<FaPlus />}
+        onClick={() => handleOpenReview(booking)}
+      >
+        Rate Service
+      </Button>
+    )}
 
         </div>
 
