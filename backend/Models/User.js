@@ -3,14 +3,15 @@ import jwt from "jsonwebtoken";
 
 const userSchema = new mongoose.Schema(
   {
-    phoneNumber : {
+    phoneNumber: {
       type: String,
       default: null,
       trim: true,
-      minlength : 10,
-      maxlength : 10
+      minlength: 10,
+      maxlength: 10,
     },
-    profileCompleted: {  //for user who signup with google need to complete profile (adding phone number)
+    profileCompleted: {
+      //for user who signup with google need to complete profile (adding phone number)
       type: Boolean,
       default: false,
     },
@@ -48,55 +49,55 @@ const userSchema = new mongoose.Schema(
       ref: "Booking",
     },
     avatar: {
-    type: String,
-    default: "",
-},
-location: {
-  address: {
-    type: String,
-    default: "",
-  },
-
-  city: {
-    type: String,
-    default: "",
-  },
-
-  state: {
-    type: String,
-    default: "",
-  },
-
-  pincode: {
-    type: String,
-    default: "",
-  },
-
-  coordinates: {
-    type: {
       type: String,
-      enum: ["Point"],
-      default: "Point",
+      default: "",
     },
+    location: {
+      address: {
+        type: String,
+        default: "",
+      },
 
-    coordinates: {
-      type: [Number],
-      default: [0, 0],
+      city: {
+        type: String,
+        default: "",
+      },
+
+      state: {
+        type: String,
+        default: "",
+      },
+
+      pincode: {
+        type: String,
+        default: "",
+      },
+
+      coordinates: {
+        type: {
+          type: String,
+          enum: ["Point"],
+          default: "Point",
+        },
+
+        coordinates: {
+          type: [Number],
+          default: [0, 0],
+        },
+      },
     },
-  },
-},
     refreshToken: {
       type: String,
     },
     isVerified: {
       type: Boolean,
-      default: false
+      default: false,
     },
     verificationToken: {
-      type: String
+      type: String,
     },
     verificationTokenExpiry: {
-      type: Date
+      type: Date,
     },
     passwordResetToken: {
       type: String,
@@ -105,7 +106,7 @@ location: {
       type: Date,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // === Access Token Method ===
@@ -120,19 +121,15 @@ userSchema.methods.generateAccessToken = function () {
     process.env.ACCESS_TOKEN_SECRET,
     {
       expiresIn: process.env.ACCESS_TOKEN_EXPIRY, // e.g., "15m"
-    }
+    },
   );
 };
 
 // === Refresh Token Method ===
 userSchema.methods.generateRefreshToken = function () {
-  return jwt.sign(
-    { id: this._id },
-    process.env.REFRESH_TOKEN_SECRET,
-    {
-      expiresIn: process.env.REFRESH_TOKEN_EXPIRY, // e.g., "7d"
-    }
-  );
+  return jwt.sign({ id: this._id }, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: process.env.REFRESH_TOKEN_EXPIRY, // e.g., "7d"
+  });
 };
 
 const User = mongoose.model("User", userSchema);
