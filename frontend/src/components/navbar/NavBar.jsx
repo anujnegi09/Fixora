@@ -18,6 +18,7 @@ import {
   FaCreditCard,
   FaQuestionCircle,
   FaPhoneAlt,
+  FaStar
 } from "react-icons/fa";
 
 import {
@@ -247,14 +248,14 @@ const Navbar = () => {
               <span>Profile</span>
             </NavLink>
 
-            {/* <NavLink
-              to="/account"
+            <NavLink
+              to="/reviews"
               onClick={closeSidebar}
               className="flex items-center gap-3 px-5 py-2.5 text-gray-700 hover:bg-gray-100 transition"
             >
-              <FaUser size={17} />
-              <span>Account</span>
-            </NavLink> */}
+              <FaStar size={17} />
+              <span>my reviews</span>
+            </NavLink>
 
             <NavLink
               to="/bookings"

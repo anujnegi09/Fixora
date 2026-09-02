@@ -18,7 +18,7 @@ import { updateBookingStatus } from "../../features/bookings/bookingThunks";
 import Button from "../common/Button";
 import defaultAvatar from "../../assets/default-avatar-profile.png";
 
-const BookingCard = ({ booking,type,onCompleteBooking,onViewBooking,onUpdateBooking,onDeleteBooking,}) => {
+const BookingCard = ({ booking,type,onCompleteBooking,onViewBooking,onUpdateBooking,onDeleteBooking, onOpenReview}) => {
   const dispatch = useDispatch();
 
   const [updatingBookingId, setUpdatingBookingId] = useState(null);
@@ -371,7 +371,7 @@ const BookingCard = ({ booking,type,onCompleteBooking,onViewBooking,onUpdateBook
         variant="rating"
         size="sm"
         leftIcon={<FaPlus />}
-        onClick={() => handleOpenReview(booking)}
+        onClick={() => onOpenReview(booking)}
       >
         Rate Service
       </Button>
