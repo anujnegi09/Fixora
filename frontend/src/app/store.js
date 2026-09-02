@@ -6,6 +6,7 @@ import locationSlice from "../features/location/locationSlice.js"
 import bookingSlice from "../features/bookings/bookingSlice.js"
 import notificationSlice from "../features/notifications/notificationSlice.js"
 import subscriptionSlice from "../features/subscription/subscriptionSlice.js"
+import reviewSlice from "../features/reviews/reviewSlice.js"
 
 
 export const store = configureStore({
@@ -17,6 +18,8 @@ export const store = configureStore({
         booking : bookingSlice,
         notification : notificationSlice,
         subscription : subscriptionSlice,
+        review : reviewSlice,
+        
     },
     devTools : import.meta.env.DEV,
 });
