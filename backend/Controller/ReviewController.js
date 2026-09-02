@@ -107,7 +107,7 @@ export const updateReview = asyncHandler(async (req, res) => {
     throw new apiError(404, "Review not found");
   }
 
-  if (existingReview.reviewer.toString() !== req.user._id.toString()) {
+  if (existingReview.reviewedBy.toString() !== req.user._id.toString()) {
     throw new apiError(403, "Not authorized");
   }
 
@@ -141,7 +141,7 @@ export const deleteReview = asyncHandler(async (req, res) => {
     throw new apiError(404, "Review not found");
   }
 
-  if (review.reviewer.toString() !== req.user._id.toString()) {
+  if (review.reviewedBy.toString() !== req.user._id.toString()) {
     throw new apiError(403, "Not authorized");
   }
 
@@ -162,6 +162,7 @@ export const getMyReviews = asyncHandler(async (req, res) => {
   })
     .populate("serviceId", "title")
     .populate("reviewedBy", "fullName avatar")
+    .populate("serviceOwner", "fullName userName avatar")
     .sort({ createdAt: -1 });
 
   return res
@@ -173,8 +174,9 @@ export const getMyServiceReviews = asyncHandler(async (req, res) => {
   const reviews = await Review.find({
     serviceOwner: req.user._id,
   })
-    .populate("reviewer", "fullName avatar")
+    .populate("reviewedBy", "fullName avatar")
     .populate("serviceId", "title")
+    .populate("serviceOwner", "fullName userName avatar")
     .sort({ createdAt: -1 });
 
   return res
