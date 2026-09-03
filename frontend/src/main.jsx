@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import { store } from "./app/store.js";
 import NotificationSocket from "./components/socket/NotificationSocket.jsx";
+import ScrollToTop from "./components/common/ScrollToTop.jsx";
 
 
 import "leaflet/dist/leaflet.css";
@@ -21,6 +22,7 @@ createRoot(document.getElementById("root")).render(
     <Provider store={store}>
       <NotificationSocket />
       <BrowserRouter>
+      <ScrollToTop />
         <Toaster
           position="top-right"
           containerStyle={{
