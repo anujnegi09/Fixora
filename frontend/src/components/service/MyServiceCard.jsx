@@ -71,7 +71,7 @@ const MyServiceCard = ({ service }) => {
   return (
     <>
       {/* <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:shadow-md"> */}
-      <div className="flex h-full flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:shadow-md">
+      <div className="flex h-full flex-col rounded-xl border border-gray-200 bg-[#FFFFFF] p-5 shadow-sm transition hover:shadow-md">
         {/* Service Header */}
         <div className="flex items-start justify-between gap-4">
           <div>

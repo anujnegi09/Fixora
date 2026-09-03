@@ -42,7 +42,7 @@ const ServiceCard = ({ service }) => {
     <div
     className="
     flex
-    min-h-[640px]
+    min-h-[540px]
     flex-col
         group
         relative
@@ -50,7 +50,7 @@ const ServiceCard = ({ service }) => {
         rounded-2xl
         border
         border-gray-100
-        bg-white
+        bg-[#FFFFFF]
         shadow-sm
         transition-all
         duration-300
@@ -126,7 +126,7 @@ const ServiceCard = ({ service }) => {
           SERVICE INFORMATION
       =========================== */}
 
-      <div className="flex-1 space-y-4 p-5">
+      <div className="flex-1 space-y-3 p-4">
 
         {/* Rating */}
 
@@ -144,12 +144,12 @@ const ServiceCard = ({ service }) => {
         </div>
 
         {/* Description */}
-
+{/* 
         {service.description && (
           <p className="h-6 overflow-hidden text-ellipsis line-clamp-1 text-sm leading-6 text-gray-600">
             {service.description}
           </p>
-        )}
+        )} */}
 
         {/* ==========================
             BOOKING OPTIONS

@@ -18,7 +18,7 @@ import {
   FaCreditCard,
   FaQuestionCircle,
   FaPhoneAlt,
-  FaStar
+  FaStar,
 } from "react-icons/fa";
 
 import {
@@ -27,7 +27,10 @@ import {
 } from "../../features/auth/authSelectors.js";
 
 import { logout } from "../../features/auth/authThunks.js";
-import { getNotifications, getNewNotificationCount } from "../../features/notifications/notificationThunks";
+import {
+  getNotifications,
+  getNewNotificationCount,
+} from "../../features/notifications/notificationThunks";
 
 import { selectNewNotificationCount } from "../../features/notifications/notificationSelectors";
 import fixoraLogo from "../../assets/fixora-logo.png";
@@ -67,7 +70,7 @@ const Navbar = () => {
     <>
       {/* ================= NAVBAR ================= */}
 
-      <nav className="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+      <nav className="fixed top-0 left-0 z-50 w-full border-b border-white/50 bg-white/70 backdrop-blur-xl shadow-sm">
         <div className="w-full px-8 h-16 flex items-center justify-between">
           {/* Logo */}
 
@@ -76,7 +79,7 @@ const Navbar = () => {
               <img
                 src={fixoraLogo}
                 alt="Fixora Logo"
-                className="h-24 pt-2 w-auto object-contain"
+                className="h-22 px-2  w-auto object-contain"
               />
             </NavLink>
           </div>
@@ -87,9 +90,11 @@ const Navbar = () => {
             <NavLink
               to="/"
               className={({ isActive }) =>
-                isActive
-                  ? "text-blue-600 font-semibold"
-                  : "text-gray-700 hover:text-blue-600 transition"
+                `rounded-lg px-3 py-2 font-medium transition-all duration-200 ${
+                  isActive
+                    ? "font-semibold text-blue-600"
+                    : "text-slate-600 transition-colors duration-200 hover:text-blue-600"
+                }`
               }
             >
               Home
@@ -114,7 +119,7 @@ const Navbar = () => {
                   : "text-gray-700 hover:text-blue-600 transition"
               }
             >
-              become provider
+              become a provider
             </NavLink>
           </div>
 
@@ -127,10 +132,15 @@ const Navbar = () => {
               <button
                 type="button"
                 onClick={handleNotificationNavigation}
-                className={`relative transition ${
+                // className={`relative transition ${
+                //   isNotificationsPage
+                //     ? "text-blue-600"
+                //     : "text-gray-700 hover:text-blue-600"
+                // }`}
+                className={`relative flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-200 ${
                   isNotificationsPage
-                    ? "text-blue-600"
-                    : "text-gray-700 hover:text-blue-600"
+                    ? " text-blue-600"
+                    : "text-slate-600 hover:text-blue-600 "
                 }`}
                 title="Notifications"
               >
@@ -142,7 +152,7 @@ const Navbar = () => {
                 />
 
                 {newNotificationCount > 0 && (
-                  <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                  <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white ring-2 ring-white">
                     {newNotificationCount > 99 ? "99+" : newNotificationCount}
                   </span>
                 )}
@@ -153,15 +163,14 @@ const Navbar = () => {
               <>
                 <NavLink
                   to="/login"
-                  className="text-gray-700 hover:text-blue-600 transition"
+                  className="rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-blue-600"
                 >
                   Login
                 </NavLink>
 
                 <NavLink
                   to="/register"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-                >
+                  className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md"                >
                   Signup
                 </NavLink>
               </>
@@ -187,7 +196,7 @@ const Navbar = () => {
       "
                   />
                 ) : (
-                  <div className="w-10 h-10 shrink-0 rounded-full bg-gray-200 flex items-center justify-center border border-gray-200">
+                  <div className="w-10 h-10 shrink-0 rounded-full bg-gray-200 flex items-center justify-center border border-gray-50 shadow-sm ring-1 ring-slate-200">
                     <FaUserCircle size={22} className="text-gray-700" />
                   </div>
                 )}
@@ -209,8 +218,7 @@ const Navbar = () => {
       {/* ================= SIDEBAR ================= */}
 
       {isSidebarOpen && (
-        <aside className="fixed top-20 right-4 z-50 w-72 max-w-[90%] rounded-2xl bg-white border border-gray-200 shadow-2xl overflow-hidden">
-          {/* ================= PROFILE ================= */}
+        <aside className="fixed right-4 top-[80px] z-50 w-80 max-w-[90%] overflow-hidden rounded-2xl border border-white/60 bg-white/90 shadow-2xl backdrop-blur-xl">  {/* ================= PROFILE ================= */}
 
           <div className="flex items-center gap-3 px-5 py-5">
             {user?.avatar ? (
@@ -275,14 +283,14 @@ const Navbar = () => {
               <span>My Services</span>
             </NavLink>
 
-            <NavLink
+            {/* <NavLink
               to="/become-provider"
               onClick={closeSidebar}
               className="flex items-center gap-3 px-5 py-2.5 text-gray-700 hover:bg-gray-100 transition"
             >
               <FaCrown size={17} />
               <span>Become a Provider</span>
-            </NavLink>
+            </NavLink> */}
 
             <NavLink
               to="/subscription"
@@ -325,12 +333,12 @@ const Navbar = () => {
             </NavLink>
           </div>
 
-          <hr className="border-gray-200" />
+          <hr className="border-gray-300" />
 
           <div className="py-2">
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-5 py-2.5 text-red-600 hover:bg-red-50 transition"
+              className="w-full flex items-center gap-3 px-5 py-2.5 text-red-600 mx-2 rounded-xl hover:bg-red-50 transition"
             >
               <FaSignOutAlt size={17} />
               <span>Logout</span>
