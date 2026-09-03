@@ -16,8 +16,7 @@ import BookService from "../pages/Booking/BookService.jsx";
 import Bookings from "../pages/booking/Bookings";
 import Notifications from "../pages/Notifications/Notifications";
 import Subscription from "../pages/Subscription/Subscription";
-
-
+import Reviews from "../pages/Review/Reviews.jsx"
 
 import MainLayout from "../components/layout/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
@@ -43,14 +42,7 @@ const AppRoutes = () => {
           }
         />
 
-        <Route
-          path="/services"
-          element={
-            <ProtectedRoute>
-              <Services />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/services" element={<Services />} />
 
         <Route
           path="/become-provider"
@@ -77,37 +69,44 @@ const AppRoutes = () => {
               <Bookings />
             </ProtectedRoute>
           }
-        /> 
+        />
 
         <Route
-          path="/notifications" 
+          path="/notifications"
           element={
             <ProtectedRoute>
               <Notifications />
             </ProtectedRoute>
-            } 
+          }
         />
 
         <Route
-          path="/subscription" 
+          path="/subscription"
           element={
             <ProtectedRoute>
               <Subscription />
             </ProtectedRoute>
-            } 
+          }
         />
 
-       
-      </Route>
-
-       <Route
-          path="/booking/:serviceId"
+        <Route
+          path="/reviews"
           element={
             <ProtectedRoute>
-              <BookService/>
+              <Reviews />
             </ProtectedRoute>
           }
         />
+      </Route>
+
+      <Route
+        path="/booking/:serviceId"
+        element={
+          <ProtectedRoute>
+            <BookService />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Guest Routes (No Navbar/Footer) */}
       <Route
