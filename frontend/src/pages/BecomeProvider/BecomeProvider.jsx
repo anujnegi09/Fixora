@@ -31,7 +31,7 @@ const BecomeProvider = () => {
 
       <div className="mb-28 flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold">Become a Provider</h1>
+          <h1 className="text-4xl font-bold text-[#0F172A]">Become a Provider</h1>
 
           <p className="mt-2 text-gray-500">
             Manage all your services from one place.

@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import Button from "../../components/common/Button";
 
 import { getProfile } from "../../features/user/userThunks";
+import { getMySubscription } from "../../features/subscription/subscriptionThunks";
+import { selectSubscription } from "../../features/subscription/subscriptionSelectors";
 import {
   selectProfile,
   selectUserLoading,
@@ -21,11 +23,16 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const user = useSelector(selectProfile);
+  const subscription = useSelector(selectSubscription);
   const loading = useSelector(selectUserLoading);
 
   useEffect(() => {
     dispatch(getProfile());
   }, [dispatch]);
+
+  useEffect(() => {
+  dispatch(getMySubscription());
+}, [dispatch]);
 
   if (loading) {
     return (
@@ -58,7 +65,7 @@ const Profile = () => {
 
             <div className="flex gap-4 mt-4 flex-wrap">
               <span className="px-3 py-1 rounded-full bg-purple-100 text-purple-700">
-                {user?.subscription?.plan || "Free Plan"}
+                {subscription?.status === "active" ? subscription?.plan :  "Free Plan"}
               </span>
             </div>
           </div>
@@ -107,14 +114,14 @@ const Profile = () => {
             <div className="grid grid-cols-2 gap-4">
               <Button
                 variant="secondary"
-                onClick={() => navigate("/my-bookings")}
+                onClick={() => navigate("/Bookings")}
               >
                 My Bookings
               </Button>
 
               <Button
                 variant="secondary"
-                onClick={() => navigate("/my-services")}
+                onClick={() => navigate("/become-provider")}
               >
                 My Services
               </Button>

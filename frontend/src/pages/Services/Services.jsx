@@ -76,8 +76,7 @@ const Services = () => {
     }
   };
   return (
-    <div className="mx-auto max-w-7xl px-5 py-24 scrollbar-hide">
-      <h1 className="mb-8 text-4xl font-bold">Services</h1>
+    <div className="my-2 mx-auto max-w-7xl px-5 py-24 scrollbar-hide">
 
       <ServiceSearchHeader
         location={
