@@ -1,7 +1,6 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
 import { login, checkAuthentication } from "../../features/auth/authThunks";
@@ -17,7 +16,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   const loading = useSelector(selectLoading);
-  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -35,160 +33,91 @@ const Login = () => {
       console.log("ERROR =>", error);
     }
   };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-5">
-      <div className="w-full max-w-md rounded-xl bg-white shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-center text-blue-600">Fixora</h1>
+    <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-4xl bg-white rounded-[2rem] shadow-xl overflow-hidden flex flex-col md:flex-row-reverse">
+        {/* Form side */}
+        <div className="w-full md:w-3/5 px-6 py-10 sm:px-10 ml-14">
+          <h1 className="text-3xl font-bold text-slate-900">Fixora</h1>
+          <p className="text-slate-500 mt-1 mb-8">Welcome back 👋</p>
 
-        <p className="text-center text-gray-500 mt-2 mb-8">Welcome Back 👋</p>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          {/* Email */}
-
-          {/* <div>
-            <label className="font-medium">
-              Email
-            </label>
-
-            <input
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <Input
+              label="Email"
               type="email"
+              name="email"
               placeholder="Enter your email"
+              error={errors.email?.message}
               {...register("email", {
                 required: "Email is required",
               })}
-              className="mt-2 w-full rounded-lg border p-3 outline-none focus:ring-2 focus:ring-blue-500"
             />
 
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.email.message}
-              </p>
-            )}
-          </div> */}
+            <PasswordInput
+              label="Password"
+              placeholder="Enter your password"
+              error={errors.password?.message}
+              {...register("password", {
+                required: "Password is required",
+              })}
+            />
 
-          <Input
-            label="Email"
-            type="email"
-            name="email"
-            placeholder="Enter your email"
-            error={errors.email?.message}
-            {...register("email", {
-              required: "Email is required",
-            })}
-          />
-
-          {/* Password */}
-
-          {/* <div>
-
-            <label className="font-medium">
-              Password
-            </label>
-
-            <div className="relative mt-2">
-
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
-                {...register("password", {
-                  required: "Password is required",
-                })}
-                className="w-full rounded-lg border p-3 pr-12 outline-none focus:ring-2 focus:ring-blue-500"
-              />
-
-              <button
-                type="button"
-                onClick={() =>
-                  setShowPassword(!showPassword)
-                }
-                className="absolute right-4 top-4"
+            <div className="text-right">
+              <Link
+                to="/forgot-password"
+                className="text-violet-600 hover:underline text-sm"
               >
-                {showPassword ? (
-                  <FaEyeSlash />
-                ) : (
-                  <FaEye />
-                )}
-              </button>
-
+                Forgot Password?
+              </Link>
             </div>
 
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.password.message}
-              </p>
-            )}
+            <Button type="submit" loading={loading} fullWidth>
+              Login
+            </Button>
+          </form>
 
-          </div> */}
-
-          <PasswordInput
-            label="Password"
-            placeholder="Enter your password"
-            error={errors.password?.message}
-            {...register("password", {
-              required: "Password is required",
-            })}
-          />
-
-          <div className="text-right">
-            <Link
-              to="/forgot-password"
-              className="text-blue-600 hover:underline text-sm"
-            >
-              Forgot Password?
-            </Link>
+          <div className="my-6 flex items-center">
+            <div className="flex-grow border-t border-slate-200"></div>
+            <span className="mx-3 text-slate-400 text-sm">or</span>
+            <div className="flex-grow border-t border-slate-200"></div>
           </div>
 
-          <Button type="submit" loading={loading} fullWidth>
-            Login
+          <Button
+            variant="google"
+            onClick={loginWithGoogle}
+            leftIcon={<FaGoogle />}
+          >
+            Continue with Google
           </Button>
-        </form>
 
-        <div className="my-6 flex items-center">
-          <div className="flex-grow border-t"></div>
-
-          <span className="mx-3 text-gray-500">OR</span>
-
-          <div className="flex-grow border-t"></div>
+          <p className="mt-6 text-center text-sm text-slate-600 md:hidden">
+            Don't have an account?{" "}
+            <Link to="/register" className="text-violet-600 font-medium hover:underline">
+              Register
+            </Link>
+          </p>
         </div>
 
-        <Button
-          variant="google"
-          size=""
-          onClick={loginWithGoogle}
-          leftIcon={<FaGoogle />}
-        >
-          Continue with Google
-        </Button>
-
-        <p className="mt-6 text-center text-sm">
-          Don't have an account?
-          <Link to="/register" className="ml-1 text-blue-600 hover:underline">
-            Register
-          </Link>
-        </p>
+        {/* Welcome side */}
+        <div className="hidden md:flex md:w-2/5 relative">
+          <div className="absolute inset-0 -mr-16 rounded-r-[100px] bg-gradient-to-bl from-violet-600 to-indigo-700 flex flex-col items-center justify-center text-center px-10 text-white">
+            <h2 className="text-3xl font-bold">New here?</h2>
+            <p className="mt-4 text-violet-100 text-sm leading-relaxed">
+              Create a Fixora account to start booking trusted local services
+              or start offering your own.
+            </p>
+            <Link
+              to="/register"
+              className="mt-8 border border-white rounded-lg px-8 py-3 text-sm font-semibold hover:bg-white hover:text-violet-700 transition-colors"
+            >
+              Register
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 export default Login;
-
-{
-  /* <button
-            disabled={loading}
-            className="w-full rounded-lg bg-blue-600 py-3 text-white font-semibold hover:bg-blue-700 transition disabled:opacity-50"
-          >
-            {loading ? "Logging In..." : "Login"}
-          </button> */
-}
-
-{
-  /* <button
-          onClick={loginWithGoogle}
-          className="flex items-center justify-center gap-3 w-full border rounded-lg py-3 hover:bg-gray-100 transition"
-        >
-          <FaGoogle />
-
-          Continue with Google
-        </button> */
-}
