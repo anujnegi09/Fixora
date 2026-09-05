@@ -283,15 +283,6 @@ const Navbar = () => {
               <span>My Services</span>
             </NavLink>
 
-            {/* <NavLink
-              to="/become-provider"
-              onClick={closeSidebar}
-              className="flex items-center gap-3 px-5 py-2.5 text-gray-700 hover:bg-gray-100 transition"
-            >
-              <FaCrown size={17} />
-              <span>Become a Provider</span>
-            </NavLink> */}
-
             <NavLink
               to="/subscription"
               onClick={closeSidebar}
@@ -306,7 +297,7 @@ const Navbar = () => {
 
           <div className="py-2">
             <NavLink
-              to="/settings"
+              to="/profile"
               onClick={closeSidebar}
               className="flex items-center gap-3 px-5 py-2.5 text-gray-700 hover:bg-gray-100 transition"
             >
@@ -315,12 +306,12 @@ const Navbar = () => {
             </NavLink>
 
             <NavLink
-              to="/help"
+              to="/about"
               onClick={closeSidebar}
               className="flex items-center gap-3 px-5 py-2.5 text-gray-700 hover:bg-gray-100 transition"
             >
               <FaQuestionCircle size={17} />
-              <span>Help & Support</span>
+              <span>About</span>
             </NavLink>
 
             <NavLink
