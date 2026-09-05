@@ -170,7 +170,8 @@ const Navbar = () => {
 
                 <NavLink
                   to="/register"
-                  className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md"                >
+                  className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md"
+                >
                   Signup
                 </NavLink>
               </>
@@ -218,8 +219,9 @@ const Navbar = () => {
       {/* ================= SIDEBAR ================= */}
 
       {isSidebarOpen && (
-        <aside className="fixed right-4 top-[80px] z-50 w-80 max-w-[90%] overflow-hidden rounded-2xl border border-white/60 bg-white/90 shadow-2xl backdrop-blur-xl">  {/* ================= PROFILE ================= */}
-
+        <aside className="fixed right-4 top-[80px] z-50 w-80 max-w-[90%] overflow-hidden rounded-2xl border border-white/60 bg-white/90 shadow-2xl backdrop-blur-xl">
+          {" "}
+          {/* ================= PROFILE ================= */}
           <div className="flex items-center gap-3 px-5 py-5">
             {user?.avatar ? (
               <img
@@ -241,11 +243,8 @@ const Navbar = () => {
               <p className="text-sm text-gray-500 truncate">{user?.email}</p>
             </div>
           </div>
-
           <hr className="border-gray-200" />
-
           {/* ================= MENU ================= */}
-
           <div className="py-2">
             <NavLink
               to="/profile"
@@ -292,9 +291,7 @@ const Navbar = () => {
               <span>Subscription</span>
             </NavLink>
           </div>
-
           <hr className="border-gray-200" />
-
           <div className="py-2">
             <NavLink
               to="/profile"
@@ -323,9 +320,7 @@ const Navbar = () => {
               <span>Contact</span>
             </NavLink>
           </div>
-
           <hr className="border-gray-300" />
-
           <div className="py-2">
             <button
               onClick={handleLogout}
