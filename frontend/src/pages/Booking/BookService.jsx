@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import Loading from "../../components/common/Loading.jsx";
 
 import {
   FaMapMarkerAlt,
@@ -188,13 +189,7 @@ const BookService = () => {
   // ==============================
 
   if (loading) {
-    return (
-      <div className="mx-auto max-w-5xl px-5 py-32 text-center">
-        <p className="text-lg font-medium text-blue-600">
-          Loading service details...
-        </p>
-      </div>
-    );
+    return <Loading fullscreen text="loading services" size="lg" />
   }
 
   // ==============================
@@ -274,11 +269,21 @@ const BookService = () => {
 
               {/* Provider */}
               <div className="mt-5 flex items-center gap-3">
-                <img
+
+                <div className="h-12 w-12 overflow-hidden rounded-full border">
+  <img
+    src={service.userId?.avatar || DefaultAvatar}
+    alt={service.userId?.fullName || "Service Provider"}
+    className={`h-full w-full object-cover ${
+      !service.userId?.avatar ? "scale-150" : ""
+    }`}
+  />
+</div>
+                {/* <img
                   src={service.userId?.avatar || DefaultAvatar }
                   alt={service.userId?.fullName || "Service Provider"}
-                  className="h-12 w-12 rounded-full border object-cover"
-                />
+                  className="h-12 w-12 rounded-full border object-cover "
+                /> */}
 
                 <div>
                   <p className="font-semibold text-gray-800">

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import Loading from "../../components/common/Loading";
 
 import {
   FaArrowLeft,
@@ -38,11 +39,7 @@ const ServiceDetails = () => {
   // ================= LOADING =================
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-500">Loading service...</p>
-      </div>
-    );
+    return <Loading fullscreen text="loading services" size="lg" />
   }
 
   // ================= ERROR =================

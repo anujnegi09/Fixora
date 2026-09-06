@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { getAllServices } from "../../features/services/serviceThunks";
+import Loading from "../../components/common/Loading.jsx"
 
 import {
   selectServices,
@@ -102,13 +103,7 @@ const Services = () => {
       )}
       {/* Loading */}
 
-      {loading && (
-        <div className="py-10 text-center">
-          <p className="text-lg font-medium text-blue-600">
-            Loading services...
-          </p>
-        </div>
-      )}
+      {loading && <Loading fullscreen text="loading services" size="lg" />}
 
       {/* Error */}
 

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import Loading from "../../components/common/Loading.jsx";
 
 import {
   selectMyServices,
@@ -72,13 +73,7 @@ const BecomeProvider = () => {
 
       {/* Loading */}
 
-      {loading && (
-        <div className="py-12 text-center">
-          <p className="text-lg font-medium text-blue-600">
-            Loading your services...
-          </p>
-        </div>
-      )}
+      {loading && <Loading fullscreen text="Loading your services" size="lg" /> }
 
       {/* Error */}
 
