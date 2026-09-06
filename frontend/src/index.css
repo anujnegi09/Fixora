@@ -27,3 +27,35 @@ body,
     width: 100%;
   }
 }
+
+
+
+@keyframes button-progress {
+  0% {
+    transform: scaleX(0);
+  }
+
+  20% {
+    transform: scaleX(0.2);
+  }
+
+  50% {
+    transform: scaleX(0.5);
+  }
+
+  80% {
+    transform: scaleX(0.8);
+  }
+
+  95% {
+    transform: scaleX(0.95);
+  }
+
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+.animate-button-progress {
+  animation: button-progress 2s ease-in-out infinite;
+}
