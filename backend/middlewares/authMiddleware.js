@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import User from "../Models/User.js";
-import apiError from "../Utils/apiError.js";
-import { asyncHandler } from "../Utils/asyncHandler.js";
+import User from "../models/UserModel.js";
+import apiError from "../utils/apiError.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const verifyJWT = asyncHandler(async (req, res, next) => {
   // Get token from cookies or Authorization header

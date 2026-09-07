@@ -1,8 +1,8 @@
 import express from "express";
-import { updateProfile, getProfile, changePassword, completeProfile, updateLocation } from "../Controller/UserController.js";
-import { verifyJWT } from "../Middleware/authMiddleware.js";
-import {upload} from "../Middleware/multerMiddleware.js";
-import uploadOnCloudinary from "../Utils/uploadOnCloudinary.js";
+import { updateProfile, getProfile, changePassword, completeProfile, updateLocation } from "../controllers/UserController.js";
+import { verifyJWT } from "../middlewares/authMiddleware.js";
+import {upload} from "../middlewares/multerMiddleware.js";
+import uploadOnCloudinary from "../utils/uploadOnCloudinary.js";
 
 const router = express.Router();
 

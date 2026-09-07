@@ -1,8 +1,8 @@
-import User from "../Models/User.js";
-import { asyncHandler } from "../Utils/asyncHandler.js";
-import apiError from "../Utils/apiError.js";
-import apiResponse from "../Utils/apiResponse.js";
-import uploadOnCloudinary from "../Utils/uploadOnCloudinary.js";
+import User from "../models/UserModel.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import apiError from "../utils/apiError.js";
+import apiResponse from "../utils/apiResponse.js";
+import uploadOnCloudinary from "../utils/uploadOnCloudinary.js";
 import bcrypt from "bcryptjs";
 import fs from "fs";
 

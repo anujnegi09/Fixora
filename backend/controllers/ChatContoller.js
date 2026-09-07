@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
-import Message, { buildConversationId } from "../Models/Message.js";
-import { asyncHandler } from "../Utils/asyncHandler.js";
-import apiError from "../Utils/apiError.js";
-import apiResponse from "../Utils/apiResponse.js";
-import { getIO } from "../Config/Socket.js";
+import Message, { buildConversationId } from "../models/MessageModel.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import apiError from "../utils/apiError.js";
+import apiResponse from "../utils/apiResponse.js";
+import { getIO } from "../configs/Socket.js";
 
 
 // ======================================
@@ -34,8 +34,8 @@ export const sendMessage = asyncHandler(async (req, res) => {
   });
 
   const populatedMessage = await Message.findById(newMessage._id)
-    .populate("sender", "fullName profilePhoto")
-    .populate("receiver", "fullName profilePhoto");
+    .populate("sender", "fullName avatar")
+    .populate("receiver", "fullName avatar");
 
   // 🔥 REAL TIME MESSAGE
   const io = getIO();
@@ -68,8 +68,8 @@ export const getMessages = asyncHandler(async (req, res) => {
    converationId,
   })
     .sort({ createdAt: 1 })
-    .populate("sender", "fullName profilePhoto")
-    .populate("receiver", "fullName profilePhoto");
+    .populate("sender", "fullName avatar")
+    .populate("receiver", "fullName avatar");
 
   return res.status(200).json(
     new apiResponse(
@@ -113,8 +113,6 @@ export const markMessagesAsSeen = asyncHandler(async (req, res) => {
 // ======================================
 // GET CHAT USERS
 // ======================================
-
-import User from "../Models/User.js";
 
 export const getChatUsers = asyncHandler(async (req, res) => {
   const myId = req.user._id;
@@ -206,7 +204,7 @@ export const getChatUsers = asyncHandler(async (req, res) => {
         user: {
           _id: "$user._id",
           fullName: "$user.fullName",
-          profilePhoto: "$user.profilePhoto",
+          avatar: "$user.avatar",
         },
 
         lastMessage: 1,

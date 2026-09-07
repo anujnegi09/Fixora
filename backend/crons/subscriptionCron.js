@@ -1,7 +1,7 @@
 import cron from "node-cron";
-import Subscription from "../Models/Subscription.js";
-import Service from "../Models/Service.js";
-import  logger  from "../Config/Logger.js";
+import Subscription from "../models/SubscriptionModel.js";
+import Service from "../models/ServiceModel.js";
+import  logger  from "../configs/Logger.js";
 
 const subscriptionCron = cron.schedule("0 0 * * *", async () => {
 

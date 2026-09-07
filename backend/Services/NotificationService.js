@@ -1,5 +1,5 @@
-import Notification from "../Models/Notification.js";
-import { getIO } from "../Config/Socket.js";
+import Notification from "../models/NotificationModel.js";
+import { getIO } from "../configs/Socket.js";
 
 export const sendNotification = async ({
   userId,

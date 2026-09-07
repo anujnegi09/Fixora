@@ -3,8 +3,8 @@ import {addReview,
     getServiceReviews,
     updateReview,
     deleteReview,
-getMyReviews, getMyServiceReviews} from "../Controller/ReviewController.js";
-import {verifyJWT} from "../Middleware/authMiddleware.js";
+getMyReviews, getMyServiceReviews} from "../controllers/ReviewController.js";
+import {verifyJWT} from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 

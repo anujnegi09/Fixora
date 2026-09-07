@@ -1,7 +1,7 @@
-import Notification from "../Models/Notification.js";
-import { asyncHandler } from "../Utils/asyncHandler.js";
-import apiError from "../Utils/apiError.js";
-import apiResponse from "../Utils/apiResponse.js";
+import Notification from "../models/NotificationModel.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import apiError from "../utils/apiError.js";
+import apiResponse from "../utils/apiResponse.js";
 import mongoose from "mongoose";
 
 /**

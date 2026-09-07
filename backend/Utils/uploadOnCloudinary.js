@@ -1,6 +1,6 @@
 import fs from "fs";
-import cloudinary from "../Config/CloudinarySetup.js";
-import logger from "../Config/Logger.js";
+import cloudinary from "../configs/CloudinarySetup.js";
+import logger from "../configs/Logger.js";
 
 const uploadOnCloudinary = async (
   localFilePath,

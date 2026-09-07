@@ -1,11 +1,11 @@
-import Subscription from "../Models/Subscription.js";
-import Razorpay from "../Config/razorpay.js";
-import { asyncHandler } from "../Utils/asyncHandler.js";
-import apiError from "../Utils/apiError.js";
-import apiResponse from "../Utils/apiResponse.js";
+import Subscription from "../models/SubscriptionModel.js";
+import Razorpay from "../configs/razorpay.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import apiError from "../utils/apiError.js";
+import apiResponse from "../utils/apiResponse.js";
 import crypto from "crypto";
-import Service from "../Models/Service.js";
-import {sendNotification} from "../Services/NotificationService.js";
+import Service from "../models/ServiceModel.js";
+import {sendNotification} from "../services/NotificationService.js";
 
 
 export const createSubscription = asyncHandler(async (req,res)=>{

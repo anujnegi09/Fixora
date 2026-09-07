@@ -10,9 +10,9 @@ import {
   forgotPassword,
   resetPassword,
   googleCallback
-} from "../Controller/AuthController.js";
-import { verifyJWT } from "../Middleware/authMiddleware.js";
-import {upload} from "../Middleware/multerMiddleware.js";
+} from "../controllers/AuthController.js";
+import { verifyJWT } from "../middlewares/authMiddleware.js";
+import {upload} from "../middlewares/multerMiddleware.js";
 
 const router = express.Router();
 

@@ -1,10 +1,10 @@
 import bcrypt from "bcryptjs";
-import User from "../Models/User.js";
-import { asyncHandler } from "../Utils/asyncHandler.js";
-import apiError from "../Utils/apiError.js";
-import apiResponse from "../Utils/apiResponse.js";
-import generateToken from "../Utils/generateToken.js";
-import { transporter } from "../Config/Mail.js";
+import User from "../models/UserModel.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import apiError from "../utils/apiError.js";
+import apiResponse from "../utils/apiResponse.js";
+import generateToken from "../utils/generateToken.js";
+import { transporter } from "../configs/Mail.js";
 import crypto from "crypto";
 
 /**

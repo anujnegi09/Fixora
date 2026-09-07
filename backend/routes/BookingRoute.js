@@ -10,9 +10,9 @@ import {
   requestCompletion,
   getCompletionOTP,
   verifyCompletionOTP
-} from "../Controller/BookingController.js";
+} from "../controllers/BookingController.js";
 
-import { verifyJWT } from "../Middleware/authMiddleware.js";
+import { verifyJWT } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 

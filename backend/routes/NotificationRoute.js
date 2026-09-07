@@ -4,8 +4,8 @@ import { getNotifications,
     markAsRead , 
     markAllAsRead,
     deleteNotification, getNewNotificationCount, markNewNotificationsAsSeen
-} from "../Controller/NotificationController.js";
-import { verifyJWT } from "../Middleware/authMiddleware.js";
+} from "../controllers/NotificationController.js";
+import { verifyJWT } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 

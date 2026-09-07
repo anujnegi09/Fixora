@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
-import Booking from "../Models/Booking.js";
-import Service from "../Models/Service.js";
-import { asyncHandler } from "../Utils/asyncHandler.js";
-import apiError from "../Utils/apiError.js";
-import apiResponse from "../Utils/apiResponse.js";
-import { getIO } from "../Config/Socket.js";
-import { sendNotification } from "../Services/NotificationService.js";
-import redisClient from "../Config/Redis.js";
+import Booking from "../models/BookingModel.js";
+import Service from "../models/ServiceModel.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import apiError from "../utils/apiError.js";
+import apiResponse from "../utils/apiResponse.js";
+import { getIO } from "../configs/Socket.js";
+import { sendNotification } from "../services/NotificationService.js";
+import redisClient from "../configs/Redis.js";
 
 export const createBooking = asyncHandler(async (req, res) => {
   const { serviceId, bookingType, startTime, notes } = req.body;
@@ -119,8 +119,8 @@ export const getBookingById = asyncHandler(async (req, res) => {
     throw new apiError(400, "Invalid booking ID");
   }
   const booking = await Booking.findById(bookingId)
-    .populate("bookedBy", "fullName email profilePhoto")
-    .populate("serviceOwner", "fullName email profilePhoto")
+    .populate("bookedBy", "fullName email avatar")
+    .populate("serviceOwner", "fullName email avatar")
     .populate("serviceId", "title description location phoneNumber")
     .lean();
   if (!booking) {

@@ -1,6 +1,6 @@
-import Subscription from "../Models/Subscription.js";
-import { asyncHandler } from "../Utils/asyncHandler.js";
-import apiError from "../Utils/apiError.js";
+import Subscription from "../models/SubscriptionModel.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import apiError from "../utils/apiError.js";
 
 export const verifySubscription = asyncHandler(async (req, res, next) => {
     const userId = req.user._id;

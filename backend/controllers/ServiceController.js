@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import Service from "../Models/Service.js";
-import { asyncHandler } from "../Utils/asyncHandler.js";
-import apiError from "../Utils/apiError.js";
-import apiResponse from "../Utils/apiResponse.js";
+import Service from "../models/ServiceModel.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import apiError from "../utils/apiError.js";
+import apiResponse from "../utils/apiResponse.js";
 
 export const getMyServices = asyncHandler(async (req, res) => {
   const userId = req.user._id;
@@ -256,7 +256,7 @@ export const getAllServices = asyncHandler(async (req, res) => {
   // ==========================================
   else {
     services = await Service.find(filter)
-      .populate("userId", "fullName email profilePhoto")
+      .populate("userId", "fullName email avatar")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(Number(limit));
@@ -294,7 +294,7 @@ export const getServiceById = asyncHandler(async (req, res) => {
   }
 
   const service = await Service.findOne({ _id: id, isVisible: true })
-    .populate("userId", "fullName email")
+    .populate("userId", "fullName email avatar")
     .lean();
 
   if (!service) {

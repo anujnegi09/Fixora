@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-import Review from "../Models/Review.js";
-import Booking from "../Models/Booking.js";
-import Service from "../Models/Service.js";
-import { asyncHandler } from "../Utils/asyncHandler.js";
-import apiError from "../Utils/apiError.js";
-import apiResponse from "../Utils/apiResponse.js";
+import Review from "../models/ReviewModel.js";
+import Booking from "../models/BookingModel.js";
+import Service from "../models/ServiceModel.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import apiError from "../utils/apiError.js";
+import apiResponse from "../utils/apiResponse.js";
 
 const updateServiceRating = async (serviceId) => {
   const result = await Review.aggregate([
@@ -88,7 +88,7 @@ export const getServiceReviews = asyncHandler(async (req, res) => {
   const reviews = await Review.find({
     serviceId,
   })
-    .populate("reviewer", "fullName profilePhoto")
+    .populate("reviewer", "fullName avatar")
     .sort({ createdAt: -1 });
 
   return res

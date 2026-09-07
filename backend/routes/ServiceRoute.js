@@ -7,10 +7,10 @@ import {
   updateService,
   deleteService,
   toggleServiceVisibility
-} from "../Controller/ServiceController.js";
+} from "../controllers/ServiceController.js";
 
-import { verifyJWT } from "../Middleware/authMiddleware.js";
-import { verifySubscription } from "../Middleware/subscriptionMiddleware.js";
+import { verifyJWT } from "../middlewares/authMiddleware.js";
+import { verifySubscription } from "../middlewares/subscriptionMiddleware.js";
 
 const router = express.Router();
 

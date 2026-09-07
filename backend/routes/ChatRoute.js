@@ -5,9 +5,9 @@ import {
   getMessages,
   markMessagesAsSeen,
   getChatUsers,
-} from "../Controller/ChatContoller.js";
+} from "../controllers/ChatContoller.js";
 
-import { verifyJWT } from "../Middleware/authMiddleware.js";
+import { verifyJWT } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 

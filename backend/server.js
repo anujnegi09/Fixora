@@ -4,22 +4,22 @@ import dotenv from "dotenv";
 import cors from "cors";
 import http from "http";
 
-import { connectDB } from "./Config/DBConnection.js";
-import { initSocket } from "./Config/Socket.js";
-import  logger  from "./Config/Logger.js";
-import subscriptionCron  from "./Cron/SubscriptionCron.js";
-import passport from "./Config/Passport.js"; 
-import { connectRedis } from "./Config/Redis.js";
+import { connectDB } from "./configs/DBConnection.js";
+import { initSocket } from "./configs/Socket.js";
+import  logger  from "./configs/Logger.js";
+import subscriptionCron  from "./crons/subscriptionCron.js";
+import passport from "./configs/Passport.js"; 
+import { connectRedis } from "./configs/Redis.js";
 
-import UserRoute from "./Route/UserRoute.js";
-import ServiceRoute from "./Route/ServiceRoute.js";
-import BookingRoute from "./Route/BookingRoute.js";
-import AuthRoute from "./Route/AuthRoute.js";
-import NotificationRoute from "./Route/NotificationRoute.js";
-import ChatRoute from "./Route/ChatRoute.js";
-import SubscriptionRoute from "./Route/SubscriptionRoute.js";
-import ReviewRoute from "./Route/ReviewRoute.js"
-import LocationRoute from "./Route/LocationRoute.js";
+import UserRoute from "./routes/UserRoute.js";
+import ServiceRoute from "./routes/ServiceRoute.js";
+import BookingRoute from "./routes/BookingRoute.js";
+import AuthRoute from "./routes/AuthRoute.js";
+import NotificationRoute from "./routes/NotificationRoute.js";
+import ChatRoute from "./routes/ChatRoute.js";
+import SubscriptionRoute from "./routes/SubscriptionRoute.js";
+import ReviewRoute from "./routes/ReviewRoute.js"
+import LocationRoute from "./routes/LocationRoute.js";
 // ================================
 // LOAD ENV
 // ================================

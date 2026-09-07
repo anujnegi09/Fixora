@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { reverseGeocode, searchLocation} from "../controller/LocationController.js";
+import { reverseGeocode, searchLocation} from "../controllers/LocationController.js";
 
 const router = Router();
 
