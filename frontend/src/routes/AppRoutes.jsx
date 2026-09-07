@@ -13,7 +13,7 @@ import BecomeProvider from "../pages/BecomeProvider/BecomeProvider";
 import Services from "../pages/Services/Services.jsx";
 import CreateService from "../pages/CreateService/CreateService.jsx";
 import BookService from "../pages/Booking/BookService.jsx";
-import Bookings from "../pages/booking/Bookings";
+import Bookings from "../pages/Booking/Bookings.jsx";
 import Notifications from "../pages/Notifications/Notifications";
 import Subscription from "../pages/Subscription/Subscription";
 import Reviews from "../pages/Review/Reviews.jsx"
@@ -21,7 +21,6 @@ import About from "../pages/About/About.jsx";
 import MainLayout from "../components/layout/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import GuestRoute from "./GuestRoute";
-
 const AppRoutes = () => {
   return (
     <Routes>
@@ -97,7 +96,6 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-
 
         <Route
         path="/about"
