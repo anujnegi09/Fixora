@@ -73,7 +73,7 @@ const BecomeProvider = () => {
 
       {/* Loading */}
 
-      {loading && <Loading fullscreen text="Loading your services" size="lg" /> }
+      {loading && <Loading fullscreen text="Loading your services" /> }
 
       {/* Error */}
 

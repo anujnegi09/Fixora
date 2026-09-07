@@ -245,26 +245,31 @@ const About = () => {
 
             {[
               {
+                number: 1,
                 icon: <FaSearch />,
                 title: "Discover",
                 text: "Search for services and providers near you.",
               },
               {
+                number: 2,
                 icon: <FaStar />,
                 title: "Choose",
                 text: "Compare details, ratings, pricing and availability.",
               },
               {
+                number: 3,
                 icon: <FaCalendarCheck />,
                 title: "Book",
                 text: "Choose an instant or scheduled booking.",
               },
               {
+                number: 4,
                 icon: <FaComments />,
                 title: "Connect",
                 text: "Communicate with your service provider.",
               },
               {
+                number: 5,
                 icon: <FaCheckCircle />,
                 title: "Get It Done",
                 text: "Complete your service and share your experience.",
@@ -274,10 +279,6 @@ const About = () => {
                 key={step.number}
                 className="relative rounded-2xl bg-white pt-3 px-5 pb-5 shadow-sm"
               >
-                <span className="text-sm font-bold text-violet-500">
-                  {step.number}
-                </span>
-
                 <div className="mt-5 flex h-12 w-12 items-center justify-center rounded-xl bg-violet-100 text-violet-600">
                   {step.icon}
                 </div>

@@ -5,6 +5,7 @@ import ReviewTabs from "../../components/review/ReviewTabs";
 import ReviewCard from "../../components/review/ReviewCard";
 import ConfirmDeleteReviewModal from "../../components/review/ConfirmDeleteReviewModal";
 import EditReviewModal from "../../components/review/EditReviewModal";
+import Loading from "../../components/common/Loading.jsx"
 
 import {
   getMyReviews,
@@ -128,19 +129,7 @@ const handleUpdateReview = async ({
   // ==========================================
 
   if (loading) {
-    return (
-      <div className="mx-auto max-w-7xl px-5 py-28">
-
-        <div className="flex min-h-[300px] items-center justify-center">
-
-          <p className="text-lg font-medium text-blue-600">
-            Loading reviews...
-          </p>
-
-        </div>
-
-      </div>
-    );
+    return <Loading fullscreen text="loading reviews" />
   }
 
   return (

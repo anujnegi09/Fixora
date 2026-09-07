@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { getAllServices } from "../../features/services/serviceThunks";
-import Loading from "../../components/common/Loading.jsx"
+import Loading from "../../components/common/Loading.jsx";
+import {FaMapMarkerAlt} from "react-icons/fa";
 
 import {
   selectServices,
@@ -11,7 +12,7 @@ import {
 } from "../../features/services/serviceSelectors";
 
 import { selectUserLocation } from "../../features/user/userSelectors";
-import {selectIsAuthenticated} from "../../features/auth/authSelectors";
+import { selectIsAuthenticated } from "../../features/auth/authSelectors";
 import { updateLocation } from "../../features/user/userThunks";
 
 import ServiceCard from "../../components/service/ServiceCard";
@@ -25,7 +26,6 @@ const Services = () => {
   const services = useSelector(selectServices);
   const loading = useSelector(selectServiceLoading);
   const error = useSelector(selectServiceError);
-  
 
   const selectedLocation = useSelector(selectUserLocation);
   const latitude = selectedLocation?.coordinates?.coordinates?.[1];
@@ -38,6 +38,7 @@ const Services = () => {
 
   const [showLocationModal, setShowLocationModal] = useState(false);
 
+  const hasLocation = latitude !== undefined && longitude !== undefined;
   // Reset page whenever search/filter changes
 
   useEffect(() => {
@@ -46,7 +47,7 @@ const Services = () => {
 
   // Fetch services
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !hasLocation) return;
     dispatch(
       getAllServices({
         search,
@@ -60,6 +61,7 @@ const Services = () => {
   }, [
     dispatch,
     isAuthenticated,
+    hasLocation,
     search,
     category,
     sortBy,
@@ -78,7 +80,6 @@ const Services = () => {
   };
   return (
     <div className="my-2 mx-auto max-w-7xl px-5 py-24 scrollbar-hide">
-
       <ServiceSearchHeader
         location={
           selectedLocation?.city
@@ -101,45 +102,69 @@ const Services = () => {
           onLocationSelect={handleLocationSelect}
         />
       )}
-      {/* Loading */}
 
-      {loading && <Loading fullscreen text="loading services" size="lg" />}
+      {!hasLocation ? (
+        <div className="flex min-h-[400px] items-center justify-center">
+          <div className="max-w-md text-center">
+            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50">
+              <FaMapMarkerAlt className="text-2xl text-blue-600" />
+            </div>
 
-      {/* Error */}
+            <h2 className="text-2xl font-bold text-gray-800">
+              Select Your Location
+            </h2>
 
-      {error && (
-        <div className="rounded-lg bg-red-50 p-4 text-red-600">{error}</div>
-      )}
+            <p className="mt-2 text-gray-500">
+              Please select your location first so we can show you services and
+              professionals near you.
+            </p>
 
-      {/* Empty */}
-
-      {!loading && services.length === 0 && (
-        <div className="py-16 text-center">
-          <h2 className="text-2xl font-semibold">No Services Found</h2>
-
-          <p className="mt-2 text-gray-500">
-            Try changing your location or search filters.
-          </p>
+            <button
+              type="button"
+              onClick={() => setShowLocationModal(true)}
+              className="mt-6 rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white transition hover:bg-blue-700"
+            >
+              Select Location
+            </button>
+          </div>
         </div>
-      )}
+      ) : (
+        <>
+          {/* Loading */}
+          {loading && <Loading fullscreen text="loading services" />}
 
-      {/* Services */}
-      {!loading && services.length > 0 && (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {services.map((service) => (
-            <ServiceCard 
-              key={service._id}
-              service={service}
-            />
-          ))}
-        </div>
-      )}
+          {/* Error */}
+          {error && (
+            <div className="rounded-lg bg-red-50 p-4 text-red-600">{error}</div>
+          )}
 
-      {/* Pagination */}
-      {services.length > 0 && (
-        <div className="mt-10">
-          <ServicePagination currentPage={page} onPageChange={setPage} />
-        </div>
+          {/* Empty */}
+          {!loading && services.length === 0 && (
+            <div className="py-16 text-center">
+              <h2 className="text-2xl font-semibold">No Services Found</h2>
+
+              <p className="mt-2 text-gray-500">
+                Try changing your location or search filters.
+              </p>
+            </div>
+          )}
+
+          {/* Services */}
+          {!loading && services.length > 0 && (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {services.map((service) => (
+                <ServiceCard key={service._id} service={service} />
+              ))}
+            </div>
+          )}
+
+          {/* Pagination */}
+          {services.length > 0 && (
+            <div className="mt-10">
+              <ServicePagination currentPage={page} onPageChange={setPage} />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-
+import Loading from "../../components/common/Loading.jsx"
 import {
   getMyBookings,
   getBookingsForMyServices,
@@ -229,13 +229,7 @@ const Bookings = () => {
           LOADING
       ====================================== */}
 
-      {loading && (
-        <div className="py-16 text-center">
-          <p className="text-lg font-medium text-blue-600">
-            Loading bookings...
-          </p>
-        </div>
-      )}
+      {loading && <Loading fullscreen text="loading bookings" />}
 
       {/* ======================================
           ERROR

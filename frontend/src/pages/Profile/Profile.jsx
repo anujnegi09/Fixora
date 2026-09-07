@@ -140,9 +140,9 @@ const Profile = () => {
                 Become Provider
               </Button>
 
-              <Button variant="secondary" onClick={() => navigate("/settings")}>
+              {/* <Button variant="secondary" onClick={() => navigate("/settings")}>
                 Settings
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>

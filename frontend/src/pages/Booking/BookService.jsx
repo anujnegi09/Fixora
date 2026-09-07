@@ -189,7 +189,7 @@ const BookService = () => {
   // ==============================
 
   if (loading) {
-    return <Loading fullscreen text="loading services" size="lg" />
+    return <Loading fullscreen text="loading services" size="lg" />;
   }
 
   // ==============================
@@ -269,21 +269,15 @@ const BookService = () => {
 
               {/* Provider */}
               <div className="mt-5 flex items-center gap-3">
-
                 <div className="h-12 w-12 overflow-hidden rounded-full border">
-  <img
-    src={service.userId?.avatar || DefaultAvatar}
-    alt={service.userId?.fullName || "Service Provider"}
-    className={`h-full w-full object-cover ${
-      !service.userId?.avatar ? "scale-150" : ""
-    }`}
-  />
-</div>
-                {/* <img
-                  src={service.userId?.avatar || DefaultAvatar }
-                  alt={service.userId?.fullName || "Service Provider"}
-                  className="h-12 w-12 rounded-full border object-cover "
-                /> */}
+                  <img
+                    src={service.userId?.avatar || DefaultAvatar}
+                    alt={service.userId?.fullName || "Service Provider"}
+                    className={`h-full w-full object-cover ${
+                      !service.userId?.avatar ? "scale-150" : ""
+                    }`}
+                  />
+                </div>
 
                 <div>
                   <p className="font-semibold text-gray-800">
