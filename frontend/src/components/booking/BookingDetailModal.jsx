@@ -47,10 +47,7 @@ const BookingDetailModal = ({ booking, onClose }) => {
       })
     : null;
 
-  const person =
-    booking.bookedBy?.fullName
-      ? booking.bookedBy
-      : booking.serviceOwner;
+  const person = booking.serviceOwner;
 
   const location =
     booking.serviceId?.location ||
@@ -128,22 +125,14 @@ const BookingDetailModal = ({ booking, onClose }) => {
 
           <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
             <p className="mb-3 text-sm font-semibold text-gray-700">
-              {booking.bookedBy?.fullName
-                ? "Customer"
-                : "Service Provider"}
+              Service Provider
             </p>
 
             <div className="flex items-center gap-3">
               <div className="h-12 w-12 overflow-hidden rounded-full border border-gray-200 bg-white">
                 <img
-                  src={
-                    person?.avatar ||
-                    defaultAvatar
-                  }
-                  alt={
-                    person?.fullName ||
-                    "User"
-                  }
+                  src={person?.avatar ||defaultAvatar}
+                  alt={person?.fullName || "Service Provider"}
                   className="h-full w-full object-cover"
                 />
               </div>

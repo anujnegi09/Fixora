@@ -293,14 +293,14 @@ const Navbar = () => {
           </div>
           <hr className="border-gray-200" />
           <div className="py-2">
-            <NavLink
+            {/* <NavLink
               to="/profile"
               onClick={closeSidebar}
               className="flex items-center gap-3 px-5 py-2.5 text-gray-700 hover:bg-gray-100 transition"
             >
               <FaCog size={17} />
               <span>Settings</span>
-            </NavLink>
+            </NavLink> */}
 
             <NavLink
               to="/about"

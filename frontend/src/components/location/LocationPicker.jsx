@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaLocationArrow } from "react-icons/fa";
+import Loading from "../common/Loading.jsx"
 import {
   MapContainer,
   TileLayer,
@@ -256,23 +257,8 @@ const LocationPicker = ({ onClose, onSaveLocation }) => {
 
       {/* Loader */}
 
-      {loading && (
-        <div className="flex items-center gap-2 text-blue-600">
-          <div
-            className="
-              h-4
-              w-4
-              animate-spin
-              rounded-full
-              border-2
-              border-blue-600
-              border-t-transparent
-            "
-          />
-
-          <span>Fetching location...</span>
-        </div>
-      )}
+      {loading && <Loading size="sm" text="fetching location" />} 
+    
 
       {/* Map */}
 
