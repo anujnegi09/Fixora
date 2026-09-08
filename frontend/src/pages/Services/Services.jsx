@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import { showErrorToast } from "../../utils/customtoast";
 import { getAllServices } from "../../features/services/serviceThunks";
 import Loading from "../../components/common/Loading.jsx";
-import {FaMapMarkerAlt} from "react-icons/fa";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 import {
   selectServices,
@@ -71,11 +71,18 @@ const Services = () => {
   ]);
 
   const handleLocationSelect = async (location) => {
+    if (!isAuthenticated) {
+      showErrorToast("Please login first to save your location.");
+      return;
+    }
     try {
       await dispatch(updateLocation(location)).unwrap();
       setShowLocationModal(false);
     } catch (error) {
       console.error("Failed to update location:", error);
+      showErrorToast(
+        typeof error === "string" ? error : "Failed to update your location.",
+      );
     }
   };
   return (
@@ -92,7 +99,13 @@ const Services = () => {
         setCategory={setCategory}
         sortBy={sortBy}
         setSortBy={setSortBy}
-        onLocationClick={() => setShowLocationModal(true)}
+        onLocationClick={() => {
+          if (!isAuthenticated) {
+            showErrorToast("Please login first to select your location.");
+            return;
+          }
+          setShowLocationModal(true);
+        }}
         isLocationOpen={showLocationModal}
       />
 
@@ -103,7 +116,21 @@ const Services = () => {
         />
       )}
 
-      {!hasLocation ? (
+      {!isAuthenticated ? (
+        <div className="flex min-h-[400px] items-center justify-center">
+          <div className="max-w-md text-center">
+            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50">
+              <FaMapMarkerAlt className="text-2xl text-blue-600" />
+            </div>
+
+            <h2 className="text-2xl font-bold text-gray-800">Login Required</h2>
+
+            <p className="mt-2 text-gray-500">
+              Please login first to see services and professionals near you.
+            </p>
+          </div>
+        </div>
+      ) : !hasLocation ? (
         <div className="flex min-h-[400px] items-center justify-center">
           <div className="max-w-md text-center">
             <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50">

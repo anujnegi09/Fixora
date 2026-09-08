@@ -1,0 +1,137 @@
+src/
+│
+├── app/
+│   ├── store.js                 // Configure Redux store
+│   └── rootReducer.js           // Combine reducers (optional)
+│
+├── api/
+│   ├── api.js                   // Axios instance
+│   ├── auth.api.js
+│   ├── service.api.js
+│   ├── booking.api.js
+│   ├── chat.api.js
+│   ├── notification.api.js
+│   ├── subscription.api.js
+│   ├── review.api.js
+│   └── upload.api.js
+│
+├── features/
+│   │
+│   ├── auth/
+│   │   ├── authSlice.js
+│   │   ├── authThunks.js
+│   │   ├── authSelectors.js
+│   │   └── authTypes.js   // optional
+│   │
+│   ├── services/
+│   │   ├── serviceSlice.js
+│   │   ├── serviceThunks.js
+│   │   └── serviceSelectors.js
+│   │
+│   ├── bookings/
+│   │   ├── bookingSlice.js
+│   │   ├── bookingThunks.js
+│   │   └── bookingSelectors.js
+│   │
+│   ├── chat/
+│   │   ├── chatSlice.js
+│   │   ├── chatThunks.js
+│   │   └── chatSelectors.js
+│   │
+│   ├── notifications/
+│   │   ├── notificationSlice.js
+│   │   ├── notificationThunks.js
+│   │   └── notificationSelectors.js
+│   │
+│   ├── subscription/
+│   │   ├── subscriptionSlice.js
+│   │   ├── subscriptionThunks.js
+│   │   └── subscriptionSelectors.js
+│   │
+│   ├── reviews/
+│   │   ├── reviewSlice.js
+│   │   ├── reviewThunks.js
+│   │   └── reviewSelectors.js
+│   │
+│   └── ui/
+│       └── uiSlice.js            // Theme, sidebar, modals, loading
+│
+├── components/
+│   ├── common/
+│   ├── layout/
+│   ├── navbar/
+│   ├── footer/
+│   ├── forms/
+│   ├── service/
+│   ├── booking/
+│   ├── chat/
+│   ├── notification/
+│   ├── profile/
+│   ├── subscription/
+│   └── shared/
+│
+├── pages/
+│   ├── Home/
+│   ├── Login/
+│   ├── Register/
+│   ├── Profile/
+│   ├── Services/
+│   ├── CreateService/
+│   ├── EditService/
+│   ├── Booking/
+│   ├── Chat/
+│   ├── Notification/
+│   ├── Subscription/
+│   ├── About/
+│   ├── Contact/
+│   └── NotFound/
+│
+├── hooks/
+│   ├── useSocket.js
+│   ├── useDebounce.js
+│   ├── usePagination.js
+│   ├── useInfiniteScroll.js
+│   └── useGeoLocation.js
+│
+├── routes/
+│   ├── AppRoutes.jsx
+│   ├── ProtectedRoute.jsx
+│   ├── GuestRoute.jsx
+│   └── AdminRoute.jsx
+│
+├── sockets/
+│   ├── socket.js
+│   └── socketEvents.js
+│
+├── utils/
+│   ├── constants.js
+│   ├── formatDate.js
+│   ├── helpers.js
+│   ├── validation.js
+│   ├── uploadImage.js
+│   └── toast.js
+│
+├── assets/
+│   ├── images/
+│   ├── icons/
+│   └── logos/
+│
+├── styles/
+│   ├── index.css
+│   └── globals.css
+│
+├── App.jsx
+├── main.jsx
+└── vite.config.js
+
+
+
+UpdateService/
+
+    UpdateService.jsx
+
+
+
+MyServices/
+
+    MyServices.jsx

@@ -10,3 +10,24 @@ Currently, two official plugins are available:
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+
+
+One important note before the code:
+Your frontend should send this payload:
+{
+  "title": "Electrician",
+  "description": "Home electrical repair",
+  "phoneNumber": "9876543210",
+  "price": 500,
+  "availability": {...},
+  "serviceRadius": 10,
+  "location": {
+    "address": "Shivaji Nagar, Rishikesh",
+    "city": "Rishikesh",
+    "state": "Uttarakhand",
+    "pincode": "249201",
+    "latitude": 30.0869,
+    "longitude": 78.2676
+  }
+}

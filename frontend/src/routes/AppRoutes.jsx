@@ -16,7 +16,7 @@ import BookService from "../pages/Booking/BookService.jsx";
 import Bookings from "../pages/Booking/Bookings.jsx";
 import Notifications from "../pages/Notifications/Notifications";
 import Subscription from "../pages/Subscription/Subscription";
-import Reviews from "../pages/Review/Reviews.jsx"
+import Reviews from "../pages/Review/Reviews.jsx";
 import About from "../pages/About/About.jsx";
 import MainLayout from "../components/layout/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
@@ -43,14 +43,7 @@ const AppRoutes = () => {
 
         <Route path="/services" element={<Services />} />
 
-        <Route
-          path="/become-provider"
-          element={
-            <ProtectedRoute>
-              <BecomeProvider />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/become-provider" element={<BecomeProvider />} />
 
         <Route
           path="/create-service"
@@ -97,14 +90,7 @@ const AppRoutes = () => {
           }
         />
 
-        <Route
-        path="/about"
-        element={
-            <About />
-         } 
-      />
-
-
+        <Route path="/about" element={<About />} />
       </Route>
 
       <Route
