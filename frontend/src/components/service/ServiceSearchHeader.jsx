@@ -2,7 +2,7 @@ import { FaMapMarkerAlt, FaChevronDown } from "react-icons/fa";
 
 import SearchBar from "./SearchBar";
 import CategoryFilter from "./CategoryFilter";
-import SortDropdown from "./SortDropdown";
+import SortDropdown from "./SortDropDown";
 
 const ServiceSearchHeader = ({
   location = "Select Location",
