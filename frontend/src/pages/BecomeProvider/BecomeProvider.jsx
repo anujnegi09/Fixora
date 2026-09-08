@@ -16,7 +16,7 @@ import { selectIsAuthenticated } from "../../features/auth/authSelectors.js";
 import EmptyState from "../../components/common/EmptyState.jsx";
 import MyServiceCard from "../../components/service/MyServiceCard.jsx";
 
-import { showErrorToast } from "../../utils/customtoast";
+import { showErrorToast } from "../../utils/customToast";
 
 const BecomeProvider = () => {
   const dispatch = useDispatch();
