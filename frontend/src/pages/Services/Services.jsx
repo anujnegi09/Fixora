@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { showErrorToast } from "../../utils/customtoast";
+import { showErrorToast } from "../../utils/customToast";
 import { getAllServices } from "../../features/services/serviceThunks";
 import Loading from "../../components/common/Loading.jsx";
 import { FaMapMarkerAlt } from "react-icons/fa";
