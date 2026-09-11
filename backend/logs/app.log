@@ -2064,3 +2064,8 @@
 2026-09-08T07:19:11.187Z [INFO] ✅ Redis connected successfully.
 2026-09-08T07:19:11.190Z [INFO] 🚀 Server running on port 5000
 2026-09-08T07:19:11.809Z [INFO] Server is ready to send emails
+2026-09-08T15:46:42.800Z [INFO] database connected
+2026-09-08T15:46:42.823Z [INFO] 🔗 Connecting to Redis...
+2026-09-08T15:46:42.858Z [INFO] ✅ Redis connected successfully.
+2026-09-08T15:46:42.871Z [INFO] 🚀 Server running on port 5000
+2026-09-08T15:46:43.922Z [INFO] Server is ready to send emails
