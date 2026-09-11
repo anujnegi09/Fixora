@@ -18,7 +18,7 @@ const router = express.Router();
 router.get("/my-services",verifyJWT,getMyServices);
 
 // Create service
-router.post("/create", verifyJWT, createService);   //verifySubscription = temprary remove this
+router.post("/create", verifyJWT, verifySubscription, createService);
 
 // Get all services
 router.get("/",verifyJWT, getAllServices );
@@ -27,7 +27,7 @@ router.get("/",verifyJWT, getAllServices );
 router.get("/:id", getServiceById);
 
 // Update service
-router.patch("/update/:id", verifyJWT, updateService);    //,verifySubscription
+router.patch("/update/:id", verifyJWT,verifySubscription, updateService);   
 
 // Delete service
 router.delete("/:id", verifyJWT, deleteService);  //there is no need to verify subscription for deleting a service
