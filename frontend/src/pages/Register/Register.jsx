@@ -217,13 +217,13 @@ const Register = () => {
 
   const loading = useSelector(selectLoading);
 
-  const [states, setStates] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [selectedStateCode, setSelectedStateCode] = useState("");
+  // const [states, setStates] = useState([]);
+  // const [cities, setCities] = useState([]);
+  // const [selectedStateCode, setSelectedStateCode] = useState("");
 
-  useEffect(() => {
-    setStates(State.getStatesOfCountry("IN"));
-  }, []);
+  // useEffect(() => {
+  //   setStates(State.getStatesOfCountry("IN"));
+  // }, []);
 
   const {
     register,
@@ -232,21 +232,21 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  const handleStateChange = (e) => {
-    const stateCode = e.target.value;
+  // const handleStateChange = (e) => {
+  //   const stateCode = e.target.value;
 
-    setSelectedStateCode(stateCode);
+  //   setSelectedStateCode(stateCode);
 
-    const selectedState = states.find(
-      (state) => state.isoCode === stateCode
-    );
+  //   const selectedState = states.find(
+  //     (state) => state.isoCode === stateCode
+  //   );
 
-    setValue("state", selectedState.name);
+  //   setValue("state", selectedState.name);
 
-    setCities(City.getCitiesOfState("IN", stateCode));
+  //   setCities(City.getCitiesOfState("IN", stateCode));
 
-    setValue("city", "");
-  };
+  //   setValue("city", "");
+  // };
 
   const onSubmit = async (data) => {
     const formData = new FormData();
@@ -256,8 +256,6 @@ const Register = () => {
     formData.append("email", data.email);
     formData.append("phoneNumber", data.phoneNumber);
     formData.append("password", data.password);
-    formData.append("state", data.state);
-    formData.append("city", data.city);
 
     if (data.profilePhoto?.[0]) {
       formData.append("profilePhoto", data.profilePhoto[0]);
