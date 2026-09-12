@@ -56,56 +56,79 @@ export const register = asyncHandler(async (req, res) => {
 
   const verificationUrl = `${process.env.BASE_URL}/users/verify-email/${verificationToken}`;
 
-  await transporter.sendMail({
+  console.log("3. About to send email...");
+console.log("EMAIL_USER exists:", !!process.env.EMAIL_USER);
+console.log("EMAIL_PASS exists:", !!process.env.EMAIL_PASS);
+console.log("BASE_URL:", process.env.BASE_URL);
+
+try {
+  const mailResult = await transporter.sendMail({
     from: process.env.EMAIL_USER,
     to: user.email,
     subject: "Verify your email",
     html: `
-       <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
-    <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-      
-      <!-- Header -->
-      <div style="background: #4f46e5; color: #ffffff; padding: 20px; text-align: center;">
-        <img src="https://raw.githubusercontent.com/anujnegi09/Fixora/main/frontend/src/assets/Logo.png" alt="Fixora" style="height: 50px;  width: 50px; border-radius: 50%;">
-        <h2 style="margin: 0;">Fixora</h2>
-      </div>
-
-      <!-- Body -->
-      <div style="padding: 30px; color: #333;">
-        <h2 style="margin-top: 0;">Verify Your Email</h2>
-        <p>Hi ${user.fullName || "User"},</p>
-        
-        <p>Thank you for signing up on <strong>Fixora</strong>. Please verify your email address to get started.</p>
-
-        <div style="text-align: center; margin: 30px 0;">
-          <a href="${verificationUrl}" 
-             style="background: #4f46e5; color: #ffffff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-            Verify Email
-          </a>
-        </div>
-
-        <p>If the button above doesn’t work, copy and paste the link below into your browser:</p>
-        <p style="word-break: break-all; color: #4f46e5;">${verificationUrl}</p>
-
-        <p style="margin-top: 20px;">This link will expire in 24 hours.</p>
-
-        <p>If you did not create this account, please ignore this email.</p>
-
-        <p>Best regards,<br><strong>Fixora Team</strong></p>
-      </div>
-
-      <!-- Footer -->
-      <div style="background: #f9f9f9; text-align: center; padding: 15px; font-size: 12px; color: #777;">
-        © ${new Date().getFullYear()} Fixora. All rights reserved.
-      </div>
-      
-    </div>
-  </div>
+      <h2>Verify Your Email</h2>
+      <p>Hi ${user.fullName},</p>
+      <p>Please verify your email:</p>
+      <a href="${verificationUrl}">Verify Email</a>
     `,
   });
 
-  console.log("3. Verification email sent"); 
-  
+  console.log("4. Email sent:", mailResult.messageId);
+} catch (error) {
+  console.error("❌ SEND MAIL ERROR:", error);
+  throw error;
+}
+  // await transporter.sendMail({
+  //   from: process.env.EMAIL_USER,
+  //   to: user.email,
+  //   subject: "Verify your email",
+  //   html: `
+  //      <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+  //   <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+      
+  //     <!-- Header -->
+  //     <div style="background: #4f46e5; color: #ffffff; padding: 20px; text-align: center;">
+  //       <img src="https://raw.githubusercontent.com/anujnegi09/Fixora/main/frontend/src/assets/Logo.png" alt="Fixora" style="height: 50px;  width: 50px; border-radius: 50%;">
+  //       <h2 style="margin: 0;">Fixora</h2>
+  //     </div>
+
+  //     <!-- Body -->
+  //     <div style="padding: 30px; color: #333;">
+  //       <h2 style="margin-top: 0;">Verify Your Email</h2>
+  //       <p>Hi ${user.fullName || "User"},</p>
+        
+  //       <p>Thank you for signing up on <strong>Fixora</strong>. Please verify your email address to get started.</p>
+
+  //       <div style="text-align: center; margin: 30px 0;">
+  //         <a href="${verificationUrl}" 
+  //            style="background: #4f46e5; color: #ffffff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+  //           Verify Email
+  //         </a>
+  //       </div>
+
+  //       <p>If the button above doesn’t work, copy and paste the link below into your browser:</p>
+  //       <p style="word-break: break-all; color: #4f46e5;">${verificationUrl}</p>
+
+  //       <p style="margin-top: 20px;">This link will expire in 24 hours.</p>
+
+  //       <p>If you did not create this account, please ignore this email.</p>
+
+  //       <p>Best regards,<br><strong>Fixora Team</strong></p>
+  //     </div>
+
+  //     <!-- Footer -->
+  //     <div style="background: #f9f9f9; text-align: center; padding: 15px; font-size: 12px; color: #777;">
+  //       © ${new Date().getFullYear()} Fixora. All rights reserved.
+  //     </div>
+      
+  //   </div>
+  // </div>
+  //   `,
+  // });
+
+  // console.log("3. Verification email sent"); 
+
   return res.status(201).json(
     new apiResponse(
       201,
