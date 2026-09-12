@@ -38,6 +38,8 @@ export const register = asyncHandler(async (req, res) => {
   const verificationToken = generateToken();
   const verificationTokenExpiry = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
 
+  console.log("1. Creating user...");
+
 
   const user = await User.create({
     phoneNumber,
@@ -49,6 +51,8 @@ export const register = asyncHandler(async (req, res) => {
     verificationToken,
     verificationTokenExpiry,
   });
+
+  console.log("2. User created");
 
   const verificationUrl = `${process.env.BASE_URL}/users/verify-email/${verificationToken}`;
 
@@ -100,6 +104,8 @@ export const register = asyncHandler(async (req, res) => {
     `,
   });
 
+  console.log("3. Verification email sent"); 
+  
   return res.status(201).json(
     new apiResponse(
       201,
