@@ -205,7 +205,7 @@ import authBg from "../../assets/background-image.png";
 import { register as registerUser } from "../../features/auth/authThunks";
 import { selectLoading } from "../../features/auth/authSelectors";
 import { loginWithGoogle } from "../../api/auth.api";
-import { State, City } from "country-state-city";
+// import { State, City } from "country-state-city";
 
 import Button from "../../components/common/Button.jsx";
 import Input from "../../components/common/Input.jsx";
@@ -257,9 +257,9 @@ const Register = () => {
     formData.append("phoneNumber", data.phoneNumber);
     formData.append("password", data.password);
 
-    if (data.profilePhoto?.[0]) {
-      formData.append("profilePhoto", data.profilePhoto[0]);
-    }
+    // if (data.profilePhoto?.[0]) {
+    //   formData.append("profilePhoto", data.profilePhoto[0]);
+    // }
 
     const result = await dispatch(registerUser(formData));
 
