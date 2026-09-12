@@ -13,10 +13,19 @@ export const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
+// transporter.verify((error, success) => {
+//   if (error) {
+//     logger.error("Transporter Error:", error);
+//   } else {
+//     logger.info("Server is ready to send emails");
+//   }
+// });
 transporter.verify((error, success) => {
   if (error) {
-    logger.error("Transporter Error:", error);
+    console.error("❌ TRANSPORTER VERIFY ERROR:");
+    console.error(error);
   } else {
-    logger.info("Server is ready to send emails");
+    console.log("✅ SMTP SERVER READY");
+    console.log("VERIFY SUCCESS:", success);
   }
 });
