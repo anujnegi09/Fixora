@@ -12,23 +12,55 @@ import {
 
 import { getProfile } from "../user/userThunks";
 
+// export const register = createAsyncThunk(
+//   "auth/register",
+//   async (formData, { rejectWithValue }) => {
+//     try {
+//       const response = await registerUser(formData);
+//       showSuccessToast(response.message || "Registration successful");
+//       return response;
+//     } catch (error) {
+//       console.log("REGISTER ERROR:", error);
+//       console.log("RESPONSE:", error?.response);
+//       console.log("DATA:", error?.response?.data);
+//       const message = error.response?.data?.message || "Registration failed";
+//       showErrorToast(message);
+//       return rejectWithValue(message);
+//     }
+//   },
+// );
 export const register = createAsyncThunk(
   "auth/register",
   async (formData, { rejectWithValue }) => {
+    console.log("🔥 REGISTER THUNK STARTED");
+    console.log("FORM DATA:", formData);
+
     try {
+      console.log("🔥 CALLING registerUser...");
+
       const response = await registerUser(formData);
+
+      console.log("🔥 REGISTER USER RESPONSE:", response);
+
       showSuccessToast(response.message || "Registration successful");
+
       return response;
     } catch (error) {
+      console.log("🔥 REGISTER CATCH BLOCK");
       console.log("REGISTER ERROR:", error);
       console.log("RESPONSE:", error?.response);
       console.log("DATA:", error?.response?.data);
-      const message = error.response?.data?.message || "Registration failed";
+
+      const message =
+        error?.response?.data?.message || "Registration failed";
+
       showErrorToast(message);
+
       return rejectWithValue(message);
     }
-  },
+  }
 );
+
 
 export const login = createAsyncThunk(
   "auth/login",
