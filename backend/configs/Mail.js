@@ -1,5 +1,8 @@
 import dotenv from "dotenv"
+console.log("📧 mail.js FILE LOADED");
 import nodemailer from "nodemailer";
+console.log("📧 Creating transporter...");
+
 import  logger  from "./Logger.js";
 
 dotenv.config();
@@ -13,6 +16,7 @@ export const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
+console.log("📧 Transporter created");
 // transporter.verify((error, success) => {
 //   if (error) {
 //     logger.error("Transporter Error:", error);
