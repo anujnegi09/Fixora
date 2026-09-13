@@ -15,15 +15,15 @@ import crypto from "crypto";
 export const register = asyncHandler(async (req, res) => {
   const { phoneNumber, fullName, email, userName, password } = req.body;
 
-  if (!phoneNumber || !fullName || !email || !userName || !password ) {
+  if (!phoneNumber || !fullName || !email || !userName || !password) {
     throw new apiError(400, "All fields are required");
   }
   if (!email.includes("@")) {
-  throw new apiError(400, "Invalid email format");
+    throw new apiError(400, "Invalid email format");
   }
-  
+
   const existingUser = await User.findOne({
-    $or: [{ email }, { userName : userName.toLowerCase() }],
+    $or: [{ email }, { userName: userName.toLowerCase() }],
   });
 
   if (existingUser) {
@@ -40,14 +40,13 @@ export const register = asyncHandler(async (req, res) => {
 
   console.log("1. Creating user...");
 
-
   const user = await User.create({
     phoneNumber,
     fullName,
     email,
-    userName : userName.toLowerCase(),
+    userName: userName.toLowerCase(),
     password: hashedPassword,
-    authProvider : "local",
+    authProvider: "local",
     verificationToken,
     verificationTokenExpiry,
   });
@@ -57,28 +56,31 @@ export const register = asyncHandler(async (req, res) => {
   const verificationUrl = `${process.env.BASE_URL}/users/verify-email/${verificationToken}`;
 
   console.log("3. About to send email...");
-console.log("EMAIL_USER exists:", !!process.env.EMAIL_USER);
-console.log("EMAIL_PASS exists:", !!process.env.EMAIL_PASS);
-console.log("BASE_URL:", process.env.BASE_URL);
+  console.log("EMAIL_USER exists:", !!process.env.EMAIL_USER);
+  console.log("EMAIL_PASS exists:", !!process.env.EMAIL_PASS);
+  console.log("BASE_URL:", process.env.BASE_URL);
 
-try {
-  const mailResult = await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: user.email,
-    subject: "Verify your email",
-    html: `
-      <h2>Verify Your Email</h2>
-      <p>Hi ${user.fullName},</p>
-      <p>Please verify your email:</p>
-      <a href="${verificationUrl}">Verify Email</a>
+  try {
+    const info = await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: "Verify your email",
+      html: `
+      <h2>Verify your email</h2>
+      <p>Please click the link below to verify your email:</p>
+      <a href="${verificationUrl}">
+        Verify Email
+      </a>
     `,
-  });
+    });
 
-  console.log("4. Email sent:", mailResult.messageId);
-} catch (error) {
-  console.error("❌ SEND MAIL ERROR:", error);
-  throw error;
-}
+    console.log("4. EMAIL SENT SUCCESSFULLY");
+    console.log("Message ID:", info.messageId);
+  } catch (error) {
+    console.error("❌ SEND MAIL ERROR:");
+    console.error(error);
+    throw error;
+  }
   // await transporter.sendMail({
   //   from: process.env.EMAIL_USER,
   //   to: user.email,
@@ -86,7 +88,7 @@ try {
   //   html: `
   //      <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
   //   <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-      
+
   //     <!-- Header -->
   //     <div style="background: #4f46e5; color: #ffffff; padding: 20px; text-align: center;">
   //       <img src="https://raw.githubusercontent.com/anujnegi09/Fixora/main/frontend/src/assets/Logo.png" alt="Fixora" style="height: 50px;  width: 50px; border-radius: 50%;">
@@ -97,11 +99,11 @@ try {
   //     <div style="padding: 30px; color: #333;">
   //       <h2 style="margin-top: 0;">Verify Your Email</h2>
   //       <p>Hi ${user.fullName || "User"},</p>
-        
+
   //       <p>Thank you for signing up on <strong>Fixora</strong>. Please verify your email address to get started.</p>
 
   //       <div style="text-align: center; margin: 30px 0;">
-  //         <a href="${verificationUrl}" 
+  //         <a href="${verificationUrl}"
   //            style="background: #4f46e5; color: #ffffff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
   //           Verify Email
   //         </a>
@@ -121,21 +123,23 @@ try {
   //     <div style="background: #f9f9f9; text-align: center; padding: 15px; font-size: 12px; color: #777;">
   //       © ${new Date().getFullYear()} Fixora. All rights reserved.
   //     </div>
-      
+
   //   </div>
   // </div>
   //   `,
   // });
 
-  // console.log("3. Verification email sent"); 
+  // console.log("3. Verification email sent");
 
-  return res.status(201).json(
-    new apiResponse(
-      201,
-      {},
-      "Account created successfully. Please verify your email."
-    )
-  );
+  return res
+    .status(201)
+    .json(
+      new apiResponse(
+        201,
+        {},
+        "Account created successfully. Please verify your email.",
+      ),
+    );
 });
 
 /**
@@ -153,17 +157,17 @@ export const login = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
   if (!user) throw new apiError(404, "No account found with this email");
 
-   // Prevent google users from local login
+  // Prevent google users from local login
   if (user.authProvider === "google") {
     throw new apiError(
       400,
-      "This account was created with Google. Please continue with Google login."
+      "This account was created with Google. Please continue with Google login.",
     );
   }
 
   if (!user.isVerified) {
-  throw new apiError(403, "Please verify your email before logging in");
-}
+    throw new apiError(403, "Please verify your email before logging in");
+  }
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) throw new apiError(400, "Invalid password");
 
@@ -176,7 +180,9 @@ export const login = asyncHandler(async (req, res) => {
   await user.save({ validateBeforeSave: false });
 
   // Exclude sensitive info
-  const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
+  const loggedInUser = await User.findById(user._id).select(
+    "-password -refreshToken",
+  );
 
   // 🍪 Set cookies
   res.cookie("accessToken", accessToken, {
@@ -196,13 +202,13 @@ export const login = asyncHandler(async (req, res) => {
     new apiResponse(
       200,
       {
-        user: loggedInUser,accessToken
+        user: loggedInUser,
+        accessToken,
       },
-      "Login successful"
-    )
+      "Login successful",
+    ),
   );
 });
-
 
 /**
  * =====================================================
@@ -285,7 +291,6 @@ export const logout = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, {}, "Logged out successfully"));
 });
 
-
 // =============================
 // forget PASSWORD CONTROLLER
 // =============================
@@ -301,29 +306,27 @@ export const forgotPassword = asyncHandler(async (req, res) => {
 
   // Don't reveal whether email exists
   if (!user) {
-    return res.status(200).json(
-      new apiResponse(
-        200,
-        {},
-        "If an account with this email exists, a reset link has been sent."
-      )
-    );
+    return res
+      .status(200)
+      .json(
+        new apiResponse(
+          200,
+          {},
+          "If an account with this email exists, a reset link has been sent.",
+        ),
+      );
   }
 
   // Google users don't have local passwords
   if (user.authProvider === "google") {
-    throw new apiError(
-      400,
-      "This account uses Google Sign-In."
-    );
+    throw new apiError(400, "This account uses Google Sign-In.");
   }
 
   // Generate secure token
   const resetToken = crypto.randomBytes(32).toString("hex");
 
   user.passwordResetToken = resetToken;
-  user.passwordResetTokenExpiry =
-    Date.now() + 15 * 60 * 1000; // 15 minutes
+  user.passwordResetTokenExpiry = Date.now() + 15 * 60 * 1000; // 15 minutes
 
   await user.save({ validateBeforeSave: false });
 
@@ -355,8 +358,8 @@ export const forgotPassword = asyncHandler(async (req, res) => {
       200,
       {},
 
-      "Password reset link sent successfully."
-    )
+      "Password reset link sent successfully.",
+    ),
   );
 });
 
@@ -378,10 +381,7 @@ export const resetPassword = asyncHandler(async (req, res) => {
   }
 
   if (newPassword.length < 8) {
-    throw new apiError(
-      400,
-      "Password must be at least 8 characters long"
-    );
+    throw new apiError(400, "Password must be at least 8 characters long");
   }
 
   // Find user with valid token
@@ -422,25 +422,29 @@ export const resetPassword = asyncHandler(async (req, res) => {
     sameSite: "none",
   });
 
-  return res.status(200).json(
-    new apiResponse(
-      200,
-      {},
-      "Password reset successfully. Please login again."
-    )
-  );
+  return res
+    .status(200)
+    .json(
+      new apiResponse(
+        200,
+        {},
+        "Password reset successfully. Please login again.",
+      ),
+    );
 });
 
 // =============================
 // 🌟 CHECK AUTH CONTROLLER
 // =============================
 export const checkAuth = asyncHandler(async (req, res) => {
-  return res.status(200).json({
-    success: true,
-    user: req.user,
-    profileCompleted: req.user.profileCompleted,
-  },
-  "User authenticated successfully");
+  return res.status(200).json(
+    {
+      success: true,
+      user: req.user,
+      profileCompleted: req.user.profileCompleted,
+    },
+    "User authenticated successfully",
+  );
 });
 
 // ===================================
@@ -485,22 +489,19 @@ export const verifyEmail = asyncHandler(async (req, res) => {
     maxAge: 10 * 24 * 60 * 60 * 1000,
   });
 
-  return res.status(200).json(
-    new apiResponse(
-      200,
-      {},
-      "Email verified and logged in successfully"
-    )
-  );
+  return res
+    .status(200)
+    .json(
+      new apiResponse(200, {}, "Email verified and logged in successfully"),
+    );
 });
 
 /**
  * ==========================================
  * GOOGLE CALLBACK CONTROLLER
  * ==========================================
-**/
+ **/
 export const googleCallback = asyncHandler(async (req, res) => {
-
   const user = req.user;
 
   if (!user) {
@@ -520,7 +521,7 @@ export const googleCallback = asyncHandler(async (req, res) => {
 
   // Get Safe User
   const safeUser = await User.findById(user._id).select(
-    "-password -refreshToken"
+    "-password -refreshToken",
   );
 
   // Cookie Options
@@ -534,7 +535,5 @@ export const googleCallback = asyncHandler(async (req, res) => {
   res.cookie("accessToken", accessToken, cookieOptions);
   res.cookie("refreshToken", refreshToken, cookieOptions);
 
-  return res.redirect(
-    `${process.env.FRONTEND_URL}/auth/google/success`
-);
+  return res.redirect(`${process.env.FRONTEND_URL}/auth/google/success`);
 });
