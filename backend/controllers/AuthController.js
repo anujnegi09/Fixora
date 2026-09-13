@@ -61,18 +61,27 @@ export const register = asyncHandler(async (req, res) => {
   console.log("BASE_URL:", process.env.BASE_URL);
 
   try {
-    const info = await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: user.email,
-      subject: "Verify your email",
-      html: `
+    const info = await Promise.race([
+  transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: user.email,
+    subject: "Verify your email",
+    html: `
       <h2>Verify your email</h2>
       <p>Please click the link below to verify your email:</p>
       <a href="${verificationUrl}">
         Verify Email
       </a>
     `,
-    });
+  }),
+
+  new Promise((_, reject) =>
+    setTimeout(
+      () => reject(new Error("Email sending timed out after 15 seconds")),
+      15000
+    )
+  ),
+]);
 
     console.log("4. EMAIL SENT SUCCESSFULLY");
     console.log("Message ID:", info.messageId);
