@@ -2069,3 +2069,35 @@
 2026-09-08T15:46:42.858Z [INFO] ✅ Redis connected successfully.
 2026-09-08T15:46:42.871Z [INFO] 🚀 Server running on port 5000
 2026-09-08T15:46:43.922Z [INFO] Server is ready to send emails
+2026-09-14T14:29:48.977Z [INFO] database connected
+2026-09-14T14:29:49.125Z [INFO] 🔗 Connecting to Redis...
+2026-09-14T14:29:49.240Z [INFO] ✅ Redis connected successfully.
+2026-09-14T14:29:49.247Z [INFO] 🚀 Server running on port 5000
+2026-09-14T14:30:42.362Z [INFO] database connected
+2026-09-14T14:30:42.557Z [INFO] 🔗 Connecting to Redis...
+2026-09-14T14:30:42.670Z [INFO] ✅ Redis connected successfully.
+2026-09-14T14:30:42.674Z [INFO] 🚀 Server running on port 5000
+2026-09-14T14:31:38.104Z [INFO] database connected
+2026-09-14T14:31:38.763Z [INFO] 🔗 Connecting to Redis...
+2026-09-14T14:31:38.900Z [INFO] ✅ Redis connected successfully.
+2026-09-14T14:31:38.904Z [INFO] 🚀 Server running on port 5000
+2026-09-14T14:32:39.261Z [INFO] database connected
+2026-09-14T14:32:39.441Z [INFO] 🔗 Connecting to Redis...
+2026-09-14T14:32:39.557Z [INFO] ✅ Redis connected successfully.
+2026-09-14T14:32:39.559Z [INFO] 🚀 Server running on port 5000
+2026-09-14T14:37:28.137Z [INFO] database connected
+2026-09-14T14:37:28.595Z [INFO] 🔗 Connecting to Redis...
+2026-09-14T14:37:28.749Z [INFO] ✅ Redis connected successfully.
+2026-09-14T14:37:28.752Z [INFO] 🚀 Server running on port 5000
+2026-09-14T14:37:41.920Z [INFO] database connected
+2026-09-14T14:37:42.177Z [INFO] 🔗 Connecting to Redis...
+2026-09-14T14:37:43.120Z [INFO] ✅ Redis connected successfully.
+2026-09-14T14:37:43.122Z [INFO] 🚀 Server running on port 5000
+2026-09-14T14:37:48.250Z [INFO] database connected
+2026-09-14T14:37:48.720Z [INFO] 🔗 Connecting to Redis...
+2026-09-14T14:37:49.131Z [INFO] ✅ Redis connected successfully.
+2026-09-14T14:37:49.133Z [INFO] 🚀 Server running on port 5000
+2026-09-14T14:37:51.939Z [INFO] database connected
+2026-09-14T14:37:52.188Z [INFO] 🔗 Connecting to Redis...
+2026-09-14T14:37:52.569Z [INFO] ✅ Redis connected successfully.
+2026-09-14T14:37:52.573Z [INFO] 🚀 Server running on port 5000
