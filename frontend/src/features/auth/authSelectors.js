@@ -18,3 +18,5 @@ export const selectResetPasswordLoading = (state) =>
 
 // Error State
 export const selectError = (state) => state.auth.error;
+
+export const selectAuthChecked = (state) => state.auth.authChecked;

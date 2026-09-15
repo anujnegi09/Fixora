@@ -12,7 +12,8 @@ import {
 const initialState = {
   user: null,
   isAuthenticated: false,
-  loading: true,
+  loading: false,
+  authChecked: false,
   error: null,
   forgotPasswordLoading: false,
   resetPasswordLoading: false,
@@ -70,13 +71,15 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload.user;
         state.isAuthenticated = true;
+        state.authChecked = true;
         state.profileCompleted = action.payload.profileCompleted;
       })
       .addCase(checkAuthentication.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
         state.user = null;
         state.isAuthenticated = false;
+        state.authChecked = true;
+        state.error = action.payload;
       })
 
       //logout
