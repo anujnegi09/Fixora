@@ -9,7 +9,8 @@ import {
   verifyEmail,
   forgotPassword,
   resetPassword,
-  googleCallback
+  googleCallback,
+  resendVerification
 } from "../controllers/AuthController.js";
 import { verifyJWT } from "../middlewares/authMiddleware.js";
 import {upload} from "../middlewares/multerMiddleware.js";
@@ -39,6 +40,8 @@ router.post("/forgot-password", forgotPassword);
 
 // Reset password using token from email
 router.post("/reset-password/:token", resetPassword);
+
+router.post("/resend-verification", resendVerification);
 
 
 /**

@@ -37,8 +37,6 @@ export const register = asyncHandler(async (req, res) => {
   const verificationToken = generateToken();
   const verificationTokenExpiry = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
 
-  console.log("1. Creating user...");
-
   const user = await User.create({
     phoneNumber,
     fullName,
@@ -49,8 +47,6 @@ export const register = asyncHandler(async (req, res) => {
     verificationToken,
     verificationTokenExpiry,
   });
-
-  console.log("2. User created");
 
   const verificationUrl = `${process.env.BASE_URL}/users/verify-email/${verificationToken}`;
 
@@ -493,6 +489,81 @@ export const verifyEmail = asyncHandler(async (req, res) => {
     .json(
       new apiResponse(200, {}, "Email verified and logged in successfully"),
     );
+});
+
+// ===================================
+//   AGAIN EMAIL VERIFICATION CONTROLLER
+// ===================================
+export const resendVerification = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    throw new apiError(400, "Email is required");
+  }
+
+  const user = await User.findOne({ email: email.toLowerCase() });
+
+  // Don't reveal whether the email exists
+  if (!user) {
+    return res.status(200).json(
+      new apiResponse(
+        200,
+        {},
+        "If an account exists with this email, a verification email has been sent."
+      )
+    );
+  }
+
+  if (user.isVerified) {
+    throw new apiError(400, "Email is already verified");
+  }
+
+  // Generate a NEW token
+  const verificationToken = generateToken();
+
+  // New token valid for 24 hours
+  const verificationTokenExpiry =
+    Date.now() + 24 * 60 * 60 * 1000;
+
+  // Update user
+  user.verificationToken = verificationToken;
+  user.verificationTokenExpiry = verificationTokenExpiry;
+
+  await user.save();
+
+  // Create new verification URL
+  const verificationUrl =
+    `${process.env.BASE_URL}/users/verify-email/${verificationToken}`;
+
+  // Send email using Resend
+  const { data, error } = await resend.emails.send({
+    from: process.env.EMAIL_FROM,
+    to: user.email,
+    subject: "Verify your Fixora account",
+    html: `
+      <!-- YOUR EXISTING EMAIL HTML HERE -->
+      
+      <a href="${verificationUrl}">
+        Verify Email
+      </a>
+    `,
+  });
+
+  if (error) {
+    console.error("❌ RESEND ERROR:", error);
+    throw new apiError(500, "Unable to send verification email");
+  }
+
+  console.log("✅ Verification email resent");
+  console.log("Resend ID:", data?.id);
+
+  return res.status(200).json(
+    new apiResponse(
+      200,
+      {},
+      "Verification email sent successfully."
+    )
+  );
 });
 
 /**
