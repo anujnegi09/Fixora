@@ -33,9 +33,13 @@ export const register = asyncHandler(async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
-  // Email verification token
-  const verificationToken = generateToken();
-  const verificationTokenExpiry = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+  // Generate 6-digit OTP
+  const verificationOtp = Math.floor(
+    100000 + Math.random() * 900000,
+  ).toString();
+
+  // OTP valid for 10 minutes
+  const verificationOtpExpiry = new Date(Date.now() + 10 * 60 * 1000);
 
   const user = await User.create({
     phoneNumber,
@@ -44,21 +48,17 @@ export const register = asyncHandler(async (req, res) => {
     userName: userName.toLowerCase(),
     password: hashedPassword,
     authProvider: "local",
-    verificationToken,
-    verificationTokenExpiry,
+    verificationOtp,
+    verificationOtpExpiry,
   });
-
-  const verificationUrl = `${process.env.BASE_URL}/users/verify-email/${verificationToken}`;
-
   const { data, error } = await resend.emails.send({
     from: process.env.EMAIL_FROM,
     to: user.email,
     subject: "Verify your Fixora account",
     html: `
     <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
-      <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+      <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 10px; overflow: hidden;">
 
-        <!-- Header -->
         <div style="background: #4f46e5; color: #ffffff; padding: 20px; text-align: center;">
           <img
             src="https://raw.githubusercontent.com/anujnegi09/Fixora/main/frontend/src/assets/Logo.png"
@@ -68,7 +68,6 @@ export const register = asyncHandler(async (req, res) => {
           <h2 style="margin: 0;">Fixora</h2>
         </div>
 
-        <!-- Body -->
         <div style="padding: 30px; color: #333;">
           <h2 style="margin-top: 0;">Verify Your Email</h2>
 
@@ -76,29 +75,26 @@ export const register = asyncHandler(async (req, res) => {
 
           <p>
             Thank you for signing up on <strong>Fixora</strong>.
-            Please verify your email address to get started.
+            Please use the OTP below to verify your email address.
           </p>
 
           <div style="text-align: center; margin: 30px 0;">
-            <a
-              href="${verificationUrl}"
-              style="background: #4f46e5; color: #ffffff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;"
-            >
-              Verify Email
-            </a>
+            <div style="
+              display: inline-block;
+              background: #f3f4f6;
+              padding: 15px 30px;
+              border-radius: 8px;
+              font-size: 32px;
+              font-weight: bold;
+              letter-spacing: 8px;
+              color: #4f46e5;
+            ">
+              ${verificationOtp}
+            </div>
           </div>
 
           <p>
-            If the button above doesn't work, copy and paste the link below
-            into your browser:
-          </p>
-
-          <p style="word-break: break-all; color: #4f46e5;">
-            ${verificationUrl}
-          </p>
-
-          <p style="margin-top: 20px;">
-            This link will expire in 24 hours.
+            This OTP will expire in <strong>10 minutes</strong>.
           </p>
 
           <p>
@@ -111,8 +107,13 @@ export const register = asyncHandler(async (req, res) => {
           </p>
         </div>
 
-        <!-- Footer -->
-        <div style="background: #f9f9f9; text-align: center; padding: 15px; font-size: 12px; color: #777;">
+        <div style="
+          background: #f9f9f9;
+          text-align: center;
+          padding: 15px;
+          font-size: 12px;
+          color: #777;
+        ">
           © ${new Date().getFullYear()} Fixora. All rights reserved.
         </div>
 
@@ -120,7 +121,6 @@ export const register = asyncHandler(async (req, res) => {
     </div>
   `,
   });
-
   if (error) {
     console.error("❌ RESEND ERROR:", error);
     throw new apiError(500, "Unable to send verification email");
@@ -446,30 +446,49 @@ export const checkAuth = asyncHandler(async (req, res) => {
 //   EMAIL VERIFICATION CONTROLLER
 // ===================================
 export const verifyEmail = asyncHandler(async (req, res) => {
-  const { token } = req.params;
+  const { email, otp } = req.body;
+
+  if (!email || !otp) {
+    throw new apiError(400, "Email and OTP are required");
+  }
 
   const user = await User.findOne({
-    verificationToken: token,
-    verificationTokenExpiry: { $gt: Date.now() },
+    email: email.toLowerCase(),
   });
 
   if (!user) {
-    throw new apiError(400, "Invalid or expired token");
+    throw new apiError(404, "User not found");
   }
 
-  // Mark user verified
+  if (user.isVerified) {
+    throw new apiError(400, "Email is already verified");
+  }
+
+  if (!user.verificationOtp) {
+    throw new apiError(400, "No verification OTP found");
+  }
+
+  if (!user.verificationOtpExpiry || user.verificationOtpExpiry < new Date()) {
+    throw new apiError(400, "OTP has expired");
+  }
+
+  if (user.verificationOtp !== otp) {
+    throw new apiError(400, "Invalid OTP");
+  }
+
+  // Mark email as verified
   user.isVerified = true;
-  user.verificationToken = undefined;
-  user.verificationTokenExpiry = undefined;
+  user.verificationOtp = undefined;
+  user.verificationOtpExpiry = undefined;
 
   // Generate tokens
   const accessToken = user.generateAccessToken();
   const refreshToken = user.generateRefreshToken();
 
   user.refreshToken = refreshToken;
+
   await user.save({ validateBeforeSave: false });
 
-  // Set cookies
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -501,69 +520,62 @@ export const resendVerification = asyncHandler(async (req, res) => {
     throw new apiError(400, "Email is required");
   }
 
-  const user = await User.findOne({ email: email.toLowerCase() });
+  const user = await User.findOne({
+    email: email.toLowerCase(),
+  });
 
-  // Don't reveal whether the email exists
   if (!user) {
-    return res.status(200).json(
-      new apiResponse(
-        200,
-        {},
-        "If an account exists with this email, a verification email has been sent."
-      )
-    );
+    return res
+      .status(200)
+      .json(
+        new apiResponse(
+          200,
+          {},
+          "If an account exists with this email, an OTP has been sent.",
+        ),
+      );
   }
 
   if (user.isVerified) {
     throw new apiError(400, "Email is already verified");
   }
 
-  // Generate a NEW token
-  const verificationToken = generateToken();
+  // Generate new OTP
+  const verificationOtp = Math.floor(
+    100000 + Math.random() * 900000,
+  ).toString();
 
-  // New token valid for 24 hours
-  const verificationTokenExpiry =
-    Date.now() + 24 * 60 * 60 * 1000;
+  const verificationOtpExpiry = new Date(Date.now() + 10 * 60 * 1000);
 
-  // Update user
-  user.verificationToken = verificationToken;
-  user.verificationTokenExpiry = verificationTokenExpiry;
+  // This automatically invalidates the old OTP
+  user.verificationOtp = verificationOtp;
+  user.verificationOtpExpiry = verificationOtpExpiry;
 
   await user.save();
 
-  // Create new verification URL
-  const verificationUrl =
-    `${process.env.BASE_URL}/users/verify-email/${verificationToken}`;
-
-  // Send email using Resend
   const { data, error } = await resend.emails.send({
     from: process.env.EMAIL_FROM,
     to: user.email,
-    subject: "Verify your Fixora account",
+    subject: "Your Fixora verification OTP",
     html: `
-      <!-- YOUR EXISTING EMAIL HTML HERE -->
-      
-      <a href="${verificationUrl}">
-        Verify Email
-      </a>
+      <h2>Verify your Fixora account</h2>
+
+      <p>Your new verification OTP is:</p>
+
+      <h1>${verificationOtp}</h1>
+
+      <p>This OTP will expire in 10 minutes.</p>
     `,
   });
 
   if (error) {
     console.error("❌ RESEND ERROR:", error);
-    throw new apiError(500, "Unable to send verification email");
+    throw new apiError(500, "Unable to send verification OTP");
   }
 
-  console.log("✅ Verification email resent");
-  console.log("Resend ID:", data?.id);
-
-  return res.status(200).json(
-    new apiResponse(
-      200,
-      {},
-      "Verification email sent successfully."
-    )
-  );
+  return res
+    .status(200)
+    .json(new apiResponse(200, {}, "Verification OTP sent successfully."));
 });
 
 /**

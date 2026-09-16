@@ -93,10 +93,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    verificationToken: {
+    verificationOtp: {
       type: String,
     },
-    verificationTokenExpiry: {
+    verificationOtpExpiry: {
       type: Date,
     },
     passwordResetToken: {
