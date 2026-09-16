@@ -139,14 +139,7 @@ const AppRoutes = () => {
         }
       />
 
-      <Route
-        path="/verify-email/:token"
-        element={
-          <GuestRoute>
-            <VerifyEmail />
-          </GuestRoute>
-        }
-      />
+     <Route path="/verify-email" element={<VerifyEmail />} />
 
       <Route path="/auth/google/success" element={<GoogleSuccess />} />
 

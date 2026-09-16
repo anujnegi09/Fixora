@@ -8,6 +8,8 @@ import {
   checkAuth,
   resetPassword as ResetPassword,
   forgotPassword as ForgotPassword,
+  resendVerification,
+  verifyEmail as VerifyEmail,
 } from "../../api/auth.api.js";
 
 import { getProfile } from "../user/userThunks";
@@ -34,16 +36,14 @@ export const register = createAsyncThunk(
       console.log("RESPONSE:", error?.response);
       console.log("DATA:", error?.response?.data);
 
-      const message =
-        error?.response?.data?.message || "Registration failed";
+      const message = error?.response?.data?.message || "Registration failed";
 
       showErrorToast(message);
 
       return rejectWithValue(message);
     }
-  }
+  },
 );
-
 
 export const login = createAsyncThunk(
   "auth/login",
@@ -118,6 +118,48 @@ export const resetPassword = createAsyncThunk(
     } catch (error) {
       const message = error.response?.data?.message || "Password reset failed";
       showErrorToast(message);
+      return rejectWithValue(message);
+    }
+  },
+);
+
+export const verifyEmail = createAsyncThunk(
+  "auth/verifyEmail",
+  async ({ email, otp }, { rejectWithValue }) => {
+    try {
+      const response = await VerifyEmail(email, otp);
+
+      showSuccessToast(response.message || "Email verified successfully");
+
+      return response;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Email verification failed";
+
+      showErrorToast(message);
+
+      return rejectWithValue(message);
+    }
+  },
+);
+
+export const resendVerificationEmail = createAsyncThunk(
+  "auth/resendVerification",
+  async (email, { rejectWithValue }) => {
+    try {
+      const response = await resendVerification(email);
+
+      showSuccessToast(
+        response.message || "Verification email sent successfully",
+      );
+
+      return response;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Unable to resend verification email";
+
+      showErrorToast(message);
+
       return rejectWithValue(message);
     }
   },

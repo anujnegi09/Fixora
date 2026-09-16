@@ -7,6 +7,8 @@ import {
   checkAuthentication,
   forgotPassword,
   resetPassword,
+  resendVerificationEmail,
+  verifyEmail,
 } from "./authThunks.js";
 
 const initialState = {
@@ -15,8 +17,10 @@ const initialState = {
   loading: false,
   authChecked: false,
   error: null,
+  resendVerificationLoading: false,
   forgotPasswordLoading: false,
   resetPasswordLoading: false,
+  verifyEmailLoading: false,
 };
 
 const authSlice = createSlice({
@@ -120,6 +124,38 @@ const authSlice = createSlice({
       })
       .addCase(resetPassword.rejected, (state, action) => {
         state.resetPasswordLoading = false;
+        state.error = action.payload;
+      })
+
+      // Verify Email
+      .addCase(verifyEmail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(verifyEmail.fulfilled, (state) => {
+        state.loading = false;
+        state.isAuthenticated = true;
+      })
+
+      .addCase(verifyEmail.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(resendVerificationEmail.pending, (state) => {
+        state.verifyEmailLoading = true;
+        state.resendVerificationLoading = true;
+      })
+
+      .addCase(resendVerificationEmail.fulfilled, (state) => {
+        state.verifyEmailLoading = false;
+        state.resendVerificationLoading = false;
+      })
+
+      .addCase(resendVerificationEmail.rejected, (state, action) => {
+        state.verifyEmailLoading = true;
+        state.resendVerificationLoading = false;
         state.error = action.payload;
       });
   },
