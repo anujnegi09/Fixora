@@ -33,7 +33,7 @@ router.post("/login", login);
 router.post("/refresh-token", refreshAccessToken);
 
 // Email verification
-router.get("/verify-email/", verifyEmail);
+router.get("/verify-email", verifyEmail);
 
 // Send password reset email
 router.post("/forgot-password", forgotPassword);
