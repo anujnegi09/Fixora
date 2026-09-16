@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import {
   verifyEmail,
   resendVerificationEmail,
-} from "../store/auth/authThunks";
+} from "../../features/auth/authThunks";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
