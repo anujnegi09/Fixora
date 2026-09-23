@@ -18,7 +18,7 @@
     "clsx": "^2.1.1",
     "country-state-city": "^3.2.1",
     "date-fns": "^4.4.0",
-    "gsap": "^3.13.0",
+    "gsap": "^3.15.0",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "lucide-react": "^1.41.0",

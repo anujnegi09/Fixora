@@ -15,6 +15,11 @@ import p4Image from "../../assets/ps4.png";
 import p5Image from "../../assets/ps5.png";
 import p6Image from "../../assets/ps6.png";
 
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
+
 import {
   MapPin,
   Star,
@@ -113,37 +118,192 @@ const Home = () => {
 
   const nextPopularService = () => {
     setPopularStart((prev) =>
-      prev + 1 >= popularServices.length ? 0 : prev + 1
+      prev + 1 >= popularServices.length ? 0 : prev + 1,
     );
   };
+  const heroRef = useRef(null);
+
+  // for hero section
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        defaults: {
+          ease: "power3.out",
+        },
+      });
+
+      tl.from(".hero-tagline", {
+        y: 30,
+        opacity: 0,
+        duration: 0.7,
+      })
+        .from(
+          ".hero-title",
+          {
+            x: -50,
+            opacity: 0,
+            duration: 0.9,
+          },
+          "-=0.60",
+        )
+        .from(
+          ".hero-description",
+          {
+            x: -30,
+            opacity: 0,
+            duration: 0.7,
+          },
+          "-=0.50",
+        )
+        .from(
+          ".hero-buttons",
+          {
+            x: -25,
+            opacity: 0,
+            duration: 0.6,
+          },
+          "-=0.40",
+        )
+        .from(
+          ".hero-features",
+          {
+            y: 20,
+            opacity: 0,
+            duration: 0.5,
+          },
+          "-=0.6",
+        )
+        .from(
+          ".hero-image",
+          {
+            x: 80,
+            opacity: 0,
+            scale: 0.95,
+            duration: 1,
+          },
+          0.3,
+        )
+        .from(
+          ".hero-small-image",
+          {
+            y: 40,
+            opacity: 0,
+            scale: 0.95,
+            duration: 0.7,
+            stagger: 0.15,
+          },
+          0.5,
+        );
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // for feature section
+  const trendingTitleRef = useRef(null);
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".trending-title", {
+        x: -50,
+        opacity: 0,
+        duration: 0.7,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: trendingTitleRef.current,
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      });
+      gsap.from(".trending-card", {
+        y: 40,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.15,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: trendingTitleRef.current,
+          start: "top 75%",
+          toggleActions: "play none none reverse",
+        },
+      });
+    }, trendingTitleRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  //for how works section
+  const howSectionRef = useRef(null);
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".how-title", {
+        y: 50,
+        opacity: 0,
+        duration: 0.7,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: howSectionRef.current,
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      gsap.from(".how-description", {
+        y: 50,
+        opacity: 0,
+        duration: 0.7,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: howSectionRef.current,
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      },0.9,
+    );
+
+      gsap.from(".how-card", {
+        y: 50,
+        opacity: 0,
+        duration: 0.9,
+        stagger: 0.20,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: howSectionRef.current,
+          start: "top 65%",
+          toggleActions: "play none none reverse",
+        },
+      },0.8,);
+    }, howSectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <>
       <main className="pt-20">
-        <section className="min-h-[calc(100vh-80px)] flex items-center px-6 md:px-12 lg:px-20 py-12">
+        <section
+          ref={heroRef}
+          className="min-h-[calc(100vh-80px)] flex items-center px-6 md:px-12 lg:px-20 py-12"
+        >
           <div className="max-w-7xl mx-auto w-full">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               <div className="max-w-xl">
-                <p className="text-[#2563EB] font-semibold text-sm md:text-base mb-4 tracking-wide">
+                <p className="hero-tagline text-[#2563EB] font-semibold text-sm md:text-base mb-4 tracking-wide">
                   LOCAL SERVICES. MADE SIMPLE.
                 </p>
 
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-[1.1]">
+                <h1 className="hero-title text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-[1.1]">
                   Find trusted
-                  <span className="text-[#2563EB]">
-                    {" "}
-                    local professionals{" "}
-                  </span>
+                  <span className="text-[#2563EB]"> local professionals </span>
                   near you.
                 </h1>
 
-                <p className="mt-6 text-slate-600 text-base md:text-lg leading-7 max-w-lg">
-                  Connect with skilled local service providers for your
-                  everyday needs. From repairs to home services, find the right
-                  person for the job.
+                <p className="hero-description mt-6 text-slate-600 text-base md:text-lg leading-7 max-w-lg">
+                  Connect with skilled local service providers for your everyday
+                  needs. From repairs to home services, find the right person
+                  for the job.
                 </p>
 
-                <div className="mt-8 flex flex-wrap gap-4">
+                <div className="hero-buttons mt-8 flex flex-wrap gap-4">
                   <button
                     onClick={() => navigate("/services")}
                     className="bg-[#2563EB] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#1D4ED8] transition-all duration-200 shadow-sm"
@@ -159,19 +319,21 @@ const Home = () => {
                   </button>
                 </div>
 
-                <div className="mt-10 flex flex-wrap gap-6 text-sm text-slate-500">
-                  {["Local Professionals", "Easy Booking", "Nearby Services"].map(
-                    (item) => (
-                      <div key={item} className="flex items-center gap-2">
-                        <span className="w-2 h-2 bg-[#2563EB] rounded-full" />
-                        {item}
-                      </div>
-                    )
-                  )}
+                <div className="hero-features mt-10 flex flex-wrap gap-6 text-sm text-slate-500">
+                  {[
+                    "Local Professionals",
+                    "Easy Booking",
+                    "Nearby Services",
+                  ].map((item) => (
+                    <div key={item} className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-[#2563EB] rounded-full" />
+                      {item}
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="w-full">
+              <div className="hero-image w-full">
                 <div className="grid grid-cols-2 gap-3 h-[500px]">
                   <div className="row-span-2 overflow-hidden rounded-2xl">
                     <img
@@ -199,7 +361,7 @@ const Home = () => {
                 </div>
 
                 <div className="flex gap-3 mt-3">
-                  <div className="w-1/2 h-32 overflow-hidden rounded-2xl">
+                  <div className="hero-small-image w-1/2 h-32 overflow-hidden rounded-2xl">
                     <img
                       src={plumberImage}
                       alt="Local plumber professional"
@@ -207,7 +369,7 @@ const Home = () => {
                     />
                   </div>
 
-                  <div className="w-1/2 h-32 overflow-hidden rounded-2xl">
+                  <div className="hero-small-image w-1/2 h-32 overflow-hidden rounded-2xl">
                     <img
                       src={cleanerImage}
                       alt="Local cleaning professional"
@@ -219,16 +381,19 @@ const Home = () => {
             </div>
           </div>
         </section>
-                  {/* What’s trending section */}
-        <section className="px-6 md:px-12 lg:px-20 py-16 my-20 ">
+        {/* What’s trending section */}
+        <section
+          ref={trendingTitleRef}
+          className="px-6 md:px-12 lg:px-20 py-16 my-20 "
+        >
           <div className="max-w-7xl mx-auto">
             <div className="flex items-end justify-between mb-8">
               <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
+                <h2 className="trending-title text-3xl md:text-4xl font-bold text-slate-900">
                   What’s trending
                 </h2>
 
-                <p className="mt-2 text-slate-500 text-base md:text-lg">
+                <p className="trending-title mt-2 text-slate-500 text-base md:text-lg">
                   See what’s in demand and find the right professional.
                 </p>
               </div>
@@ -257,16 +422,16 @@ const Home = () => {
                       onClick={() =>
                         navigate(
                           `/services?category=${encodeURIComponent(
-                            service.name
-                          )}`
+                            service.name,
+                          )}`,
                         )
                       }
-                      className="relative flex-shrink-0 w-full md:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] h-[222px] rounded-xl overflow-hidden cursor-pointer group bg-slate-100"
+                      className="trending-card relative flex-shrink-0 w-full md:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] h-[222px] rounded-xl overflow-hidden cursor-pointer group bg-slate-100"
                     >
                       <img
                         src={service.image}
                         alt={service.name}
-                        className="absolute inset-0 w-full h-full object-contain transition-transform duration-500 group-hover:scale-95"
+                        className=" absolute inset-0 w-full h-full object-contain transition-transform duration-500 group-hover:scale-95"
                       />
                     </div>
                   ))}
@@ -284,19 +449,19 @@ const Home = () => {
             </div>
           </div>
         </section>
-                     {/* how its works */}
-        <section className="bg-white py-20 pb-30 ">
+        {/* how its works */}
+        <section ref={howSectionRef} className="bg-white py-20 pb-30 ">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
-              <span className="inline-flex rounded-full bg-blue-50 px-4 py-1.5 text-sm font-semibold text-blue-600">
+              <span className="how-title inline-flex rounded-full bg-blue-50 px-4 py-1.5 text-sm font-semibold text-blue-600">
                 Simple & Easy
               </span>
 
-              <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+              <h2 className="how-title mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
                 How Fixora Works
               </h2>
 
-              <p className="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
+              <p className="how-description mt-4 text-base leading-7 text-slate-600 sm:text-lg">
                 From finding the right professional to getting the job done,
                 Fixora makes booking local services simple.
               </p>
@@ -307,7 +472,7 @@ const Home = () => {
 
               <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
                 {howItWorks.map((item) => (
-                  <div key={item.step} className="relative text-center">
+                  <div key={item.step} className="how-card relative text-center">
                     <div className="relative z-10 mx-auto flex h-20 w-20 items-center justify-center rounded-2xl border border-slate-200 bg-white text-3xl shadow-sm">
                       {item.icon}
                     </div>
@@ -329,7 +494,7 @@ const Home = () => {
             </div>
           </div>
         </section>
-                        {/* why choose fixora  */}
+        {/* why choose fixora  */}
         <section className="bg-white py-20 pb-50">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
@@ -382,28 +547,6 @@ const Home = () => {
 
 export default Home;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import React, { useState } from "react";
 // import { useSelector } from "react-redux";
 // import Navbar from "../../components/navbar/NavBar.jsx";
@@ -420,8 +563,6 @@ export default Home;
 // import p4Image from "../../assets/p4.png";
 // import p5Image from "../../assets/p5.png";
 // import p6Image from "../../assets/p6.png";
-
-
 
 // import {
 //   MapPin,
