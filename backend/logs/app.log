@@ -2108,3 +2108,11 @@
 2026-09-14T15:30:17.332Z [ERROR] ❌ Redis Error: read ECONNRESET
 2026-09-14T15:30:17.913Z [INFO] 🔗 Connecting to Redis...
 2026-09-14T15:30:18.052Z [INFO] ✅ Redis connected successfully.
+2026-09-23T14:13:08.487Z [INFO] database connected
+2026-09-23T14:13:12.646Z [INFO] 🔗 Connecting to Redis...
+2026-09-23T14:13:12.836Z [INFO] ✅ Redis connected successfully.
+2026-09-23T14:13:12.849Z [INFO] 🚀 Server running on port 5000
+2026-09-23T14:13:47.697Z [INFO] database connected
+2026-09-23T15:14:31.079Z [ERROR] ❌ Redis Error: read ECONNRESET
+2026-09-23T15:14:31.546Z [INFO] 🔗 Connecting to Redis...
+2026-09-23T15:14:32.082Z [INFO] ✅ Redis connected successfully.
