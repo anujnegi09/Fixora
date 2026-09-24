@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import gsap from "gsap";
 
 import {
   FaBars,
@@ -66,6 +67,34 @@ const Navbar = () => {
     navigate("/notifications");
   };
 
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Logo
+      gsap.from(".navbar-logo", {
+        x: -50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      });
+
+      // Navigation
+      gsap.from(".navbar-nav", {
+        y: -20,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      });
+
+      gsap.from(".navbar-button", {
+        y: -20,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
   return (
     <>
       {/* ================= NAVBAR ================= */}
@@ -75,7 +104,10 @@ const Navbar = () => {
           {/* Logo */}
 
           <div className="flex items-center gap-2">
-            <NavLink to="/" className="text-2xl font-bold text-blue-600">
+            <NavLink
+              to="/"
+              className="navbar-logo text-2xl font-bold text-blue-600"
+            >
               <img
                 src={fixoraLogo}
                 alt="Fixora Logo"
@@ -86,7 +118,7 @@ const Navbar = () => {
 
           {/* Navigation */}
 
-          <div className="flex items-center gap-8">
+          <div className="navbar-nav flex items-center gap-8">
             <NavLink
               to="/"
               className={({ isActive }) =>
@@ -103,9 +135,11 @@ const Navbar = () => {
             <NavLink
               to="/services"
               className={({ isActive }) =>
-                isActive
-                  ? "text-blue-600 font-semibold"
-                  : "text-gray-700 hover:text-blue-600 transition"
+                ` rounded-lg px-3 py-2 font-medium transition-all duration-200 ${
+                  isActive
+                    ? "font-semibold text-blue-600"
+                    : "text-slate-600 transition-colors duration-200 hover:text-blue-600"
+                }`
               }
             >
               Services
@@ -114,9 +148,11 @@ const Navbar = () => {
             <NavLink
               to="/become-provider"
               className={({ isActive }) =>
-                isActive
-                  ? "text-blue-600 font-semibold"
-                  : "text-gray-700 hover:text-blue-600 transition"
+                ` rounded-lg px-3 py-2 font-medium transition-all duration-200 ${
+                  isActive
+                    ? "font-semibold text-blue-600"
+                    : "text-slate-600 transition-colors duration-200 hover:text-blue-600"
+                }`
               }
             >
               become a provider
@@ -125,18 +161,13 @@ const Navbar = () => {
 
           {/* Right Section */}
 
-          <div className="flex items-center gap-4">
+          <div className="navbar-button flex items-center gap-4">
             {/* Notification */}
 
             {isAuthenticated && (
               <button
                 type="button"
                 onClick={handleNotificationNavigation}
-                // className={`relative transition ${
-                //   isNotificationsPage
-                //     ? "text-blue-600"
-                //     : "text-gray-700 hover:text-blue-600"
-                // }`}
                 className={`relative flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-200 ${
                   isNotificationsPage
                     ? " text-blue-600"
@@ -163,14 +194,14 @@ const Navbar = () => {
               <>
                 <NavLink
                   to="/login"
-                  className="rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-blue-600"
+                  className=" rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-blue-600"
                 >
                   Login
                 </NavLink>
 
                 <NavLink
                   to="/register"
-                  className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md"
+                  className=" rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md"
                 >
                   Signup
                 </NavLink>
@@ -293,15 +324,6 @@ const Navbar = () => {
           </div>
           <hr className="border-gray-200" />
           <div className="py-2">
-            {/* <NavLink
-              to="/profile"
-              onClick={closeSidebar}
-              className="flex items-center gap-3 px-5 py-2.5 text-gray-700 hover:bg-gray-100 transition"
-            >
-              <FaCog size={17} />
-              <span>Settings</span>
-            </NavLink> */}
-
             <NavLink
               to="/about"
               onClick={closeSidebar}
