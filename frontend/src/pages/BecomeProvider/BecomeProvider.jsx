@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../components/common/Loading.jsx";
+import CreateServiceModal from "../../components/service/CreateServiceModal.jsx";
 import gsap from "gsap";
 
 import {
@@ -21,7 +21,6 @@ import { showErrorToast } from "../../utils/customToast";
 
 const BecomeProvider = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
@@ -36,15 +35,15 @@ const BecomeProvider = () => {
     dispatch(getMyServices());
   }, [dispatch, isAuthenticated]);
 
-  // Handle Create Service click
-  const handleCreateService = (e) => {
+  const [showCreateService, setShowCreateService] = useState(false);
+
+  const handleCreateService = () => {
     if (!isAuthenticated) {
-      e.preventDefault();
-
       showErrorToast("Please login first to create a service.");
-
       return;
     }
+
+    setShowCreateService(true);
   };
 
   useLayoutEffect(() => {
@@ -58,7 +57,7 @@ const BecomeProvider = () => {
       });
 
       gsap.from(".button", {
-        x: 50,
+        y: -20,
         opacity: 0,
         duration: 0.8,
         ease: "power3.out",
@@ -86,14 +85,15 @@ const BecomeProvider = () => {
           </p>
         </div>
 
-        <Link
-          to="/create-service"
+        <button
+          type="button"
           onClick={handleCreateService}
-          className="button inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-700"
+          className=" inline-flex items-center justify-center gap-2 rounded-xl bg-violet-60 px-5 py-3 text-sm 
+  font-semibold text-white shadow-sm transition hover:bg-violet-700 hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2"
         >
           <span className="text-lg leading-none">+</span>
           Create Service
-        </Link>
+        </button>
       </div>
 
       {/* Login Required */}
@@ -162,6 +162,10 @@ const BecomeProvider = () => {
             </div>
           )}
         </>
+      )}
+
+      {showCreateService && (
+        <CreateServiceModal onClose={() => setShowCreateService(false)} />
       )}
     </div>
   );

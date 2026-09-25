@@ -152,14 +152,6 @@ const Home = () => {
         duration: 0.9,
         ease: "power3.out",
       });
-
-      gsap.from(".hero-small-image", {
-        x: 80,
-        opacity: 0,
-        scale: 0.95,
-        duration: 0.9,
-        ease: "power3.out",
-      });
     }, heroRef);
 
     return () => ctx.revert();
@@ -378,7 +370,7 @@ const Home = () => {
                 </div>
 
                 <div className="flex gap-3 mt-3">
-                  <div className="hero-small-image w-1/2 h-32 overflow-hidden rounded-2xl">
+                  <div className="hero-image w-1/2 h-32 overflow-hidden rounded-2xl">
                     <img
                       src={plumberImage}
                       alt="Local plumber professional"
