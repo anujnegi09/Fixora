@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaLocationArrow } from "react-icons/fa";
-import Loading from "../common/Loading.jsx"
+import Loading from "../common/Loading.jsx";
 import {
   MapContainer,
   TileLayer,
@@ -35,7 +35,6 @@ function ChangeMapView({ center }) {
   return null;
 }
 
-
 function LocationSelector({ onLocationChange }) {
   useMapEvents({
     click(event) {
@@ -55,12 +54,18 @@ const LocationPicker = ({ onClose, onSaveLocation }) => {
   const searchResults = useSelector(selectSearchResults);
   const loading = useSelector(selectReverseGeocodeLoading);
 
-  const [position, setPosition] = useState([
-    20.5937,
-    78.9629,
-  ]);
+  const [position, setPosition] = useState([20.5937, 78.9629]);
 
   const [search, setSearch] = useState("");
+  useEffect(() => {
+    if (search.trim().length <= 2) return;
+
+    const timer = setTimeout(() => {
+      dispatch(searchLocation(search.trim()));
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [search, dispatch]);
 
   // ==========================
   // Update marker + reverse geocode
@@ -76,7 +81,7 @@ const LocationPicker = ({ onClose, onSaveLocation }) => {
       reverseGeocode({
         lat: latitude,
         lng: longitude,
-      })
+      }),
     );
   };
 
@@ -105,7 +110,7 @@ const LocationPicker = ({ onClose, onSaveLocation }) => {
       },
       {
         enableHighAccuracy: true,
-      }
+      },
     );
   };
 
@@ -150,22 +155,22 @@ const LocationPicker = ({ onClose, onSaveLocation }) => {
   };
 
   function FixMapSize() {
-  const map = useMap();
+    const map = useMap();
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (map && map.getContainer()) {
-        map.invalidateSize();
-      }
-    }, 300);
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        if (map && map.getContainer()) {
+          map.invalidateSize();
+        }
+      }, 300);
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [map]);
+      return () => {
+        clearTimeout(timer);
+      };
+    }, [map]);
 
-  return null;
-}
+    return null;
+  }
 
   return (
     <>
@@ -176,13 +181,7 @@ const LocationPicker = ({ onClose, onSaveLocation }) => {
           type="text"
           value={search}
           onChange={(e) => {
-            const value = e.target.value;
-
-            setSearch(value);
-
-            if (value.length > 2) {
-              dispatch(searchLocation(value));
-            }
+            setSearch(e.target.value);
           }}
           placeholder="Search location..."
           className="
@@ -206,10 +205,7 @@ const LocationPicker = ({ onClose, onSaveLocation }) => {
                 onClick={() => {
                   setSearch(item.display_name);
 
-                  handleLocationChange(
-                    Number(item.lat),
-                    Number(item.lon)
-                  );
+                  handleLocationChange(Number(item.lat), Number(item.lon));
                 }}
                 className="
                   w-full
@@ -227,56 +223,24 @@ const LocationPicker = ({ onClose, onSaveLocation }) => {
       </div>
 
       {/* Current Location */}
-
-      {/* <button
+      <Button
         type="button"
+        variant="location"
+        size="md"
+        leftIcon={<FaLocationArrow size={18} />}
         onClick={getCurrentLocation}
-        className="
-          rounded-lg
-          bg-blue-600
-          px-4
-          py-2
-          text-white
-          hover:bg-blue-700
-        "
+        className="px-4 py-4"
       >
-        Use Current Location
-      </button> */}
-
-<Button
-  type="button"
-  variant="location"
-  size="md"
-  leftIcon={<FaLocationArrow size={18} />}
-  onClick={getCurrentLocation}
-  className="px-4 py-4"
->
-  Use current location
-</Button>
-      
+        Use current location
+      </Button>
 
       {/* Loader */}
 
-      {loading && <Loading size="sm" text="fetching location" />} 
-    
+      {loading && <Loading size="sm" text="fetching location" />}
 
       {/* Map */}
 
       <MapContainer
-  center={position}
-  zoom={15}
-  style={{
-    width: "100%",
-    height: "250px",
-    borderRadius: "12px",
-  }}
-  whenReady={(event) => {
-    setTimeout(() => {
-      event.target.invalidateSize();
-    }, 300);
-  }}
->
-      {/* <MapContainer
         center={position}
         zoom={15}
         style={{
@@ -284,9 +248,12 @@ const LocationPicker = ({ onClose, onSaveLocation }) => {
           height: "250px",
           borderRadius: "12px",
         }}
-      > */}
-        {/* <FixMapSize /> */}
-
+        whenReady={(event) => {
+          setTimeout(() => {
+            event.target.invalidateSize();
+          }, 300);
+        }}
+      >
         <ChangeMapView center={position} />
 
         <TileLayer
@@ -294,17 +261,14 @@ const LocationPicker = ({ onClose, onSaveLocation }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <LocationSelector
-          onLocationChange={handleLocationChange}
-        />
+        <LocationSelector onLocationChange={handleLocationChange} />
 
         <Marker
           position={position}
           draggable={true}
           eventHandlers={{
             dragend: (event) => {
-              const { lat, lng } =
-                event.target.getLatLng();
+              const { lat, lng } = event.target.getLatLng();
 
               handleLocationChange(lat, lng);
             },
@@ -315,23 +279,18 @@ const LocationPicker = ({ onClose, onSaveLocation }) => {
       {/* Selected Location */}
 
       <div className="rounded-lg border bg-gray-50 p-4">
-        <h3 className="mb-2 font-semibold">
-          Selected Location
-        </h3>
+        <h3 className="mb-2 font-semibold">Selected Location</h3>
 
         <p>
-          <strong>State:</strong>{" "}
-          {selectedLocation?.state || "-"}
+          <strong>State:</strong> {selectedLocation?.state || "-"}
         </p>
 
         <p>
-          <strong>City:</strong>{" "}
-          {selectedLocation?.city || "-"}
+          <strong>City:</strong> {selectedLocation?.city || "-"}
         </p>
 
         <p>
-          <strong>Pincode:</strong>{" "}
-          {selectedLocation?.pincode || "-"}
+          <strong>Pincode:</strong> {selectedLocation?.pincode || "-"}
         </p>
 
         <p className="mt-2 text-sm text-gray-600">

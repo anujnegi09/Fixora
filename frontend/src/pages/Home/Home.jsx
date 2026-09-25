@@ -284,7 +284,7 @@ const Home = () => {
           ease: "power3.out",
           scrollTrigger: {
             trigger: whyChooseRef.current,
-            start: "top 60%",
+            start: "top 50%",
           },
         },
         0.8,
