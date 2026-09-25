@@ -94,7 +94,7 @@ const Navbar = () => {
     });
 
     return () => ctx.revert();
-  }, []);
+  }, [location.pathname]);
   return (
     <>
       {/* ================= NAVBAR ================= */}
