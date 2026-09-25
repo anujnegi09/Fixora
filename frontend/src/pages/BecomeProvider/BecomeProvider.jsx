@@ -56,6 +56,13 @@ const BecomeProvider = () => {
         duration: 0.8,
         ease: "power3.out",
       });
+
+      gsap.from(".button", {
+        x: 50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      });
     });
 
     return () => ctx.revert();
@@ -65,7 +72,7 @@ const BecomeProvider = () => {
     <div className="mx-auto max-w-7xl px-5 py-28">
       {/* Heading */}
 
-      <div className="mb-28 flex items-center justify-between">
+      {/* <div className="mb-28 flex items-center justify-between">
         <div className="heading">
           <h1 className="text-4xl font-bold text-[#0F172A]">
             Become a Provider
@@ -78,7 +85,7 @@ const BecomeProvider = () => {
 
         {/* Create Service */}
 
-        <Link
+      {/* <Link
           to="/create-service"
           onClick={handleCreateService}
           className="
@@ -104,7 +111,32 @@ const BecomeProvider = () => {
             focus:ring-offset-2
           "
         >
-          <span className="text-lg">+</span>
+          <span className="button text-lg">+</span>
+          Create Service
+        </Link> */}
+      {/* </div> */}
+
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <div className="mb-2 inline-flex items-center rounded-full bg-violet-50 px-3 py-1 text-xs font-medium text-violet-700">
+            Provider Dashboard
+          </div>
+
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900">
+            Become a Provider
+          </h1>
+
+          <p className="mt-2 text-sm text-slate-500">
+            Manage and grow your local services from one place.
+          </p>
+        </div>
+
+        <Link
+          to="/create-service"
+          onClick={handleCreateService}
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-700"
+        >
+          <span className="text-lg leading-none">+</span>
           Create Service
         </Link>
       </div>
