@@ -50,7 +50,7 @@ const BecomeProvider = () => {
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       // Logo
-      gsap.from(".title", {
+      gsap.from(".heading", {
         x: -50,
         opacity: 0,
         duration: 0.8,
@@ -71,53 +71,8 @@ const BecomeProvider = () => {
   return (
     <div className="mx-auto max-w-7xl px-5 py-28">
       {/* Heading */}
-
-      {/* <div className="mb-28 flex items-center justify-between">
-        <div className="heading">
-          <h1 className="text-4xl font-bold text-[#0F172A]">
-            Become a Provider
-          </h1>
-
-          <p className="mt-2 text-gray-500">
-            Manage all your services from one place.
-          </p>
-        </div>
-
-        {/* Create Service */}
-
-      {/* <Link
-          to="/create-service"
-          onClick={handleCreateService}
-          className="
-            inline-flex
-            items-center
-            gap-2
-            rounded-lg
-            bg-red-800
-            px-5
-            py-2.5
-            text-sm
-            font-semibold
-            text-white
-            shadow-md
-            transition-all
-            duration-200
-            hover:bg-red-700
-            hover:shadow-lg
-            active:scale-95
-            focus:outline-none
-            focus:ring-2
-            focus:ring-red-800
-            focus:ring-offset-2
-          "
-        >
-          <span className="button text-lg">+</span>
-          Create Service
-        </Link> */}
-      {/* </div> */}
-
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-        <div className="title">
+        <div className="heading">
           <div className="mb-2 inline-flex items-center rounded-full bg-violet-50 px-3 py-1 text-xs font-medium text-violet-700">
             Provider Dashboard
           </div>
@@ -134,9 +89,9 @@ const BecomeProvider = () => {
         <Link
           to="/create-service"
           onClick={handleCreateService}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-700"
+          className="button inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-700"
         >
-          <span className="button text-lg leading-none">+</span>
+          <span className="text-lg leading-none">+</span>
           Create Service
         </Link>
       </div>
