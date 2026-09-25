@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../components/common/Loading.jsx";
+import gsap from "gsap";
 
 import {
   selectMyServices,
@@ -46,12 +47,26 @@ const BecomeProvider = () => {
     }
   };
 
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Logo
+      gsap.from(".heading", {
+        x: -50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <div className="mx-auto max-w-7xl px-5 py-28">
       {/* Heading */}
 
       <div className="mb-28 flex items-center justify-between">
-        <div>
+        <div className="heading">
           <h1 className="text-4xl font-bold text-[#0F172A]">
             Become a Provider
           </h1>
