@@ -14,7 +14,7 @@ import {
 import { getMyServices } from "../../features/services/serviceThunks.js";
 
 import { selectIsAuthenticated } from "../../features/auth/authSelectors.js";
-
+import { selectSubscription } from "../../features/subscription/subscriptionSelectors.js";
 import EmptyState from "../../components/common/EmptyState.jsx";
 import MyServiceCard from "../../components/service/MyServiceCard.jsx";
 
@@ -24,11 +24,15 @@ const BecomeProvider = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isAuthenticated = useSelector(selectIsAuthenticated);
-
   const myServices = useSelector(selectMyServices);
   const loading = useSelector(selectServiceLoading);
   const error = useSelector(selectServiceError);
+  const subscription = useSelector(selectSubscription);
 
+  const hasActiveSubscription =
+  subscription?.status === "active" &&
+  subscription?.expiryDate &&
+  new Date(subscription.expiryDate) > new Date();
   // Fetch user's services only when logged in
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -43,6 +47,12 @@ const BecomeProvider = () => {
       showErrorToast("Please login first to create a service.");
       return;
     }
+     if (!hasActiveSubscription) {
+    showErrorToast(
+      "You need an active subscription plan to create a service."
+    );
+    return;
+  }
 
     setShowCreateService(true);
   };

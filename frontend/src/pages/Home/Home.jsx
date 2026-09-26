@@ -378,7 +378,7 @@ const Home = () => {
                     />
                   </div>
 
-                  <div className="hero-small-image w-1/2 h-32 overflow-hidden rounded-2xl">
+                  <div className="hero-image w-1/2 h-32 overflow-hidden rounded-2xl">
                     <img
                       src={cleanerImage}
                       alt="Local cleaning professional"
