@@ -11,7 +11,6 @@ import VerifyEmail from "../pages/VerifyEmail/VerifyEmail.jsx";
 import GoogleSuccess from "../pages/GoogleSuccess/GoogleSuccess.jsx";
 import BecomeProvider from "../pages/BecomeProvider/BecomeProvider";
 import Services from "../pages/Services/Services.jsx";
-import CreateService from "../pages/CreateService/CreateService.jsx";
 import BookService from "../pages/Booking/BookService.jsx";
 import Bookings from "../pages/Booking/Bookings.jsx";
 import Notifications from "../pages/Notifications/Notifications";
@@ -44,15 +43,6 @@ const AppRoutes = () => {
         <Route path="/services" element={<Services />} />
 
         <Route path="/become-provider" element={<BecomeProvider />} />
-
-        <Route
-          path="/create-service"
-          element={
-            <ProtectedRoute>
-              <CreateService />
-            </ProtectedRoute>
-          }
-        />
 
         <Route
           path="/bookings"
