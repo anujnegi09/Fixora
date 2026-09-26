@@ -199,7 +199,7 @@ const Subscription = () => {
             Active Subscription
         ========================================== */}
 
-        {subscription?.status === "pending" ? (
+        {subscription?.status === "active" ? (
           <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
             {/* Top Section */}
 
