@@ -451,7 +451,7 @@ const Home = () => {
         {/* What’s trending section */}
         <section
           ref={trendingTitleRef}
-          className="px-6 md:px-12 lg:px-20 py-16 my-20 pb-48"
+          className="px-6 md:px-12 lg:px-20 py-16 my-20 pb-32"
         >
           <div className="max-w-7xl mx-auto">
             <div className="flex items-end justify-between mb-8">
@@ -616,7 +616,7 @@ const Home = () => {
           </div>
         </section>
         {/* how its works */}
-        <section ref={howSectionRef} className="bg-white py-20 pb-48">
+        <section ref={howSectionRef} className="bg-white py-20 pb-32">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <span className="how-title inline-flex rounded-full bg-blue-50 px-4 py-1.5 text-sm font-semibold text-blue-600">
