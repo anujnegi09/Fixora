@@ -451,7 +451,7 @@ const Home = () => {
         {/* What’s trending section */}
         <section
           ref={trendingTitleRef}
-          className="px-6 md:px-12 lg:px-20 py-16 my-20 "
+          className="px-6 md:px-12 lg:px-20 py-16 my-20"
         >
           <div className="max-w-7xl mx-auto">
             <div className="flex items-end justify-between mb-8">
@@ -520,7 +520,7 @@ const Home = () => {
         {/* Trust & Stats Section */}
         <section
           ref={statsSectionRef}
-          className="bg-slate-50 px-6 py-20 md:px-12 lg:px-20"
+          className="bg-slate-50 px-6 py-20 md:px-12 lg:px-20 pb-32"
         >
           <div className="mx-auto max-w-7xl">
             {/* Heading */}
@@ -616,7 +616,7 @@ const Home = () => {
           </div>
         </section>
         {/* how its works */}
-        <section ref={howSectionRef} className="bg-white py-20 pb-32 ">
+        <section ref={howSectionRef} className="bg-white py-20 pb-48">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <span className="how-title inline-flex rounded-full bg-blue-50 px-4 py-1.5 text-sm font-semibold text-blue-600">
@@ -664,7 +664,7 @@ const Home = () => {
           </div>
         </section>
         {/* why choose fixora  */}
-        <section ref={whyChooseRef} className="bg-white py-20 pb-50">
+        <section ref={whyChooseRef} className="bg-white py-20 pb-48">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <span className="why-title inline-flex rounded-full bg-blue-50 px-4 py-1.5 text-sm font-semibold text-blue-600">
