@@ -1,5 +1,6 @@
 import { useState, useEffect, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Loading from "../../components/common/Loading.jsx";
 import CreateServiceModal from "../../components/service/CreateServiceModal.jsx";
 import gsap from "gsap";
@@ -21,7 +22,7 @@ import { showErrorToast } from "../../utils/customToast";
 
 const BecomeProvider = () => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const myServices = useSelector(selectMyServices);
@@ -88,7 +89,7 @@ const BecomeProvider = () => {
         <button
           type="button"
           onClick={handleCreateService}
-          className=" inline-flex items-center justify-center gap-2 rounded-xl bg-violet-60 px-5 py-3 text-sm 
+          className="button inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm 
   font-semibold text-white shadow-sm transition hover:bg-violet-700 hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2"
         >
           <span className="text-lg leading-none">+</span>
@@ -148,7 +149,6 @@ const BecomeProvider = () => {
             <EmptyState
               title="No Services Yet"
               message="Create your first service and start receiving bookings."
-              buttonText="Create Service"
             />
           )}
 
