@@ -2,9 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 
-import {
-  updateProfile,
-} from "../../features/user/userThunks.js";
+import { updateProfile } from "../../features/user/userThunks.js";
 
 import {
   selectProfile,
@@ -15,7 +13,7 @@ import Button from "../common/Button.jsx";
 import Input from "../common/Input.jsx";
 
 import { IoClose } from "react-icons/io5";
-import { FaCamera } from "react-icons/fa";
+import { FaCamera, FaUserCircle } from "react-icons/fa";
 
 const UpdateProfileModal = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -33,12 +31,12 @@ const UpdateProfileModal = ({ onClose }) => {
   } = useForm();
 
   useEffect(() => {
-  document.body.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
 
-  return () => {
-    document.body.style.overflow = "";
-  };
-}, []);
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
 
   // ==============================
   // Set existing user data
@@ -73,24 +71,22 @@ const UpdateProfileModal = ({ onClose }) => {
   // Submit
   // ==============================
   const onSubmit = async (data) => {
+    const formData = new FormData();
 
-  const formData = new FormData();
+    formData.append("fullName", data.fullName);
+    formData.append("userName", data.userName);
+    formData.append("phoneNumber", data.phoneNumber);
 
-  formData.append("fullName", data.fullName);
-  formData.append("userName", data.userName);
-  formData.append("phoneNumber", data.phoneNumber);
+    if (data.avatar?.[0]) {
+      formData.append("avatar", data.avatar[0]);
+    }
 
-  if (data.avatar?.[0]) {
-    formData.append("avatar", data.avatar[0]);
-  }
+    const result = await dispatch(updateProfile(formData));
 
-  const result = await dispatch(updateProfile(formData));
-
-
-  if (updateProfile.fulfilled.match(result)) {
-    onClose();
-  }
-};
+    if (updateProfile.fulfilled.match(result)) {
+      onClose();
+    }
+  };
 
   return (
     <div
@@ -109,18 +105,7 @@ const UpdateProfileModal = ({ onClose }) => {
     >
       {/* Modal */}
       <div
-        className="
-          relative
-          max-h-[90vh]
-          w-full
-          max-w-lg
-          overflow-y-auto
-          rounded-2xl
-          bg-white
-          p-6
-          shadow-2xl
-        "
-      >
+        className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl" >
         {/* Close button */}
         <button
           type="button"
@@ -142,9 +127,7 @@ const UpdateProfileModal = ({ onClose }) => {
 
         {/* Header */}
         <div className="mb-6 pr-10">
-          <h1 className="text-2xl font-bold text-gray-800">
-            Update Profile
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-800">Update Profile</h1>
 
           <p className="mt-1 text-sm text-gray-500">
             Update your personal information and profile picture.
@@ -152,52 +135,25 @@ const UpdateProfileModal = ({ onClose }) => {
         </div>
 
         {/* Form */}
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-5"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Profile Picture */}
           <div className="flex flex-col items-center">
-            <label
-              htmlFor="avatar"
-              className="group relative cursor-pointer"
-            >
-              <img
-                src={
-                  preview ||
-                  "/default-avatar-profile.png"
-                }
-                alt="Profile preview"
-                className="
-                  h-28
-                  w-28
-                  rounded-full
-                  border-4
-                  border-blue-500
-                  object-cover
-                "
-              />
+            <label htmlFor="avatar" className="group relative cursor-pointer">
+              {preview ? (
+                <img
+                  src={preview}
+                  alt="Profile preview"
+
+                  className="h-28 w-28 rounded-full border-4 border-blue-50 object-cover"
+                />
+              ) : (
+                <FaUserCircle size={112} className="text-gray-400" />
+              )}
 
               {/* Camera icon */}
               <div
-                className="
-                  absolute
-                  bottom-1
-                  right-1
-                  flex
-                  h-9
-                  w-9
-                  items-center
-                  justify-center
-                  rounded-full
-                  border-2
-                  border-white
-                  bg-blue-600
-                  text-white
-                  transition
-                  group-hover:bg-blue-700
-                "
-              >
+                className=" absolute right-1 bottom-1 flex h-9 w-9 items-center justify-center rounded-full border-2
+     border-white bg-blue-600 text-white transition group-hover:bg-blue-700">
                 <FaCamera size={15} />
               </div>
             </label>
@@ -250,11 +206,7 @@ const UpdateProfileModal = ({ onClose }) => {
 
           {/* Buttons */}
           <div className="flex gap-3 pt-3">
-            <Button
-              type="submit"
-              loading={loading}
-              fullWidth
-            >
+            <Button type="submit" loading={loading} fullWidth>
               Save Changes
             </Button>
 
