@@ -451,7 +451,7 @@ const Home = () => {
         {/* What’s trending section */}
         <section
           ref={trendingTitleRef}
-          className="px-6 md:px-12 lg:px-20 py-16 my-20 pb-32"
+          className="px-6 md:px-12 lg:px-20 py-16 my-20"
         >
           <div className="max-w-7xl mx-auto">
             <div className="flex items-end justify-between mb-8">
