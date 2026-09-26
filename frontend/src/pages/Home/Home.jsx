@@ -286,6 +286,64 @@ const Home = () => {
     return () => ctx.revert();
   }, []);
 
+  // For stats / trust section
+  const statsSectionRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".stats-title", {
+        y: 40,
+        opacity: 0,
+        duration: 0.7,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: statsSectionRef.current,
+          start: "top 80%",
+        },
+      });
+
+      gsap.from(".stat-card", {
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: statsSectionRef.current,
+          start: "top 75%",
+        },
+      });
+
+      // Number counter animation
+      gsap.utils.toArray(".stat-number").forEach((element) => {
+        const target = Number(element.dataset.value);
+
+        gsap.fromTo(
+          element,
+          { innerText: 0 },
+          {
+            innerText: target,
+            duration: 2,
+            ease: "power2.out",
+            snap: { innerText: 1 },
+            scrollTrigger: {
+              trigger: statsSectionRef.current,
+              start: "top 75%",
+              once: true,
+            },
+            onUpdate: function () {
+              element.innerText = Math.floor(
+                Number(element.innerText),
+              ).toLocaleString();
+            },
+          },
+        );
+      });
+    }, statsSectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <>
       <main className="pt-20">
@@ -455,6 +513,105 @@ const Home = () => {
               >
                 →
               </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Trust & Stats Section */}
+        <section
+          ref={statsSectionRef}
+          className="bg-slate-50 px-6 py-20 md:px-12 lg:px-20"
+        >
+          <div className="mx-auto max-w-7xl">
+            {/* Heading */}
+            <div className="stats-title mx-auto max-w-2xl text-center">
+              <span className="inline-flex rounded-full bg-blue-50 px-4 py-1.5 text-sm font-semibold text-blue-600">
+                Growing Together
+              </span>
+
+              <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                Trusted by people in their local communities
+              </h2>
+
+              <p className="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
+                More people are discovering reliable professionals and getting
+                everyday services done through Fixora.
+              </p>
+            </div>
+
+            {/* Stats */}
+            <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {/* Users */}
+              <div className="stat-card rounded-2xl border border-slate-200 bg-white p-7 text-center shadow-sm">
+                <div
+                  className="stat-number text-4xl font-bold text-blue-600"
+                  data-value="1250"
+                >
+                  0
+                </div>
+
+                <h3 className="mt-2 text-lg font-semibold text-slate-900">
+                  Users
+                </h3>
+
+                <p className="mt-2 text-sm text-slate-500">
+                  People using Fixora
+                </p>
+              </div>
+
+              {/* Professionals */}
+              <div className="stat-card rounded-2xl border border-slate-200 bg-white p-7 text-center shadow-sm">
+                <div
+                  className="stat-number text-4xl font-bold text-blue-600"
+                  data-value="350"
+                >
+                  0
+                </div>
+
+                <h3 className="mt-2 text-lg font-semibold text-slate-900">
+                  Professionals
+                </h3>
+
+                <p className="mt-2 text-sm text-slate-500">
+                  Local service providers
+                </p>
+              </div>
+
+              {/* Services */}
+              <div className="stat-card rounded-2xl border border-slate-200 bg-white p-7 text-center shadow-sm">
+                <div
+                  className="stat-number text-4xl font-bold text-blue-600"
+                  data-value="1800"
+                >
+                  0
+                </div>
+
+                <h3 className="mt-2 text-lg font-semibold text-slate-900">
+                  Services
+                </h3>
+
+                <p className="mt-2 text-sm text-slate-500">
+                  Services completed
+                </p>
+              </div>
+
+              {/* Cities */}
+              <div className="stat-card rounded-2xl border border-slate-200 bg-white p-7 text-center shadow-sm">
+                <div
+                  className="stat-number text-4xl font-bold text-blue-600"
+                  data-value="25"
+                >
+                  0
+                </div>
+
+                <h3 className="mt-2 text-lg font-semibold text-slate-900">
+                  Areas
+                </h3>
+
+                <p className="mt-2 text-sm text-slate-500">
+                  Communities reached
+                </p>
+              </div>
             </div>
           </div>
         </section>
