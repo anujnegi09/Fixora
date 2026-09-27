@@ -616,7 +616,7 @@ const Home = () => {
           </div>
         </section>
         {/* how its works */}
-        <section ref={howSectionRef} className="bg-white py-20 pb-32">
+        {/* <section ref={howSectionRef} className="bg-white py-20 pb-32">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <span className="how-title inline-flex rounded-full bg-blue-50 px-4 py-1.5 text-sm font-semibold text-blue-600">
@@ -662,7 +662,69 @@ const Home = () => {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
+        <section ref={howSectionRef} className="bg-white py-20 pb-32">
+  <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    {/* Header */}
+    <div className="mx-auto max-w-2xl text-center">
+      <span className="how-title inline-flex rounded-full bg-blue-50 px-4 py-1.5 text-sm font-semibold text-blue-600">
+        Simple & Easy
+      </span>
+
+      <h2 className="how-title mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+        How Fixora Works
+      </h2>
+
+      <p className="how-description mt-4 text-base leading-7 text-slate-600 sm:text-lg">
+        From finding the right professional to getting the job done,
+        Fixora makes booking local services simple.
+      </p>
+    </div>
+
+    {/* Timeline */}
+    <div className="relative mt-20">
+      {/* Vertical line */}
+      <div className="absolute left-10 top-0 hidden h-full w-px bg-slate-200 sm:block" />
+
+      <div className="space-y-12">
+        {howItWorks.map((item, index) => (
+          <div
+            key={item.step}
+            className="how-card relative flex gap-6 sm:gap-10"
+          >
+            {/* Step icon */}
+            <div className="relative z-10 flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white text-3xl shadow-sm">
+              {item.icon}
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 rounded-2xl border border-slate-200 bg-slate-50/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:bg-blue-50/40 hover:shadow-md">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="text-sm font-bold tracking-wide text-blue-600">
+                  STEP {item.step}
+                </span>
+
+                <span className="h-1 w-1 rounded-full bg-slate-300" />
+
+                <span className="text-sm text-slate-400">
+                  0{index + 1}
+                </span>
+              </div>
+
+              <h3 className="mt-2 text-xl font-semibold text-slate-900 sm:text-2xl">
+                {item.title}
+              </h3>
+
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
+                {item.description}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
         {/* why choose fixora  */}
         <section ref={whyChooseRef} className="bg-white py-20 pb-48">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
