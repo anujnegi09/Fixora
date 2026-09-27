@@ -36,17 +36,13 @@ const CompleteProfileModal = () => {
 
       const response = await completeProfileApi(formData);
 
-      toast.success(
-        response.message || "Profile completed successfully."
-      );
+      toast.success(response.message || "Profile completed successfully.");
 
       // You can refresh auth/user data here if needed.
       window.location.reload();
-
     } catch (error) {
       toast.error(
-        error.response?.data?.message ||
-          "Failed to complete profile."
+        error.response?.data?.message || "Failed to complete profile.",
       );
     }
   };
@@ -85,10 +81,7 @@ const CompleteProfileModal = () => {
           Just a few more details to finish setting up your account.
         </p>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-5"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Phone Number */}
 
           <Input
@@ -110,16 +103,15 @@ const CompleteProfileModal = () => {
           <div>
             <label className="font-medium text-gray-700">
               Profile Picture{" "}
-              <span className="text-sm text-gray-400">
-                (Optional)
-              </span>
+              <span className="text-sm text-gray-400">(Optional)</span>
             </label>
 
             <input
               type="file"
               accept="image/*"
-              {...register("profileImage")}
-              onChange={handleImagePreview}
+              {...register("profileImage", {
+                onChange: handleImagePreview,
+              })}
               className="mt-2 w-full"
             />
 
@@ -142,11 +134,7 @@ const CompleteProfileModal = () => {
 
           {/* Submit */}
 
-          <Button
-            type="submit"
-            loading={isSubmitting}
-            fullWidth
-          >
+          <Button type="submit" loading={isSubmitting} fullWidth>
             Complete Profile
           </Button>
         </form>
