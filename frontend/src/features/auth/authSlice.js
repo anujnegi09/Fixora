@@ -58,8 +58,10 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
+        // The API response wraps the user in `data`.
+        state.user = action.payload.data?.user ?? action.payload.user;
         state.isAuthenticated = true;
+        state.authChecked = true;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;

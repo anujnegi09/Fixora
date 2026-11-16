@@ -91,20 +91,20 @@ const VerifyEmail = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC] px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
+    <div className="min-h-screen flex items-center justify-center bg-[#f7f9fc] px-4 py-10">
+      <div className="w-full max-w-md rounded-[2rem] border border-slate-100 bg-white p-8 shadow-2xl shadow-slate-900/10">
 
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-[#0d1b2a]">
             Verify Your Email
           </h1>
 
-          <p className="text-gray-500 mt-2">
+          <p className="mt-2 text-slate-500">
             Enter the 6-digit OTP sent to your email.
           </p>
 
           {email && (
-            <p className="text-sm text-gray-600 mt-3">
+            <p className="mt-3 text-sm text-slate-600">
               {email}
             </p>
           )}
@@ -130,14 +130,14 @@ const VerifyEmail = () => {
                 setOtp(value);
               }}
               placeholder="Enter 6-digit OTP"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6E42E5] focus:border-transparent text-center text-lg tracking-[0.4em]"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-center text-lg tracking-[0.4em] outline-none focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-lg bg-[#6E42E5] text-white font-medium hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full rounded-xl bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Verifying..." : "Verify Email"}
           </button>
@@ -147,7 +147,7 @@ const VerifyEmail = () => {
           type="button"
           onClick={handleResend}
           disabled={resending}
-          className="w-full mt-4 py-3 rounded-lg border border-[#6E42E5] text-[#6E42E5] font-medium hover:bg-purple-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mt-4 w-full rounded-xl border border-blue-200 py-3 font-semibold text-blue-700 transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {resending ? "Sending..." : "Resend OTP"}
         </button>

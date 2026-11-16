@@ -11,13 +11,13 @@ const Input = ({
 
       {label && (
         <label htmlFor={props.name}>
-          {label}
+          <span className="text-sm font-semibold text-slate-700">{label}</span>
         </label>
       )}
 
       <input
         {...props}
-        className={`mt-2 w-full rounded-lg border p-3 outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
+        className={`mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 p-3.5 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100 ${className}`}
       />
 
       {error && (

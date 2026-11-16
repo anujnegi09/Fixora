@@ -29,13 +29,13 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-5">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-center text-blue-600">
+    <div className="min-h-screen flex items-center justify-center bg-[#f7f9fc] px-5 py-10">
+      <div className="w-full max-w-md rounded-[2rem] border border-slate-100 bg-white p-8 shadow-2xl shadow-slate-900/10">
+        <h1 className="text-center text-3xl font-bold text-[#0d1b2a]">
           Forgot Password
         </h1>
 
-        <p className="text-center text-gray-500 mt-2 mb-8">
+        <p className="mt-2 mb-8 text-center text-slate-500">
           Enter your registered email address.
         </p>
 
@@ -91,7 +91,7 @@ const ForgotPassword = () => {
 
         <p className="text-center mt-6">
           Remember your password?
-          <Link to="/login" className="ml-1 text-blue-600 hover:underline">
+          <Link to="/login" className="ml-1 font-semibold text-blue-600 hover:text-blue-700">
             Login
           </Link>
         </p>

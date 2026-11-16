@@ -13,17 +13,17 @@ const Button = ({
   onClick,
 }) => {
   const baseClasses =
-    "relative overflow-hidden flex items-center justify-center gap-2 transition duration-300 rounded-lg font-medium focus:outline-none cursor-pointer";
+    "relative overflow-hidden flex items-center justify-center gap-2 transition duration-300 rounded-xl font-semibold focus:outline-none cursor-pointer";
 
   const variants = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700",
-    secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
-    danger: "bg-red-600 text-white hover:bg-red-700",
+    primary: "bg-blue-600 text-white shadow-lg shadow-blue-600/15 hover:bg-blue-700 hover:-translate-y-0.5",
+    secondary: "bg-slate-100 text-slate-800 hover:bg-slate-200",
+    danger: "bg-rose-600 text-white hover:bg-rose-700",
     outline:
-      "border border-blue-600 text-blue-600 hover:bg-blue-50",
+      "border border-blue-200 text-blue-700 hover:bg-blue-50",
 
     google:
-      "flex items-center justify-center gap-3 w-full border rounded-lg py-3 bg-white text-gray-700 hover:bg-gray-100 transition",
+      "flex items-center justify-center gap-3 w-full border border-slate-200 rounded-xl py-3 bg-white text-slate-700 hover:bg-slate-50 transition",
 
     success:
       "rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700",

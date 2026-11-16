@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 import { resetPassword } from "../../features/auth/authThunks";
 import { selectResetPasswordLoading } from "../../features/auth/authSelectors";
@@ -17,9 +15,6 @@ const ResetPassword = () => {
   const { token } = useParams();
 
   const changePasswordLoading = useSelector(selectResetPasswordLoading);
-
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
 
   const {
     register,
@@ -47,13 +42,13 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-5">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-center text-blue-600">
+    <div className="min-h-screen flex items-center justify-center bg-[#f7f9fc] px-5 py-10">
+      <div className="w-full max-w-md rounded-[2rem] border border-slate-100 bg-white p-8 shadow-2xl shadow-slate-900/10">
+        <h1 className="text-center text-3xl font-bold text-[#0d1b2a]">
           Reset Password
         </h1>
 
-        <p className="text-center text-gray-500 mt-2 mb-8">
+        <p className="mt-2 mb-8 text-center text-slate-500">
           Enter your new password.
         </p>
 
@@ -177,11 +172,12 @@ const ResetPassword = () => {
           </div> */}
 
           <PasswordInput
-            label="Password"
-            placeholder="Enter your password"
-            error={errors.password?.message}
-            {...register("password", {
-              required: "Password is required",
+            label="Confirm password"
+            placeholder="Confirm your password"
+            error={errors.confirmPassword?.message}
+            {...register("confirmPassword", {
+              required: "Confirm password is required",
+              validate: (value) => value === password || "Passwords do not match",
             })}
           />
 

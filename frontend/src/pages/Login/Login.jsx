@@ -129,7 +129,7 @@ import { useForm } from "react-hook-form";
 import { FaGoogle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import authBg from "../../assets/background-image.png";
-import { login, checkAuthentication } from "../../features/auth/authThunks";
+import { login } from "../../features/auth/authThunks";
 import { selectLoading } from "../../features/auth/authSelectors";
 import { loginWithGoogle } from "../../api/auth.api";
 
@@ -152,20 +152,18 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       await dispatch(login(data)).unwrap();
-      await dispatch(checkAuthentication()).unwrap();
-
       navigate("/");
     } catch (error) {
-      console.log("ERROR =>", error);
+      console.error("Login failed:", error);
     }
   };
 
   return (
     <div
-      className="min-h-screen bg-slate-100 flex items-center justify-start px-4  py-10"
+      className="min-h-screen bg-slate-100 flex items-center justify-center px-4 py-10"
       style={{ backgroundImage: `url(${authBg})` }}
     >
-      <div className=" w-full max-w-2xl bg-white rounded-[2rem] translate-x-35 shadow-xl overflow-hidden">
+      <div className="w-full max-w-2xl bg-white rounded-[2rem] shadow-xl overflow-hidden">
         {/* Form side */}
         <div className="w-full px-6 py-10 sm:px-10">
           <h1 className="text-3xl font-bold text-slate-900">Fixora</h1>

@@ -6,6 +6,12 @@ import apiResponse from "../utils/apiResponse.js";
 import generateToken from "../utils/generateToken.js";
 import crypto from "crypto";
 import resend from "../configs/Mail.js";
+
+const authCookieOptions = () => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+});
 /**
  * =====================================================
  * 🔐 REGISTER USER
@@ -180,17 +186,8 @@ export const login = asyncHandler(async (req, res) => {
   );
 
   // 🍪 Set cookies
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
-  });
-
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
-  });
+  res.cookie("accessToken", accessToken, authCookieOptions());
+  res.cookie("refreshToken", refreshToken, authCookieOptions());
 
   // ✅ Response
   return res.status(200).json(
@@ -231,16 +228,12 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
 
   // Replace cookies
   res.cookie("accessToken", newAccessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
+    ...authCookieOptions(),
     maxAge: 24 * 60 * 60 * 1000,
   });
 
   res.cookie("refreshToken", newRefreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
+    ...authCookieOptions(),
     maxAge: 10 * 24 * 60 * 60 * 1000,
   });
 
@@ -269,17 +262,8 @@ export const logout = asyncHandler(async (req, res) => {
   }
 
   // 🧹 Clear cookies properly (for both dev and production)
-  res.clearCookie("accessToken", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
-  });
-
-  res.clearCookie("refreshToken", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
-  });
+  res.clearCookie("accessToken", authCookieOptions());
+  res.clearCookie("refreshToken", authCookieOptions());
 
   return res
     .status(200)
