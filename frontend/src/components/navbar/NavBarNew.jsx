@@ -54,7 +54,7 @@ const NavBarNew = () => {
   };
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/85 backdrop-blur-xl">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-[#8d6548]/15 bg-[#fbfaf7]/65 backdrop-blur-xl">
       <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-12">
         <NavLink to="/" className="app-nav-logo flex items-center gap-2.5" aria-label="Fixora home">
           <img src={fixoraLogo} alt="Fixora" className="h-14 w-auto object-contain md:h-16" />
