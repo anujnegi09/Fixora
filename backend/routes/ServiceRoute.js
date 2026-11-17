@@ -18,7 +18,7 @@ const router = express.Router();
 router.get("/my-services",verifyJWT,getMyServices);
 
 // Create service
-router.post("/create", verifyJWT, verifySubscription, createService);
+router.post("/create", verifyJWT,createService); //verifySubscription
 
 // Get all services
 router.get("/",verifyJWT, getAllServices );

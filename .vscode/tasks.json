@@ -1,0 +1,12 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Start Fixora frontend",
+			"type": "shell",
+			"command": "npm --prefix frontend run dev",
+			"isBackground": true,
+			"problemMatcher": []
+		}
+	]
+}

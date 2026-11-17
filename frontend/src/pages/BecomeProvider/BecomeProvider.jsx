@@ -99,8 +99,8 @@ const BecomeProvider = () => {
         <button
           type="button"
           onClick={handleCreateService}
-          className="button inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm 
-  font-semibold text-white shadow-sm transition hover:bg-violet-700 hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2"
+          className="button inline-flex items-center justify-center gap-2 rounded-xl bg-[#6f4f38] px-5 py-3 text-sm 
+  font-semibold text-white shadow-sm transition hover:bg-[#5a3f2d] hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#8a6548] focus:ring-offset-2"
         >
           <span className="text-lg leading-none">+</span>
           Create Service
