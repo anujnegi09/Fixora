@@ -12,8 +12,6 @@ import {
   verifyEmail as VerifyEmail,
 } from "../../api/auth.api.js";
 
-import { getProfile } from "../user/userThunks";
-
 export const register = createAsyncThunk(
   "auth/register",
   async (formData, { rejectWithValue }) => {
@@ -77,11 +75,9 @@ export const logout = createAsyncThunk(
 
 export const checkAuthentication = createAsyncThunk(
   "auth/checkAuthentication",
-  async (_, { dispatch, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const response = await checkAuth();
-      // Automatically load profile
-      await dispatch(getProfile()).unwrap();
       return response;
     } catch (error) {
       if (error.response?.status === 401) {

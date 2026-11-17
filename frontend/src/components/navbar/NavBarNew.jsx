@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { logout } from "../../features/auth/authThunks.js";
 import { getNewNotificationCount, getNotifications } from "../../features/notifications/notificationThunks";
-import { selectIsAuthenticated, selectUser } from "../../features/auth/authSelectors.js";
+import { selectAuthChecked, selectIsAuthenticated, selectUser } from "../../features/auth/authSelectors.js";
 import { selectNewNotificationCount } from "../../features/notifications/notificationSelectors";
 import gsap from "gsap";
 import fixoraLogo from "../../assets/fixora-logo.png";
@@ -23,6 +23,7 @@ const NavBarNew = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const authChecked = useSelector(selectAuthChecked);
   const user = useSelector(selectUser);
   const notificationCount = useSelector(selectNewNotificationCount);
 
@@ -65,7 +66,9 @@ const NavBarNew = () => {
         </nav>
 
         <div className="app-nav-actions flex items-center gap-2">
-          {isAuthenticated ? (
+          {!authChecked ? (
+            <div className="h-10 w-28 animate-pulse rounded-xl bg-[#eadfd3]/60" aria-hidden="true" />
+          ) : isAuthenticated ? (
             <>
               <button type="button" onClick={() => navigate("/notifications")} className="relative flex h-10 w-10 items-center justify-center rounded-xl text-slate-600 transition hover:bg-blue-50 hover:text-blue-700" aria-label="Notifications">
                 <Bell size={19} />
@@ -85,7 +88,7 @@ const NavBarNew = () => {
           <button type="button" onClick={() => setMobileOpen((open) => !open)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-700 md:hidden" aria-label={mobileOpen ? "Close menu" : "Open menu"}>{mobileOpen ? <X size={19} /> : <Menu size={19} />}</button>
         </div>
       </div>
-      {mobileOpen && <div className="border-t border-slate-100 bg-white px-5 pb-5 pt-3 shadow-lg md:hidden"><nav className="flex flex-col gap-1">{links.map((link) => <NavLink key={link.to} to={link.to} className="rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-700">{link.label}</NavLink>)}</nav>{!isAuthenticated && <div className="mt-3 grid grid-cols-2 gap-2 border-t border-slate-100 pt-3"><NavLink to="/login" className="rounded-xl border border-slate-200 px-4 py-3 text-center text-sm font-bold text-slate-700">Log in</NavLink><NavLink to="/register" className="rounded-xl bg-blue-600 px-4 py-3 text-center text-sm font-bold text-white">Get started</NavLink></div>}</div>}
+      {mobileOpen && <div className="border-t border-slate-100 bg-white px-5 pb-5 pt-3 shadow-lg md:hidden"><nav className="flex flex-col gap-1">{links.map((link) => <NavLink key={link.to} to={link.to} className="rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-700">{link.label}</NavLink>)}</nav>{authChecked && !isAuthenticated && <div className="mt-3 grid grid-cols-2 gap-2 border-t border-slate-100 pt-3"><NavLink to="/login" className="rounded-xl border border-slate-200 px-4 py-3 text-center text-sm font-bold text-slate-700">Log in</NavLink><NavLink to="/register" className="rounded-xl bg-blue-600 px-4 py-3 text-center text-sm font-bold text-white">Get started</NavLink></div>}</div>}
     </header>
   );
 };

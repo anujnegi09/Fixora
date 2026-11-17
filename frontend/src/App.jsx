@@ -1,18 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
 import { checkAuthentication } from "./features/auth/authThunks";
 import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   const dispatch = useDispatch();
-   const location = useLocation();
+  const authCheckStarted = useRef(false);
 
-  console.log("CURRENT PATH:", location.pathname);
-    useEffect(() => {
-       console.log("CHECK AUTH STARTED ON:", location.pathname);
+  useEffect(() => {
+    if (authCheckStarted.current) return;
+    authCheckStarted.current = true;
     dispatch(checkAuthentication());
-}, [dispatch]);
+  }, [dispatch]);
 
   return <AppRoutes />;
 }
