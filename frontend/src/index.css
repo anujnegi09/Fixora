@@ -9,7 +9,7 @@ html,
 body,
 #root {
   min-height: 100%;
-  background-color: #f7f9fc;
+  background-color: #f3f0ea;
   color: #0f172a;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -17,6 +17,57 @@ body,
 
 body {
   margin: 0;
+}
+
+/* Angora White-inspired neutral surfaces across the application. */
+.bg-white {
+  background-color: #fbfaf7 !important;
+}
+
+.bg-gray-50 {
+  background-color: #f3f0ea !important;
+}
+
+.bg-gray-100 {
+  background-color: #ebe6de !important;
+}
+
+/* Softer blue alternative for remaining legacy/shared utility classes. */
+.bg-blue-50 {
+  background-color: #edf2f3 !important;
+}
+
+.bg-blue-100 {
+  background-color: #dfeaec !important;
+}
+
+.bg-blue-600 {
+  background-color: #8faab3 !important;
+  color: #20343b !important;
+}
+
+.bg-blue-700,
+.hover\:bg-blue-700:hover {
+  background-color: #7896a0 !important;
+  color: #20343b !important;
+}
+
+.text-blue-600 {
+  color: #66828d !important;
+}
+
+.text-blue-700 {
+  color: #536f7a !important;
+}
+
+.border-blue-100,
+.border-blue-200 {
+  border-color: #c9dadd !important;
+}
+
+::selection {
+  background: #bfdbfe;
+  color: #0d1b2a;
 }
 
 button,
@@ -87,3 +138,20 @@ select:focus-visible {
 .animate-button-progress {
   animation: button-progress 2s ease-in-out infinite;
 }
+
+/* Professional visual language for the shared product surfaces. */
+.landing-category,
+.landing-benefit,
+.landing-cta {
+  border-radius: 1rem !important;
+}
+
+.landing-category,
+.landing-benefit {
+  box-shadow: 0 1px 2px rgb(15 23 42 / 4%);
+}
+.app-footer .text-blue-400 { color: #c89f7b !important; }
+.app-footer .text-blue-300 { color: #e4b991 !important; }
+.app-footer .text-slate-400 { color: #cbb9aa !important; }
+.app-footer .text-slate-500 { color: #aa9586 !important; }
+.app-footer img[alt="Fixora"], nav img[alt="Fixora"] { mix-blend-mode: multiply; }

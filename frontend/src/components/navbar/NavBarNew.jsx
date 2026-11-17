@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Bell, CalendarDays, ChevronDown, Menu, Sparkles, UserRound, X } from "lucide-react";
+import { Bell, CalendarDays, ChevronDown, Menu, UserRound, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { logout } from "../../features/auth/authThunks.js";
@@ -8,6 +8,7 @@ import { getNewNotificationCount, getNotifications } from "../../features/notifi
 import { selectIsAuthenticated, selectUser } from "../../features/auth/authSelectors.js";
 import { selectNewNotificationCount } from "../../features/notifications/notificationSelectors";
 import gsap from "gsap";
+import fixoraLogo from "../../assets/fixora-logo.png";
 
 const links = [
   { to: "/", label: "Home" },
@@ -56,8 +57,7 @@ const NavBarNew = () => {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/85 backdrop-blur-xl">
       <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-12">
         <NavLink to="/" className="app-nav-logo flex items-center gap-2.5" aria-label="Fixora home">
-          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-600/20"><Sparkles size={20} /></span>
-          <span className="text-xl font-black tracking-tight text-[#0d1b2a]">fixora<span className="text-blue-600">.</span></span>
+          <img src={fixoraLogo} alt="Fixora" className="h-14 w-auto object-contain md:h-16" />
         </NavLink>
 
         <nav className="hidden items-center gap-1 md:flex">

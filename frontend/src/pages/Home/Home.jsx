@@ -777,3 +777,4 @@ const Home = () => {
 };
 
 export default Home;
+// UI refinement pending

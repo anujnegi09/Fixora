@@ -21,7 +21,7 @@ const PasswordInput = ({
         <input
           {...props}
           type={showPassword ? "text" : "password"}
-          className={`w-full rounded-xl border border-slate-200 bg-slate-50 p-3.5 pr-12 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100 ${className}`}
+          className={`w-full rounded-lg border border-slate-300 bg-white p-3 pr-12 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 ${className}`}
         />
 
         <button

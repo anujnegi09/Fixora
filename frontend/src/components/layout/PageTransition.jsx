@@ -9,7 +9,7 @@ const PageTransition = ({ children }) => {
   useLayoutEffect(() => {
     const context = gsap.context(() => {
       gsap.fromTo(
-        ".page-transition-content",
+        pageRef.current,
         { opacity: 0, y: 16 },
         { opacity: 1, y: 0, duration: 0.55, ease: "power3.out", clearProps: "all" },
       );
