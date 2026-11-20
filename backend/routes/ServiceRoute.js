@@ -18,7 +18,8 @@ const router = express.Router();
 router.get("/my-services",verifyJWT,getMyServices);
 
 // Create service
-router.post("/create", verifyJWT,createService); //verifySubscription
+// TODO: Re-enable verifySubscription after the subscription UI updates.
+router.post("/create", verifyJWT, createService);
 
 // Get all services
 router.get("/",verifyJWT, getAllServices );
