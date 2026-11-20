@@ -108,7 +108,7 @@ const Subscription = () => {
         },
 
         theme: {
-          color: "#6E42E5",
+          color: "#6f4f38",
         },
       };
 
@@ -147,9 +147,9 @@ const Subscription = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F8F7FC] px-4 py-24">
+          <div className="min-h-screen bg-[#f7f3ef] px-4 py-24">
         <div className="mx-auto max-w-4xl text-center">
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-[#6E42E5]/20 border-t-[#6E42E5]" />
+          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-[#6f4f38]/20 border-t-[#6f4f38]" />
 
           <p className="mt-4 text-sm font-medium text-gray-500">
             Loading subscription...
@@ -164,18 +164,18 @@ const Subscription = () => {
   // ==========================================
 
   return (
-    <div className="min-h-screen bg-[#F8F7FC] px-4 py-12 sm:px-6 lg:px-8 mt-13">
+    <div className="min-h-screen bg-[#f7f3ef] px-4 py-12 sm:px-6 lg:px-8 mt-13">
       <div className="mx-auto max-w-5xl">
         {/* ==========================================
             Header
         ========================================== */}
 
         <div className="mx-auto mb-10 max-w-2xl text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#6E42E5]/10">
-            <FaCrown className="text-[#6E42E5]" size={24} />
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#6f4f38]/10">
+            <FaCrown className="text-[#6f4f38]" size={24} />
           </div>
 
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h1 className="text-3xl font-bold tracking-tight text-[#2d241f] sm:text-4xl">
             Choose your Fixora plan
           </h1>
 
@@ -200,18 +200,18 @@ const Subscription = () => {
         ========================================== */}
 
         {subscription?.status === "active" ? (
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+            <div className="overflow-hidden rounded-2xl border border-[#e6ddd5] bg-white shadow-sm">
             {/* Top Section */}
 
-            <div className="border-b border-gray-100 bg-gradient-to-r from-[#6E42E5]/10 to-transparent px-6 py-7 sm:px-8">
+            <div className="border-b border-[#eee5de] bg-gradient-to-r from-[#6f4f38]/10 to-transparent px-6 py-7 sm:px-8">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#6E42E5] text-white shadow-sm">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#6f4f38] text-white shadow-sm">
                     <FaCrown size={20} />
                   </div>
 
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">
+                    <h2 className="text-xl font-bold text-[#2d241f]">
                       Your Subscription
                     </h2>
 
@@ -233,23 +233,23 @@ const Subscription = () => {
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {/* Plan */}
 
-                <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
-                  <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-[#6E42E5]/10">
-                    <FaCrown className="text-[#6E42E5]" size={15} />
+                <div className="rounded-xl border border-[#eee5de] bg-[#fbf9f7] p-5">
+                  <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-[#6f4f38]/10">
+                    <FaCrown className="text-[#6f4f38]" size={15} />
                   </div>
 
                   <p className="text-xs font-medium text-gray-500">
                     Current Plan
                   </p>
 
-                  <p className="mt-1 text-lg font-bold capitalize text-gray-900">
+                  <p className="mt-1 text-lg font-bold capitalize text-[#2d241f]">
                     {subscription.plan || "Subscription"}
                   </p>
                 </div>
 
                 {/* Start Date */}
 
-                <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
+                <div className="rounded-xl border border-[#eee5de] bg-[#fbf9f7] p-5">
                   <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50">
                     <FaCalendarAlt className="text-blue-600" size={15} />
                   </div>
@@ -258,7 +258,7 @@ const Subscription = () => {
                     Start Date
                   </p>
 
-                  <p className="mt-1 text-lg font-bold text-gray-900">
+                  <p className="mt-1 text-lg font-bold text-[#2d241f]">
                     {subscription.startDate
                       ? new Date(subscription.startDate).toLocaleDateString(
                           "en-IN",
@@ -269,7 +269,7 @@ const Subscription = () => {
 
                 {/* Expiry */}
 
-                <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
+                <div className="rounded-xl border border-[#eee5de] bg-[#fbf9f7] p-5">
                   <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-orange-50">
                     <FaCalendarAlt className="text-orange-500" size={15} />
                   </div>
@@ -278,7 +278,7 @@ const Subscription = () => {
                     Expiry Date
                   </p>
 
-                  <p className="mt-1 text-lg font-bold text-gray-900">
+                  <p className="mt-1 text-lg font-bold text-[#2d241f]">
                     {subscription.expiryDate
                       ? new Date(subscription.expiryDate).toLocaleDateString(
                           "en-IN",
@@ -289,16 +289,16 @@ const Subscription = () => {
 
                 {/* ID */}
 
-                <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
-                  <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-purple-50">
-                    <FaCreditCard className="text-purple-600" size={15} />
+                <div className="rounded-xl border border-[#eee5de] bg-[#fbf9f7] p-5">
+                  <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-[#6f4f38]/10">
+                    <FaCreditCard className="text-[#6f4f38]" size={15} />
                   </div>
 
                   <p className="text-xs font-medium text-gray-500">
                     Subscription ID
                   </p>
 
-                  <p className="mt-1 truncate text-sm font-bold text-gray-900">
+                  <p className="mt-1 truncate text-sm font-bold text-[#2d241f]">
                     {subscription._id || "-"}
                   </p>
                 </div>
@@ -306,7 +306,7 @@ const Subscription = () => {
 
               {/* Cancel */}
 
-              <div className="mt-8 flex justify-end border-t border-gray-100 pt-6">
+              <div className="mt-8 flex justify-end border-t border-[#eee5de] pt-6">
                 <button
                   type="button"
                   onClick={handleCancelSubscription}
@@ -351,28 +351,28 @@ const Subscription = () => {
                   Monthly
               ========================================== */}
 
-              <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#6E42E5]/40 hover:shadow-xl sm:p-8">
-                <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-[#6E42E5]/5 blur-2xl" />
+              <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-[#e6ddd5] bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#6f4f38]/40 hover:shadow-xl sm:p-8">
+                <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-[#6f4f38]/5 blur-2xl" />
 
                 <div className="relative flex h-full flex-col">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-sm font-semibold text-[#6E42E5]">
+                      <p className="text-sm font-semibold text-[#6f4f38]">
                         FLEXIBLE
                       </p>
 
-                      <h2 className="mt-2 text-2xl font-bold text-gray-900">
+                      <h2 className="mt-2 text-2xl font-bold text-[#2d241f]">
                         Monthly
                       </h2>
                     </div>
 
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#6E42E5]/10">
-                      <FaCalendarAlt className="text-[#6E42E5]" size={18} />
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#6f4f38]/10">
+                      <FaCalendarAlt className="text-[#6f4f38]" size={18} />
                     </div>
                   </div>
 
                   <div className="mt-6 flex items-end gap-1">
-                    <span className="text-4xl font-bold tracking-tight text-gray-900">
+                    <span className="text-4xl font-bold tracking-tight text-[#2d241f]">
                       ₹149
                     </span>
 
@@ -384,7 +384,7 @@ const Subscription = () => {
                     commitment.
                   </p>
 
-                  <div className="my-4 h-px bg-gray-100" />
+                  <div className="my-4 h-px bg-[#eee5de]" />
 
                   <ul className="space-y-4 mb-5">
                     {[
@@ -397,8 +397,8 @@ const Subscription = () => {
                         key={feature}
                         className="flex items-center gap-3 text-sm text-gray-600"
                       >
-                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#6E42E5]/10">
-                          <FaCheck className="text-[#6E42E5]" size={10} />
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#6f4f38]/10">
+                          <FaCheck className="text-[#6f4f38]" size={10} />
                         </span>
 
                         {feature}
@@ -426,34 +426,34 @@ const Subscription = () => {
                   Yearly
               ========================================== */}
 
-              <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white border border-gray-200 p-6 hover:shadow-md transition duration-300 hover:-translate-y-1 hover:border-[#6E42E5]/40 shadow-xl sm:p-8">
+              <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white border border-[#e6ddd5] p-6 hover:shadow-md transition duration-300 hover:-translate-y-1 hover:border-[#6f4f38]/40 shadow-xl sm:p-8">
                 {/* Popular Badge */}
 
-                <div className="absolute right-4 top-4 rounded-full bg-[#6E42E5] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
+                <div className="absolute right-4 top-4 rounded-full bg-[#6f4f38] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
                   Best Value
                 </div>
 
-                <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[#6E42E5]/10 blur-3xl" />
+                <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[#6f4f38]/10 blur-3xl" />
 
                 <div className="relative flex h-full flex-col">
                   <div className="flex items-start justify-between pr-24">
                     <div>
-                      <p className="text-sm font-semibold text-[#6E42E5]">
+                      <p className="text-sm font-semibold text-[#6f4f38]">
                         SAVE MORE
                       </p>
 
-                      <h2 className="mt-2 text-2xl font-bold text-gray-900">
+                      <h2 className="mt-2 text-2xl font-bold text-[#2d241f]">
                         Yearly
                       </h2>
                     </div>
 
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#6E42E5] text-white">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#6f4f38] text-white">
                       <FaCrown size={18} />
                     </div>
                   </div>
 
                   <div className="mt-6 flex items-end gap-1">
-                    <span className="text-4xl font-bold tracking-tight text-gray-900">
+                    <span className="text-4xl font-bold tracking-tight text-[#2d241f]">
                       ₹1599
                     </span>
 
@@ -469,7 +469,7 @@ const Subscription = () => {
                     the year.
                   </p>
 
-                  <div className="my-4 h-px bg-gray-100" />
+                  <div className="my-4 h-px bg-[#eee5de]" />
 
                   <ul className="space-y-4 mb-5">
                     {[
@@ -482,8 +482,8 @@ const Subscription = () => {
                         key={feature}
                         className="flex items-center gap-3 text-sm text-gray-600"
                       >
-                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#6E42E5]/10">
-                          <FaCheck className="text-[#6E42E5]" size={10} />
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#6f4f38]/10">
+                          <FaCheck className="text-[#6f4f38]" size={10} />
                         </span>
 
                         {feature}

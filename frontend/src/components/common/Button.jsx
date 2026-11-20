@@ -32,7 +32,7 @@ const Button = ({
       "rounded-lg bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-100",
 
     subscription:
-      "bg-[#6E42E5] text-white hover:bg-[#5B34C7] hover:shadow-lg hover:shadow-[#6E42E5]/20",
+      "bg-[#6f4f38] text-white hover:bg-[#5a3f2d] hover:shadow-lg hover:shadow-[#6f4f38]/20",
 
     rating:
       "flex items-center gap-2 text-[#6E42E5] text-base font-semibold px-4 py-4 hover:opacity-80",
